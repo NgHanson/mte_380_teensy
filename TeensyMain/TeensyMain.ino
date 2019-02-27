@@ -22,29 +22,59 @@ const int pingPin = A2;
 
 const int hallPin = A3;
 
+//Timer
+IntervalTimer flameTimer;
+IntervalTimer ultrasonicTimer;
+IntervalTimer hallTimer;
+//IntervalTimer motorEncoder1Timer;
+//IntervalTimer motorEncoder2Timer;
+
 //read values
 int rgbArray[3]; //red,green,blue
-int flameIgnore; //flame values to ignore if below
 bool detectedFlame, magnetDetected;
 long lenHC_1, lenHC_2, lenPing;
 
 void setup() {
   colourSetup();
-  hc_sr04Setup();
+  hcUltrasonicSetup();
 
   Serial.begin(115200);
+
+  timerSetup();
+}
+
+
+//Lower value, higher priority
+void timerSetup() {
+  flameTimer.begin(detectFlame, 125);
+  flameTimer.priority(3);
+  
+  ultrasonicTimer.begin(ultrasonicPulse, 125);
+  ultrasonicTimer.priority(3);
+  
+  hallTimer.begin(detectMagnet, 125);
+  hallTimer.priority(3);
 }
 
 void loop() {
-  //code ignores interrupts, etc. will need to implement later
   
   colourRead(rgbArray);
-  detectedFlame = flameDetected(flamePin, flameIgnore); //bool to tell if flame was detected
+  
   if(detectedFlame){
     analogWrite(fanPin, 255); //add logic to look at timers and other stuff. not entirely sure as of yet.
   }
-  lenHC_1 = ultraPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
-  lenHC_2 = ultraPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
-  lenPing = pingPulse(pingPin); //length reading from parallax Ping
+}
+
+void detectFlame() {
+  detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
+}
+
+void ultrasonicPulse() {
+  lenHC_1 = hcPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
+  lenHC_2 = hcPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
+  lenPing = parallaxPulse(pingPin); //length reading from parallax Ping
+}
+
+void detectMagnet() {
   magnetDetected = digitalRead(hallPin); //slightly more complicated than this, but this should be fine
 }
