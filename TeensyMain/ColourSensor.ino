@@ -28,6 +28,13 @@ void colourRead(int cData[]) {
   digitalWrite(colorS3,HIGH);
   cData[2] = pulseIn(colorOut, LOW); //blue
  
+   /* 
+  will need to do some comparison checking if freqColor is in some range to see if lego was found
+  i.e: if( (freqRed > X || freqRed < Y) && etc etc) ) for a specific color.
+  */
+}
+
+void printColourValues(int cData[]) {
   Serial.print("Red= ");
   Serial.print(cData[0]);
   Serial.print("  ");
@@ -37,9 +44,4 @@ void colourRead(int cData[]) {
   Serial.print("B= ");
   Serial.print(cData[2]);
   Serial.println("  ");
-   /* 
-  will need to do some comparison checking if freqColor is in some range to see if lego was found
-  i.e: if( (freqRed > X || freqRed < Y) && etc etc) ) for a specific color.
-  */
-
 }
