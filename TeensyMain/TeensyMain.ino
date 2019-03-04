@@ -36,7 +36,7 @@ long lenHC_1, lenHC_2, lenPing;
 
 void setup() {
   colourSetup();
-  hcUltrasonicSetup();
+  //hcUltrasonicSetup();
 
   Serial.begin(115200);
 
@@ -57,12 +57,32 @@ void timerSetup() {
 }
 
 void loop() {
-  
+  /*
   colourRead(rgbArray);
   
   if(detectedFlame){
     analogWrite(fanPin, 255); //add logic to look at timers and other stuff. not entirely sure as of yet.
+  }*/
+  constructionCheckLoop();
+}
+
+void constructionCheckLoop(){
+
+  moveForward(100);
+  moveForward(-100);
+
+  while(!detectedFlame) {
   }
+
+  rotateCW(90);
+  rotateCCW(90);
+
+  while(lenPing > 50) {
+  }
+
+  rotateCW(90);
+  rotateCCW(90);
+  
 }
 
 void detectFlame() {
@@ -70,8 +90,8 @@ void detectFlame() {
 }
 
 void ultrasonicPulse() {
-  lenHC_1 = hcPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
-  lenHC_2 = hcPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
+  //lenHC_1 = hcPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
+  //lenHC_2 = hcPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
   lenPing = parallaxPulse(pingPin); //length reading from parallax Ping
 }
 
