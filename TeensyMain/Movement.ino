@@ -35,11 +35,11 @@ void rotateCW (int angle) {
 }
 
 void rotateCCW(int angle) {
-  analogWrite(LEFT_MOTOR_PIN, 255);
-  analogWrite(RIGHT_MOTOR_PIN, 255);
+  analogWrite(LEFT_MOTOR_SPEED, 255);
+  analogWrite(RIGHT_MOTOR_SPEED, 255);
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 1);
   delay(1000); 
-  analogWrite(LEFT_MOTOR_PIN, 0);
-  analogWrite(RIGHT_MOTOR_PIN, 0);  
+  analogWrite(LEFT_MOTOR_SPEED, 0);
+  analogWrite(RIGHT_MOTOR_SPEED, 0);  
 }
