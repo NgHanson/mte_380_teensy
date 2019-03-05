@@ -1,8 +1,12 @@
-#define LEFT_MOTOR_SPEED 6
-#define RIGHT_MOTOR_SPEED 7
-#define LEFT_MOTOR_DIR 8
-#define RIGHT_MOTOR_DIR 9
-#define LEFT_MOTOR
+#define LEFT_MOTOR_SPEED A6
+#define RIGHT_MOTOR_SPEED A7
+#define LEFT_MOTOR_DIR A8
+#define RIGHT_MOTOR_DIR A9
+#define LEFT_ENC_1 A4
+#define LEFT_ENC_2 A5
+#define LEFT_ENC_1 A21
+#define RIGHT_ENC_2 A22
+
 //A6 - 9 for reg motors, A4,A5,A21,A22 for the motor encoders
 void moveForward(int dist) {
   analogWrite(LEFT_MOTOR_SPEED, 255);
