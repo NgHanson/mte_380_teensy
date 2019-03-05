@@ -1,7 +1,8 @@
 /*
-A6 - 9 for reg motors
+A6 - 9 for reg motors, A4,A5,A21,A22 for the motor encoders
 IMU code and Motor Encoders/Motor Control not included. Many algorithms neccesary ignored.
-Have not included Hall Effect. Wanna Test a bit more
+Have not included Hall Effect. Wanna Test a bit more]
+IMU pind are pins 3 and 4 (not Analog)
 */
 
 //pins
@@ -12,10 +13,9 @@ const int colorS3 = A15;
 const int colorOut = A16;
 
 const int flamePin = A17;
-const int fanPin = A19;
-
-const int trigPin_HCSR04_1 = A20;
-const int echoPin_HCSR04_1 = A21;
+const int fanPin = A18;
+const int trigPin_HCSR04_1 = A19;
+const int echoPin_HCSR04_1 = A20;
 const int trigPin_HCSR04_2 = A0;
 const int echoPin_HCSR04_2 = A1;
 const int pingPin = A2;
