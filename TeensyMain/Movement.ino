@@ -13,21 +13,22 @@ void moveForward(int dist) {
   analogWrite(RIGHT_MOTOR_SPEED, 255);
   if (dist < 0) {
     digitalWrite(LEFT_MOTOR_DIR, 0);
-    digitalWrite(RIGHT_MOTOR_DIR, 1);  
+    digitalWrite(RIGHT_MOTOR_DIR, 0);  
   } else if (dist > 0) {
     digitalWrite(LEFT_MOTOR_DIR, 1);
-    digitalWrite(RIGHT_MOTOR_DIR, 0);
+    digitalWrite(RIGHT_MOTOR_DIR, 1);
   }
   delay(1000);
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
+  delay(1000);
   //do nothing for dist of 0
 }
 
 void rotateCW (int angle) {
   analogWrite(LEFT_MOTOR_SPEED, 255);
   analogWrite(RIGHT_MOTOR_SPEED, 255);
-  digitalWrite(LEFT_MOTOR_DIR, 0);
+  digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0); 
   delay(1000);
   analogWrite(LEFT_MOTOR_SPEED, 0);
@@ -37,7 +38,7 @@ void rotateCW (int angle) {
 void rotateCCW(int angle) {
   analogWrite(LEFT_MOTOR_SPEED, 255);
   analogWrite(RIGHT_MOTOR_SPEED, 255);
-  digitalWrite(LEFT_MOTOR_DIR, 1);
+  digitalWrite(LEFT_MOTOR_DIR, 0);
   digitalWrite(RIGHT_MOTOR_DIR, 1);
   delay(1000); 
   analogWrite(LEFT_MOTOR_SPEED, 0);

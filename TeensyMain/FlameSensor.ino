@@ -1,8 +1,8 @@
-const int flameIgnoreValue = 0; //TODO: Kelvin to find this value
+const int flameIgnoreValue = 200;
 
 bool flameDetected(const int pin){
   int flameValue = analogRead(pin);
-
+  Serial.println(flameValue);
   if(flameValue < flameIgnoreValue){
     return false;
   }else{
