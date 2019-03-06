@@ -55,10 +55,17 @@ void detectFlame() {
 void ultrasonicPulse() {
   //lenHC_1 = hcPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
   //lenHC_2 = hcPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
-  lenPing = parallaxPulse(pingPin); //length reading from parallax Ping
+  float data[10];
+  float mean, std_dev;
+  for (int i = 0;i < 10; i++){
+    data[i] = parallaxPulse(pingPin);
+  }
+  mean = calculateMean(data);
+  std_dev = calculateSD(data, mean);
+  lenPing = calculateAdjustedMean(data, mean, std_dev);
+  //lenPing = parallaxPulse(pingPin); //length reading from parallax Ping
   Serial.print(lenPing);
   Serial.println(" cm");
-  Serial.println("penis");
 }
 
 void detectMagnet() {
@@ -113,7 +120,7 @@ void constructionCheckLoop(){
   rotateCW(90);
   rotateCCW(90);
 
-  while(lenPing > 50) {
+  while(lenPing > 10) {
     ultrasonicPulse();
   }
   lenPing = 10000;
