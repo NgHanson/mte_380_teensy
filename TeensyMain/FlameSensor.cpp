@@ -1,3 +1,4 @@
+#include "FlameSensor.h"
 const int flameIgnoreValue = 200;
 
 bool flameDetected(const int pin){

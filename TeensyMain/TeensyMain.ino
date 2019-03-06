@@ -4,20 +4,20 @@ IMU code and Motor Encoders/Motor Control not included. Many algorithms neccesar
 Have not included Hall Effect. Wanna Test a bit more]
 IMU pind are pins 3 and 4 (not Analog)
 */
-
+#include "Arduino.h"
 //pins
-const int colorS0 = A12;
-const int colorS1 = A13;
-const int colorS2 = A14;
-const int colorS3 = A15;
-const int colorOut = A16;
+#define colorS0 A12
+#define colorS1 A13
+#define colorS2 A14
+#define colorS3 A15
+#define colorOut A16
 
-const int flamePin = A17;
-const int fanPin = A18;
-const int trigPin_HCSR04_1 = A19;
-const int echoPin_HCSR04_1 = A20;
-const int trigPin_HCSR04_2 = A0;
-const int echoPin_HCSR04_2 = A1;
+#define flamePin A17
+#define fanPin A18
+#define trigPin_HCSR04_1 A19
+#define echoPin_HCSR04_1 A20
+#define trigPin_HCSR04_2 A0
+#define echoPin_HCSR04_2 A1
 
 const int pingPin = A2;
 
@@ -29,8 +29,21 @@ const int pingPin = A2;
 #define LEFT_ENC_2 A5
 #define RIGHT_ENC_1 A21
 #define RIGHT_ENC_2 A22
+#define IMU_3 A3
+#define IMU_4 A4
 
 const int hallPin = A3;
+
+//#include <Adafruit_Sensor.h>
+//#include <Adafruit_BNO055.h>
+//#include <utility/imumaths.h>
+
+#include "MathHelper.h"
+#include "ColourSensor.h"
+#include "FlameSensor.h"
+#include "Movement.h"
+#include "UltrasonicSensor.h"
+#include "IMU.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -45,11 +58,8 @@ bool detectedFlame = false;
 bool magnetDetected = false;
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
-
-
 void detectFlame() {
   detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
-  //return flameDetected(flamePin);
 }
 
 void ultrasonicPulse() {
@@ -60,10 +70,7 @@ void ultrasonicPulse() {
   for (int i = 0;i < 10; i++){
     data[i] = parallaxPulse(pingPin);
   }
-  mean = calculateMean(data);
-  std_dev = calculateSD(data, mean);
-  lenPing = calculateAdjustedMean(data, mean, std_dev);
-  //lenPing = parallaxPulse(pingPin); //length reading from parallax Ping
+  lenPing = filteredMean(data);
   Serial.print(lenPing);
   Serial.println(" cm");
 }
@@ -71,6 +78,7 @@ void ultrasonicPulse() {
 void detectMagnet() {
   magnetDetected = digitalRead(hallPin); //slightly more complicated than this, but this should be fine
 }
+
 
 
 void setup() {
@@ -81,15 +89,15 @@ void setup() {
 
   //timerSetup();
   pinMode(LEFT_MOTOR_SPEED,OUTPUT);
-pinMode(RIGHT_MOTOR_SPEED,OUTPUT);
-pinMode(LEFT_MOTOR_DIR,OUTPUT);
-pinMode(RIGHT_MOTOR_DIR,OUTPUT);
-pinMode(flamePin, INPUT);
+  pinMode(RIGHT_MOTOR_SPEED,OUTPUT);
+  pinMode(LEFT_MOTOR_DIR,OUTPUT);
+  pinMode(RIGHT_MOTOR_DIR,OUTPUT);
+  pinMode(flamePin, INPUT);
 }
 
 
 //Lower value, higher priority
-  void timerSetup() {
+void timerSetup() {
   //flameTimer.begin(detectFlame, 500);
   //flameTimer.priority(3);
   /*
@@ -104,7 +112,7 @@ pinMode(flamePin, INPUT);
 
 
 void loop() {
-  constructionCheckLoop();
+//  constructionCheckLoop();
 }
 
 void constructionCheckLoop(){
