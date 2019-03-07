@@ -1,3 +1,10 @@
+#include "ColourSensor.h"
+#define colorS0 A12
+#define colorS1 A13
+#define colorS2 A14
+#define colorS3 A15
+#define colorOut A16
+
 void colourSetup() {
   pinMode(colorS0, OUTPUT);
   pinMode(colorS1, OUTPUT);

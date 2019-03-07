@@ -1,3 +1,4 @@
+#include "MathHelper.h"
 #define US_ARR_LEN 10
 
 float calculateAdjustedMean(float data[], float mean, float stdDev) {
@@ -22,4 +23,9 @@ float calculateSD(float data[], float mean) {
     for(int i = 0; i < US_ARR_LEN; ++i)
         standardDeviation += pow(data[i] - mean, 2);
     return sqrt(standardDeviation/US_ARR_LEN);
+}
+float filteredMean(float data[]){
+  float mean = calculateMean(data);
+  float std_dev = calculateSD(data, mean);
+  return calculateAdjustedMean(data, mean, std_dev);
 }

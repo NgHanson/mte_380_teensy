@@ -1,3 +1,8 @@
+#include "UltrasonicSensor.h"
+#define trigPin_HCSR04_1 A19
+#define echoPin_HCSR04_1 A20
+#define trigPin_HCSR04_2 A0
+#define echoPin_HCSR04_2 A1
 /*
  * HCSR04
  */
