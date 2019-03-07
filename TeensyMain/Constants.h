@@ -11,7 +11,7 @@
 #define trigPin_HCSR04_2 A0
 #define echoPin_HCSR04_2 A1
 
-const int pingPin = A2;
+#define pingPin A2
 
 #define LEFT_MOTOR_SPEED A6
 #define RIGHT_MOTOR_SPEED A7
@@ -24,8 +24,10 @@ const int pingPin = A2;
 #define IMU_3 A3
 #define IMU_4 A4
 
-const int hallPin = A3;
-const int ledPin = NULL;
+#define hallPin A3
+#define ledPin NULL
 
 // Math function
 #define US_ARR_LEN 10
+
+#define LED_PIN LED_BUILTIN

@@ -71,6 +71,7 @@ void setup() {
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
   pinMode(flamePin, INPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 
@@ -156,8 +157,8 @@ void goToLocation() {
 }
 
 void signalComplete(){
-  Serial.println("LED pin not chosen yet...");
-  // digitalWrite(ledPin, HIGH);
-  // delay(1000);
-  // digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin, LOW);
+  delay(1000);
 }

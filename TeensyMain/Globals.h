@@ -1,3 +1,8 @@
+// IF ANY OF OUR GLOBAL VARS START FUCKING UP, THIS MIGHT BE WHY:
+// https://stackoverflow.com/questions/5121782/can-non-static-function-modify-a-static-variable-in-c
+
+// Jessens wheel changes make the rock worse.  Keep this in mind for later
+
 //State Variables
 static bool flameDetected = false;
 static bool flameDone = false;
