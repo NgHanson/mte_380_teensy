@@ -1,6 +1,6 @@
 #include "Mapping.h"
 
-int map[6][6];
+int levelMap[6][6];
 
 //NEED SOME SORT OF ENUMS for objectives
 

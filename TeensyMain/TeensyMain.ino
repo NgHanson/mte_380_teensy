@@ -6,33 +6,7 @@ IMU pind are pins 3 and 4 (not Analog)
 */
 #include "Arduino.h"
 //pins
-#define colorS0 A12
-#define colorS1 A13
-#define colorS2 A14
-#define colorS3 A15
-#define colorOut A16
-
-#define flamePin A17
-#define fanPin A18
-#define trigPin_HCSR04_1 A19
-#define echoPin_HCSR04_1 A20
-#define trigPin_HCSR04_2 A0
-#define echoPin_HCSR04_2 A1
-
-const int pingPin = A2;
-
-#define LEFT_MOTOR_SPEED A6
-#define RIGHT_MOTOR_SPEED A7
-#define LEFT_MOTOR_DIR A8
-#define RIGHT_MOTOR_DIR A9
-#define LEFT_ENC_1 A4
-#define LEFT_ENC_2 A5
-#define RIGHT_ENC_1 A21
-#define RIGHT_ENC_2 A22
-#define IMU_3 A3
-#define IMU_4 A4
-
-const int hallPin = A3;
+#include "Constants.h"
 
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
@@ -59,7 +33,7 @@ bool detectedFlame = false;
 bool magnetDetected = false;
 
 //State Variables
-bool flameDetected, flameDone, magnetDetected, survivorsDetected, foodDelivered, lostDetected, lostDone;
+bool flameDetected, flameDone, survivorsDetected, foodDelivered, lostDetected, lostDone;
 
 //General Variables
 bool flameInfront;
@@ -67,7 +41,8 @@ bool flameInfront;
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
 void detectFlame() {
-  detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
+  Serial.println("detectFlame not implemented...");
+  // detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
 }
 
 void ultrasonicPulse() {
@@ -185,7 +160,8 @@ void goToLocation() {
 }
 
 void signalComplete(){
-  digitalWrite(ledPin, HIGH);
-  delay(1000);
-  digitalWrite(ledPin, LOW);
+  Serial.println("LED pin not chosen yet...");
+  // digitalWrite(ledPin, HIGH);
+  // delay(1000);
+  // digitalWrite(ledPin, LOW);
 }
