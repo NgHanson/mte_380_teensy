@@ -76,18 +76,17 @@ void ultrasonicPulse() {
 }
 
 void detectMagnet() {
-  magnetDetected = digitalRead(hallPin); //slightly more complicated than this, but this should be fine
+  magnetDetected = analogRead(hallPin); //slightly more complicated than this, but this should be fine
 }
 
 
-
 void setup() {
-//  colourSetup();
-  //hcUltrasonicSetup();
-
+  // colourSetup();
+  // hcUltrasonicSetup();
+  setupIMU();
   Serial.begin(115200);
 
-  //timerSetup();
+  // timerSetup();
   pinMode(LEFT_MOTOR_SPEED,OUTPUT);
   pinMode(RIGHT_MOTOR_SPEED,OUTPUT);
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
@@ -112,6 +111,9 @@ void timerSetup() {
 
 
 void loop() {
+  int count = 0;
+  
+  getIMUData();
 //  constructionCheckLoop();
 }
 

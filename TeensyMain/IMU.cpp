@@ -1,9 +1,16 @@
 #include "IMU.h"
+#include "MathHelper.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
+#define NUM_FILTERS 10
+
 Adafruit_BNO055 bno = Adafruit_BNO055();
+float calibXAngle = 0;
+float calibYAngle = 0;
+float calibZAngle = 0;
+
 void setupIMU() {
   if(!bno.begin()) {
     /* There was a problem detecting the BNO055 ... check your connections */
@@ -12,27 +19,31 @@ void setupIMU() {
   }
 }
 
-void getIMUData() {
-  int count = 0;
-  while (1) {
+void calibrateIMU(){
+  delay(1000);
+  float xAngle[10];
+  float yAngle[10];
+  float zAngle[10];
+  for (int i = 0; i < NUM_FILTERS; i++) {
     sensors_event_t event; 
     bno.getEvent(&event);
-    
-    /* Display the floating point data */
-    Serial.print("X: ");
-    Serial.print(event.orientation.x, 4);
-    Serial.print("\tY: ");
-    Serial.print(event.orientation.y, 4);
-    Serial.print("\tZ: ");
-    Serial.print(event.orientation.z, 4);
-    Serial.println("");
-    int8_t temp = bno.getTemp();
-    Serial.print("D Current Temperature: ");
-    Serial.print(temp);
-    Serial.println(" C");
-    delay(1000);
-    Serial.print("Count: ");
-    Serial.println(count);
-    count += 1;
+    xAngle[i] = event.orientation.x;
+    yAngle[i] = event.orientation.y;
+    zAngle[i] = event.orientation.z;
   }
+  calibXAngle = filteredMean(xAngle);
+  calibYAngle = filteredMean(yAngle);
+  calibZAngle = filteredMean(zAngle);
+}
+
+void getIMUData() {
+  int count = 0;
+  sensors_event_t event; 
+  bno.getEvent(&event);
+  Serial.println("Here");
+  Serial.println(calibXAngle);
+  Serial.println(calibYAngle);
+  Serial.println(calibZAngle);
+  Serial.println("Donez");
+  Serial.println("Need to calibrate the IMU data by either adding or subtracting the calibration angle...");
 }
