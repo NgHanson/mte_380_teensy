@@ -44,6 +44,7 @@ const int hallPin = A3;
 #include "Movement.h"
 #include "UltrasonicSensor.h"
 #include "IMU.h"
+#include "Mapping.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -56,6 +57,13 @@ const int hallPin = A3;
 int rgbArray[3]; //red,green,blue
 bool detectedFlame = false;
 bool magnetDetected = false;
+
+//State Variables
+bool flameDetected, flameDone, magnetDetected, survivorsDetected, foodDelivered, lostDetected, lostDone;
+
+//General Variables
+bool flameInfront;
+
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
 void detectFlame() {
@@ -139,4 +147,45 @@ void constructionCheckLoop(){
   rotateCCW(90);
 
   delay(5000);
+}
+
+int determinePriority() {
+
+  if (!flameDetected){
+    return 1; //look for flame
+  } else if (flameDetected && !flameDone) {
+    return 2; //go to flame
+  }
+
+  //at this point, flame stuff is done
+  if (!magnetDetected) {
+    return 3; //look for magnets
+  }
+
+  //at this point, food has been found
+  
+  //WE MAY NEED A GENERAL LEGO HAS BEEN DETECTED
+  if (!survivorsDetected) {
+    return 4; //look for survivors
+  } else if (survivorsDetected && !foodDelivered){
+    return 5; //go to survivors
+  }
+
+  if (!lostDetected) {
+    return 6; //look for lost
+  } else if (lostDetected && !lostDone) {
+    return 7; // go to lost
+  }
+
+  return 8; // Return home
+}
+
+void goToLocation() {
+
+}
+
+void signalComplete(){
+  digitalWrite(ledPin, HIGH);
+  delay(1000);
+  digitalWrite(ledPin, LOW);
 }
