@@ -7,7 +7,7 @@ IMU pind are pins 3 and 4 (not Analog)
 #include "Arduino.h"
 //pins
 #include "Constants.h"
-
+#include "Globals.h"
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
 //#include <utility/imumaths.h>
@@ -29,11 +29,7 @@ IMU pind are pins 3 and 4 (not Analog)
 
 //read values
 int rgbArray[3]; //red,green,blue
-bool detectedFlame = false;
-bool magnetDetected = false;
 
-//State Variables
-bool flameDetected, flameDone, survivorsDetected, foodDelivered, lostDetected, lostDone;
 
 //General Variables
 bool flameInfront;

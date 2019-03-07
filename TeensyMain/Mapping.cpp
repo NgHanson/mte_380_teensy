@@ -1,6 +1,6 @@
 #include "Mapping.h"
+#include "Globals.h"
 
-int levelMap[6][6];
 
 //NEED SOME SORT OF ENUMS for objectives
 
