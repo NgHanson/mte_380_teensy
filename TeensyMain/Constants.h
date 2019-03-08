@@ -31,3 +31,5 @@
 #define US_ARR_LEN 10
 
 #define LED_PIN LED_BUILTIN
+
+#define TILT_TOLERANCE 15

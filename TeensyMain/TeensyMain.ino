@@ -30,10 +30,6 @@ IMU pind are pins 3 and 4 (not Analog)
 //read values
 int rgbArray[3]; //red,green,blue
 
-
-//General Variables
-bool flameInfront;
-
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
 void detectFlame() {
@@ -55,6 +51,7 @@ void ultrasonicPulse() {
 }
 
 void detectMagnet() {
+  didDetectMagnet();
   magnetDetected = analogRead(hallPin); //slightly more complicated than this, but this should be fine
 }
 
@@ -63,6 +60,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   setupIMU();
+  // calibrateIMU();
   Serial.begin(115200);
 
   // timerSetup();
@@ -91,9 +89,9 @@ void timerSetup() {
 
 
 void loop() {
-  int count = 0;
   
-  getIMUData();
+  // debugIMUData();
+  didDetectMagnet();
 //  constructionCheckLoop();
 }
 

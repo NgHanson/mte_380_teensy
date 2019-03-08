@@ -13,5 +13,8 @@ static bool lostDone = false;
 static bool detectedFlame = false;
 static bool magnetDetected = false;
 
-// Global map
-static int levelMap[6][6];
+// Global map/position/orientation
+static char levelMap[6][6];
+static float ccwHeading = 0.0;
+static float frontTilt = 0.0;
+static float ccwRollFromBack = 0.0;
