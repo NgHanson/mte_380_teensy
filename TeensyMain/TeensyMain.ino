@@ -5,6 +5,7 @@ Have not included Hall Effect. Wanna Test a bit more]
 IMU pind are pins 3 and 4 (not Analog)
 */
 #include "Arduino.h"
+#include "Encoder.h"
 //pins
 #include "Constants.h"
 #include "Globals.h"
@@ -26,6 +27,10 @@ IMU pind are pins 3 and 4 (not Analog)
 //IntervalTimer hallTimer;
 //IntervalTimer motorEncoder1Timer;
 //IntervalTimer motorEncoder2Timer;
+
+//Encoders
+Encoder leftEncoder(LEFT_ENC_1, LEFT_ENC_2);
+Encoder rightEncoder(RIGHT_ENC_1, RIGHT_ENC_2);
 
 //read values
 int rgbArray[3]; //red,green,blue
@@ -59,7 +64,7 @@ void detectMagnet() {
 void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
-  setupIMU();
+  //setupIMU();
   // calibrateIMU();
   Serial.begin(115200);
 
@@ -89,10 +94,18 @@ void timerSetup() {
 
 
 void loop() {
-  
   // debugIMUData();
-  didDetectMagnet();
-//  constructionCheckLoop();
+  //didDetectMagnet();
+  //constructionCheckLoop();
+  testEncoders();
+}
+
+void testEncoders() {
+  Serial.print("Left = ");
+  Serial.print(leftEncoder.read());
+  Serial.print(", Right = ");
+  Serial.print(rightEncoder.read());
+  Serial.println();
 }
 
 void constructionCheckLoop(){

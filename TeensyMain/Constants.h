@@ -13,10 +13,12 @@
 
 #define pingPin A2
 
-#define LEFT_MOTOR_SPEED A6
-#define RIGHT_MOTOR_SPEED A7
-#define LEFT_MOTOR_DIR A8
-#define RIGHT_MOTOR_DIR A9
+#define LEFT_MOTOR_DIR A6
+#define LEFT_MOTOR_SPEED A7
+#define RIGHT_MOTOR_DIR A8
+#define RIGHT_MOTOR_SPEED A9
+
+
 #define LEFT_ENC_1 A4
 #define LEFT_ENC_2 A5
 #define RIGHT_ENC_1 A21
