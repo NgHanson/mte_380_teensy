@@ -20,9 +20,6 @@
 //Timer
 //IntervalTimer flameTimer;
 //IntervalTimer ultrasonicTimer;
-//IntervalTimer hallTimer;
-//IntervalTimer motorEncoder1Timer;
-//IntervalTimer motorEncoder2Timer;
 
 //read values
 int rgbArray[3]; //red,green,blue
@@ -97,9 +94,9 @@ void loop() {
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
-
-  // rotateRight90();
   // testIRSensor();
+  rotateRight(90);
+  delay(1000);
 }
 
 void testIRSensor() {
@@ -107,7 +104,7 @@ void testIRSensor() {
 }
 
 void testLaserSensor() {
-    Serial.println(getLaserDistance());
+   Serial.println(getLaserDistance());
 }
 
 void testEncoders() {
@@ -138,16 +135,16 @@ void constructionCheckLoop(){
   }
   detectedFlame = false;
 
-  rotateRight90;
-  rotateLeft90;
+  rotateRight(90);
+  rotateLeft(90);
 
   while(lenPing > 10) {
     ultrasonicPulse();
   }
   lenPing = 10000;
 
-  rotateRight90;
-  rotateLeft90;
+  rotateRight(90);
+  rotateLeft(90);
 
   delay(5000);
 }

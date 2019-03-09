@@ -1,4 +1,5 @@
 #include <Arduino.h>
 void moveForward(int);
-void rotateRight90();
-void rotateLeft90();
+void rotateRight(int);
+void rotateLeft(int);
+void rotate180();

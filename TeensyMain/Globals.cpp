@@ -16,8 +16,15 @@ float cwHeading;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
 
-int totalHorzCount = 0;
-int totalVertCount = 0;
+//Assume starting from location (3, 0);
+int startXPos = 3500;
+int startYPos = 0; 
+
+int xPos = startXPos;
+int yPos = startYPos;
+
+int maxXPos = 100000;
+int maxYPos = 100000;
 
 bool inPit = false;
 
