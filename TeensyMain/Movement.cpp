@@ -2,8 +2,9 @@
 #include "Globals.h"
 #include "Constants.h"
 #include "IMU.h"
-#define moveSpeed 200
-#define rotationSpeed 150
+
+#define MOVE_SPEED 200
+#define ROTATION_SPEED 150
 
 //if we only want to move in up/down/left/right our relative angles will always be either 0, 90, 180, 270
 //IMU does CW increasing 
@@ -18,14 +19,13 @@ void moveForward(int dist) {
     digitalWrite(RIGHT_MOTOR_DIR, 1);
   }
   
-  analogWrite(LEFT_MOTOR_SPEED, moveSpeed);
-  analogWrite(RIGHT_MOTOR_SPEED, moveSpeed);
+  analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
 
   delay(1000);
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
   delay(1000);
-  //do nothing for dist of 0
 }
 
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
@@ -35,8 +35,8 @@ void rotateRight90() {
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0); 
   
-  analogWrite(LEFT_MOTOR_SPEED, rotationSpeed);
-  analogWrite(RIGHT_MOTOR_SPEED, rotationSpeed);
+  analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
 
   int target = (90 + (int) cwHeading)%360;
   Serial.println(target);
@@ -56,8 +56,8 @@ void rotateLeft90() {
   digitalWrite(LEFT_MOTOR_DIR, 0);
   digitalWrite(RIGHT_MOTOR_DIR, 1);
   
-  analogWrite(LEFT_MOTOR_SPEED, rotationSpeed);
-  analogWrite(RIGHT_MOTOR_SPEED, rotationSpeed);
+  analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
 
   float target = (cwHeading - 90);
   if (target < 0) {

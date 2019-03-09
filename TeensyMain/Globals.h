@@ -20,7 +20,8 @@ extern float cwHeading;
 extern float frontTilt;
 extern float ccwRollFromBack;
 
-extern bool movementUpDown;
+extern int totalHorzCount;
+extern int totalVertCount;
 
 extern bool inPit;
 

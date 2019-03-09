@@ -16,7 +16,8 @@ float cwHeading;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
 
-bool movementUpDown = true;
+int totalHorzCount = 0;
+int totalVertCount = 0;
 
 bool inPit = false;
 
