@@ -51,7 +51,7 @@ void getIMUData() {
     xAngle[i] = event.orientation.x;
     yAngle[i] = event.orientation.y;
   }
-  ccwHeading = filteredMean(xAngle);
+  cwHeading = filteredMean(xAngle);
   frontTilt = filteredMean(yAngle);
   
   // ccwHeading = event.orientation.x;//(float)((int)(event.orientation.x + 360 - calibXAngle) % 360);
@@ -99,7 +99,7 @@ void debugIMUData() {
   Serial.println(event.orientation.z);
   Serial.println("Eat shit hanson");
   Serial.print("Xcal: ");
-  Serial.print(ccwHeading);
+  Serial.print(cwHeading);
   Serial.print(" Ycal: ");
   Serial.print(frontTilt);
   Serial.print(" Zcal: ");

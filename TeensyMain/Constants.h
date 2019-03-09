@@ -21,8 +21,8 @@
 
 #define LEFT_ENC_1 A4
 #define LEFT_ENC_2 A5
-#define RIGHT_ENC_1 A21
-#define RIGHT_ENC_2 A22
+#define RIGHT_ENC_1 A14//A21
+#define RIGHT_ENC_2 A15//A22
 #define IMU_3 A3
 #define IMU_4 A4
 

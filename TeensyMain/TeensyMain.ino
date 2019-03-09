@@ -1,12 +1,5 @@
-/*
-A6 - 9 for reg motors, A4,A5,A21,A22 for the motor encoders
-IMU code and Motor Encoders/Motor Control not included. Many algorithms neccesary ignored.
-Have not included Hall Effect. Wanna Test a bit more]
-IMU pind are pins 3 and 4 (not Analog)
-*/
 #include "Arduino.h"
 #include "Encoder.h"
-//pins
 #include "Constants.h"
 #include "Globals.h"
 //#include <Adafruit_Sensor.h>
@@ -64,7 +57,9 @@ void detectMagnet() {
 void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
-  //setupIMU();
+  setupIMU();
+  delay(1000);
+  getIMUData();
   // calibrateIMU();
   Serial.begin(115200);
 
@@ -97,7 +92,9 @@ void loop() {
   // debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
-  testEncoders();
+  //testEncoders();
+
+  rotateRight90();
 }
 
 void testEncoders() {
@@ -118,16 +115,16 @@ void constructionCheckLoop(){
   }
   detectedFlame = false;
 
-  rotateCW(90);
-  rotateCCW(90);
+  rotateRight90;
+  rotateLeft90;
 
   while(lenPing > 10) {
     ultrasonicPulse();
   }
   lenPing = 10000;
 
-  rotateCW(90);
-  rotateCCW(90);
+  rotateRight90;
+  rotateLeft90;
 
   delay(5000);
 }
