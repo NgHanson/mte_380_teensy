@@ -101,6 +101,10 @@ void loop() {
   rotateRight90();
 }
 
+void testLaserSensor() {
+    Serial.println(myLidarLite.distance());
+}
+
 void testEncoders() {
   Serial.print("Left = ");
   Serial.print(leftEncoder.read());
