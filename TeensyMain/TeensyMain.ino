@@ -5,6 +5,10 @@
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
 //#include <utility/imumaths.h>
+#include <Wire.h>
+#include "LIDARLite.h"
+
+LIDARLite myLidarLite;
 
 #include "MathHelper.h"
 #include "ColourSensor.h"
@@ -23,6 +27,10 @@
 
 //read values
 int rgbArray[3]; //red,green,blue
+
+
+//General Variables
+bool flameInfront;
 
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
@@ -45,7 +53,6 @@ void ultrasonicPulse() {
 }
 
 void detectMagnet() {
-  didDetectMagnet();
   magnetDetected = analogRead(hallPin); //slightly more complicated than this, but this should be fine
 }
 
@@ -65,7 +72,8 @@ void setup() {
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
   pinMode(flamePin, INPUT);
-  pinMode(ledPin, OUTPUT);
+  myLidarLite.begin(0, true);  // Set configuration to default and I2C to 400 kHz
+  myLidarLite.configure(0); // Change this number to try out alternate configurations
 }
 
 
@@ -99,6 +107,16 @@ void testEncoders() {
   Serial.print(", Right = ");
   Serial.print(rightEncoder.read());
   Serial.println();
+  int count = 0;
+  
+  // getIMUData();
+//  constructionCheckLoop();
+  Serial.println(myLidarLite.distance());
+  delay(500);
+  // Take 99 measurements without receiver bias correction and print to serial terminal
+  // for(int i = 0; i < 99; i++) {
+  //   Serial.println(myLidarLite.distance(false));
+  // }
 }
 
 void constructionCheckLoop(){
@@ -165,4 +183,8 @@ void signalComplete(){
   delay(1000);
   digitalWrite(ledPin, LOW);
   delay(1000);
+  Serial.println("LED pin not chosen yet...");
+  // digitalWrite(ledPin, HIGH);
+  // delay(1000);
+  // digitalWrite(ledPin, LOW);
 }
