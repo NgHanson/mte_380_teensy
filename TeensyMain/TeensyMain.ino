@@ -2,13 +2,12 @@
 #include "Encoder.h"
 #include "Constants.h"
 #include "Globals.h"
+#include "LaserSensor.h"
+#include "IRSensor.h"
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
 //#include <utility/imumaths.h>
-#include <Wire.h>
-#include "LIDARLite.h"
 
-LIDARLite myLidarLite;
 
 #include "MathHelper.h"
 #include "ColourSensor.h"
@@ -60,10 +59,11 @@ void detectMagnet() {
 void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
-  setupIMU();
-  delay(1000);
-  getIMUData();
+  // setupIMU();
+  // delay(1000);
+  // getIMUData();
   // calibrateIMU();
+  setUpLaserSensor();
   Serial.begin(115200);
 
   // timerSetup();
@@ -72,8 +72,8 @@ void setup() {
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
   pinMode(flamePin, INPUT);
-  myLidarLite.begin(0, true);  // Set configuration to default and I2C to 400 kHz
-  myLidarLite.configure(0); // Change this number to try out alternate configurations
+  // pinMode(IR_SENSOR, INPUT);
+  
 }
 
 
@@ -98,11 +98,16 @@ void loop() {
   //constructionCheckLoop();
   //testEncoders();
 
-  rotateRight90();
+  // rotateRight90();
+  // testIRSensor();
+}
+
+void testIRSensor() {
+  Serial.println(getIRDistance());
 }
 
 void testLaserSensor() {
-    Serial.println(myLidarLite.distance());
+    Serial.println(getLaserDistance());
 }
 
 void testEncoders() {
@@ -115,7 +120,7 @@ void testEncoders() {
   
   // getIMUData();
 //  constructionCheckLoop();
-  Serial.println(myLidarLite.distance());
+  // Serial.println(myLidarLite.distance());
   delay(500);
   // Take 99 measurements without receiver bias correction and print to serial terminal
   // for(int i = 0; i < 99; i++) {

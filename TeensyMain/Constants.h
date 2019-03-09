@@ -35,3 +35,5 @@
 #define LED_PIN LED_BUILTIN
 
 #define TILT_TOLERANCE 15
+
+#define IR_SENSOR NULL
