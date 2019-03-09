@@ -21,10 +21,6 @@
 //IntervalTimer motorEncoder1Timer;
 //IntervalTimer motorEncoder2Timer;
 
-//Encoders
-Encoder leftEncoder(LEFT_ENC_1, LEFT_ENC_2);
-Encoder rightEncoder(RIGHT_ENC_1, RIGHT_ENC_2);
-
 //read values
 int rgbArray[3]; //red,green,blue
 
