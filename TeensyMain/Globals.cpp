@@ -12,19 +12,13 @@ bool magnetDetected = false;
 
 // Global map/position/orientation
 char levelMap[6][6];
-float cwHeading;
+float cwHeading = 0.0;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
 
 //Assume starting from location (3, 0);
-int startXPos = 3500;
-int startYPos = 0; 
-
-int xPos = startXPos;
-int yPos = startYPos;
-
-int maxXPos = 100000;
-int maxYPos = 100000;
+int xPos = 3;
+int yPos = 0;
 
 bool inPit = false;
 

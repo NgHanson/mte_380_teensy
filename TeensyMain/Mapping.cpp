@@ -20,6 +20,7 @@ void initialScan() {
    X: 2 - Y:0
    */
 
+  //CHANGE THIS TO A FOR LOOP OF ANGLES
   rotateRight(18);
   /* @ 288.434948822922
    X: 0 - Y:1

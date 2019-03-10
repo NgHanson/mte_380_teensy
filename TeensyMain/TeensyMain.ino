@@ -19,11 +19,9 @@
 
 //Timer
 //IntervalTimer flameTimer;
-//IntervalTimer ultrasonicTimer;
 
 //read values
 int rgbArray[3]; //red,green,blue
-
 
 //General Variables
 bool flameInfront;
@@ -54,13 +52,14 @@ void detectMagnet() {
 
 
 void setup() {
+  delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  // setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
-  setUpLaserSensor();
+  //setUpLaserSensor();
   Serial.begin(115200);
 
   // timerSetup();
@@ -69,6 +68,7 @@ void setup() {
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
   pinMode(flamePin, INPUT);
+  pinMode(LED_PIN, OUTPUT);
   // pinMode(IR_SENSOR, INPUT);
   
 }
@@ -113,16 +113,6 @@ void testEncoders() {
   Serial.print(", Right = ");
   Serial.print(rightEncoder.read());
   Serial.println();
-  int count = 0;
-  
-  // getIMUData();
-//  constructionCheckLoop();
-  // Serial.println(myLidarLite.distance());
-  delay(500);
-  // Take 99 measurements without receiver bias correction and print to serial terminal
-  // for(int i = 0; i < 99; i++) {
-  //   Serial.println(myLidarLite.distance(false));
-  // }
 }
 
 void constructionCheckLoop(){

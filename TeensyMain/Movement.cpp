@@ -6,10 +6,14 @@
 #define MOVE_SPEED 200
 #define ROTATION_SPEED 125
 
+#define FORWARD_ENCODER_DIST 5000
+#define FORWARD_ENCODER_DIST_PIT 1000
+
 //if we only want to move in up/down/left/right our relative angles will always be either 0, 90, 180, 270
 //IMU does CW increasing 
 //A6 - 9 for reg motors, A4,A5,A21,A22 for the motor encoders
 // THIS WILL MOD THE vert and horz counts
+//DEPRECATE THIS
 void moveForward(int dist) {
   if (dist < 0) {
     digitalWrite(LEFT_MOTOR_DIR, 0);
@@ -26,6 +30,41 @@ void moveForward(int dist) {
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
   delay(1000);
+}
+
+void moveForwardTile() {
+  leftEncoder.write(0);
+  rightEncoder.write(0);
+  
+  digitalWrite(LEFT_MOTOR_DIR, 1);
+  digitalWrite(RIGHT_MOTOR_DIR, 1);
+
+  analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
+
+  int encoder_dist = FORWARD_ENCODER_DIST;
+  if (inPit) { //MIGHT NEED TO START DIFFERENTIATING MOVEMENT BETWEEN SAND, PITS, and ROCKS
+    encoder_dist = FORWARD_ENCODER_DIST_PIT;
+    //GET OUT OF PIT FIRST
+    while(inPit){
+      
+    }
+    
+  }
+
+  int avgEncoderVal = 0;
+  while(avgEncoderVal < encoder_dist) {
+    if (frontTile > 100.0) { //TEST VALUE AND SET THIS AS A CONST
+      inPit = true;
+    }
+    avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
+  }
+
+
+  analogWrite(LEFT_MOTOR_SPEED, 0);
+  analogWrite(RIGHT_MOTOR_SPEED, 0);
+
+  //REALIGN TO ITS CURRENT ORIENTATION (0, 90, 180, 270)
 }
 
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation

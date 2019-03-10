@@ -1,6 +1,7 @@
 #include "IMU.h"
 #include "MathHelper.h"
 #include "Globals.h"
+#include "Constants.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
@@ -53,6 +54,12 @@ void getIMUData() {
   }
   cwHeading = filteredMean(xAngle);
   frontTilt = filteredMean(yAngle);
+
+  if (cwHeading > 0.0) {
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    digitalWrite(LED_PIN, LOW);
+  }
   
   // ccwHeading = event.orientation.x;//(float)((int)(event.orientation.x + 360 - calibXAngle) % 360);
   // // if 
