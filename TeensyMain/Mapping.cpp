@@ -1,11 +1,23 @@
 #include "Mapping.h"
 #include "Globals.h"
+#include "Constants.h"
 #include "Movement.h"
+#include "IMU.h"
 
 //NEED SOME SORT OF ENUMS for objectives
 
-void updateMap(int x, int y, int objective) {
+/*
+ u - unknown (default)
+ v - visited -> do we want to differentiate visited to water, sand, gravel, and normal tiles?
+ o - object location (not sure which object though)
+ c - candle
+ m - magnet
+ h - house
+ s - survivor
+ */
 
+void updateMap(int x, int y, char type) {
+  levelMap[x][y] = type;
 }
 
 
@@ -148,5 +160,16 @@ void initialScan() {
 }
 
 void sensorMeasurements() {
+  
+}
+
+
+// to help figure out if the lidar is seeing the wall or if theres an object present
+float lidarToWallDist(int x, int y) {
+
+  float currX = x * TILE_DIST;
+  float currY = y * TILE_DIST;
+  getIMUData();
+
   
 }

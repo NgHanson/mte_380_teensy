@@ -29,6 +29,8 @@
 #define hallPin A3
 #define ledPin NULL
 
+#define TILE_DIST 0.3048 //m
+
 // Math function
 #define US_ARR_LEN 10
 

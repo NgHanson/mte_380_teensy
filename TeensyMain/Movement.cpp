@@ -54,7 +54,7 @@ void moveForwardTile() {
 
   int avgEncoderVal = 0;
   while(avgEncoderVal < encoder_dist) {
-    if (frontTile > 100.0) { //TEST VALUE AND SET THIS AS A CONST
+    if (frontTilt > 100.0) { //TEST VALUE AND SET THIS AS A CONST
       inPit = true;
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
