@@ -10,5 +10,6 @@ float getIRDistance() {
   Serial.print(" Distance: ");
   // Serial.print(distance);
   Serial.println(distance);                       // print the distance
+  return distance;
   delay(100);
 }

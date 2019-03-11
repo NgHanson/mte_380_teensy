@@ -55,7 +55,7 @@ void setup() {
   delay(1000);
   colourSetup();
   // hcUltrasonicSetup();
-  setupIMU();
+  //setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -69,7 +69,7 @@ void setup() {
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
   pinMode(flamePin, INPUT);
   pinMode(LED_PIN, OUTPUT);
-  // pinMode(IR_SENSOR, INPUT);
+  pinMode(IR_SENSOR, INPUT);
   
 }
 
@@ -95,10 +95,10 @@ void loop() {
   //constructionCheckLoop();
   //testEncoders();
   //testIRSensor();
-  testRotationWithIMU();
+  //testRotationWithIMU();
   // testLaserSensor();
-  // int cData[3];
-  // colourRead(cData);
+  int cData[3];
+  colourRead(cData);
 }
 
 void testRotationWithIMU() {
