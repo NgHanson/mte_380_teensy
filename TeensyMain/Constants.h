@@ -38,4 +38,6 @@
 
 #define TILT_TOLERANCE 15
 
-#define IR_SENSOR NULL
+#define IR_SENSOR NULL//A9//Usually null
+
+#define NUM_FILTERS 10

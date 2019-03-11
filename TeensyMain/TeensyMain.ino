@@ -53,7 +53,7 @@ void detectMagnet() {
 
 void setup() {
   delay(1000);
-  // colourSetup();
+  colourSetup();
   // hcUltrasonicSetup();
   setupIMU();
   // delay(1000);
@@ -94,13 +94,30 @@ void loop() {
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
-  // testIRSensor();
+  //testIRSensor();
+  testRotationWithIMU();
+  // testLaserSensor();
+  // int cData[3];
+  // colourRead(cData);
+}
+
+void testRotationWithIMU() {
+  Serial.println("rotateRight(90) ============================");
   rotateRight(90);
-  delay(1000);
+  delay(5000);
+  Serial.println("rotateRight(180) ============================");
+  rotateRight(180);
+  delay(5000);
+  Serial.println("rotateRight(270) ============================");
+  rotateRight(270);
+  delay(5000);
+  Serial.println("rotateRight(0) ============================");
+  rotateRight(0);
+  delay(5000);  
 }
 
 void testIRSensor() {
-  Serial.println(getIRDistance());
+  getIRDistance();
 }
 
 void testLaserSensor() {

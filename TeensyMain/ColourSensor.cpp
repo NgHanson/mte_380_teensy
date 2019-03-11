@@ -14,6 +14,18 @@ void colourSetup() {
 
 }
 
+void printColourValues(int cData[]) {
+  Serial.print("Red= ");
+  Serial.print(cData[0]);
+  Serial.print("  ");
+  Serial.print("G= ");
+  Serial.print(cData[1]);
+  Serial.print("  ");
+  Serial.print("B= ");
+  Serial.print(cData[2]);
+  Serial.println("  ");
+}
+
 void colourRead(int cData[]) {
     // Setting red filtered photodiodes to be read
   digitalWrite(colorS2,LOW);
@@ -30,21 +42,11 @@ void colourRead(int cData[]) {
   digitalWrite(colorS2,LOW);
   digitalWrite(colorS3,HIGH);
   cData[2] = pulseIn(colorOut, LOW); //blue
- 
+  printColourValues(cData);
    /* 
   will need to do some comparison checking if freqColor is in some range to see if lego was found
   i.e: if( (freqRed > X || freqRed < Y) && etc etc) ) for a specific color.
   */
 }
 
-void printColourValues(int cData[]) {
-  Serial.print("Red= ");
-  Serial.print(cData[0]);
-  Serial.print("  ");
-  Serial.print("G= ");
-  Serial.print(cData[1]);
-  Serial.print("  ");
-  Serial.print("B= ");
-  Serial.print(cData[2]);
-  Serial.println("  ");
-}
+

@@ -4,7 +4,7 @@
 #include "IMU.h"
 
 #define MOVE_SPEED 200
-#define ROTATION_SPEED 125
+#define ROTATION_SPEED 80
 
 #define FORWARD_ENCODER_DIST 5000
 #define FORWARD_ENCODER_DIST_PIT 1000
@@ -71,19 +71,47 @@ void moveForwardTile() {
 //The casting stuff for the rotations are wack ...
 
 void rotateRight(int angle) {
+  if (angle < 0 || angle > 360) {
+    Serial.println("Angle is invalid");
+    return;
+  }
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0); 
   
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
-
-  int target = (angle + (int) cwHeading)%360;
-  Serial.println(target);
+  // int target = (angle + (int) cwHeading)%360;
+  //cwHeading = (int) cwHeading;
+  Serial.println(angle);
   Serial.println(cwHeading);
-  while(cwHeading < target || cwHeading > target + 3) { //DEFINITELY NEED TO TUNE THIS
-    getIMUData();
-    Serial.println(cwHeading);
+  if (angle == 0) {
+    // angle = 357.5;
+    while (!(cwHeading >= 0 && cwHeading < 1)) {
+      getIMUData();
+      Serial.println(cwHeading);      
+    }
   }
+  else {
+    angle = angle - 2.5;
+    if (cwHeading < angle) {
+
+      while(cwHeading < angle) { //DEFINITELY NEED TO TUNE THIS
+        getIMUData();
+        Serial.println(cwHeading);
+      }
+    } else if (cwHeading > angle) {
+      bool started = false;
+      while ((cwHeading - 360) < angle) {
+        getIMUData();
+        Serial.println(cwHeading);
+      }
+    }    
+  }
+
+  // while(cwHeading < angle || (cwHeading-360) < angle) { //DEFINITELY NEED TO TUNE THIS
+  //   getIMUData();
+  //   Serial.println(cwHeading);
+  // }
   Serial.println("Good");
   //RUN A FINE TUNE FUNCTION TO GET EXACT HEADING
   
