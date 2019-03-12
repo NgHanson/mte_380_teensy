@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "LaserSensor.h"
 #include "IRSensor.h"
+#include "DetectionHelper.h"
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
 //#include <utility/imumaths.h>
@@ -53,9 +54,9 @@ void detectMagnet() {
 
 void setup() {
   delay(1000);
-  colourSetup();
+  //colourSetup();
   // hcUltrasonicSetup();
-  //setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -97,8 +98,13 @@ void loop() {
   //testIRSensor();
   //testRotationWithIMU();
   // testLaserSensor();
-  int cData[3];
-  colourRead(cData);
+  // int cData[3];
+  // colourRead(cData);
+  testTileDetection();
+}
+
+void testTileDetection() {
+  detectTileInFront();
 }
 
 void testRotationWithIMU() {
