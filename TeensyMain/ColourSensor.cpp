@@ -23,7 +23,7 @@ void printColorValues(int cData[]) {
   Serial.print("  ");
   Serial.print("B= ");
   Serial.print(cData[2]);
-  Serial.print("  ");
+  Serial.println("  ");
 }
 
 void printColourDistribution(float r_val, float g_val, float b_val) {

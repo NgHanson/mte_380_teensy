@@ -30,16 +30,17 @@ bool flameInfront;
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
 void detectFlame() {
-  Serial.println("detectFlame not implemented...");
-  // detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
+  flamePresent(flamePin);
+  // Serial.println("DetectFlame: ");
+  // Serial.println(flamePresent(flamePin)); //bool to tell if flame was detected
 }
 
 
 void setup() {
   delay(1000);
-  //colourSetup();
+  // colourSetup();
   // hcUltrasonicSetup();
-  setupIMU();
+  //setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -83,7 +84,11 @@ void loop() {
   // testLaserSensor();
   // int cData[3];
   // colourRead(cData);
-  testTileDetection();
+  // printColorValues(cData);
+  // testTileDetection();
+  // detectFlame();
+  // analogWrite(fanPin, 255);
+  // moveForward(10);
 }
 
 void testTileDetection() {
