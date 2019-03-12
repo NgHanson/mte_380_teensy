@@ -34,23 +34,6 @@ void detectFlame() {
   // detectedFlame = flameDetected(flamePin); //bool to tell if flame was detected
 }
 
-void ultrasonicPulse() {
-  //lenHC_1 = hcPulse(trigPin_HCSR04_1, echoPin_HCSR04_1);
-  //lenHC_2 = hcPulse(trigPin_HCSR04_2, echoPin_HCSR04_2);
-  float data[10];
-  float mean, std_dev;
-  for (int i = 0;i < 10; i++){
-    data[i] = parallaxPulse(pingPin);
-  }
-  lenPing = filteredMean(data);
-  Serial.print(lenPing);
-  Serial.println(" cm");
-}
-
-void detectMagnet() {
-  magnetDetected = analogRead(hallPin); //slightly more complicated than this, but this should be fine
-}
-
 
 void setup() {
   delay(1000);
@@ -138,29 +121,29 @@ void testEncoders() {
   Serial.println();
 }
 
-void constructionCheckLoop(){
+// void constructionCheckLoop(){
 
-  moveForward(100);
-  moveForward(-100);
+//   moveForward(100);
+//   moveForward(-100);
   
-  while(!detectedFlame) {
-    detectFlame();
-  }
-  detectedFlame = false;
+//   while(!detectedFlame) {
+//     detectFlame();
+//   }
+//   detectedFlame = false;
 
-  rotateRight(90);
-  rotateLeft(90);
+//   rotateRight(90);
+//   rotateLeft(90);
 
-  while(lenPing > 10) {
-    ultrasonicPulse();
-  }
-  lenPing = 10000;
+//   while(lenPing > 10) {
+//     ultrasonicPulse();
+//   }
+//   lenPing = 10000;
 
-  rotateRight(90);
-  rotateLeft(90);
+//   rotateRight(90);
+//   rotateLeft(90);
 
-  delay(5000);
-}
+//   delay(5000);
+// }
 
 int determinePriority() {
 
@@ -198,9 +181,9 @@ void goToLocation() {
 }
 
 void signalComplete(){
-  digitalWrite(ledPin, HIGH);
+  digitalWrite(LED_PIN, HIGH);
   delay(1000);
-  digitalWrite(ledPin, LOW);
+  digitalWrite(LED_PIN, LOW);
   delay(1000);
   Serial.println("LED pin not chosen yet...");
   // digitalWrite(ledPin, HIGH);

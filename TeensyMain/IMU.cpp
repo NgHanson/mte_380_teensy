@@ -6,8 +6,6 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
-#define NUM_FILTERS 10
-
 #define MIN_GARBAGE_THRESH 1000
 #define MIN_MAGNET_THRESH 250
 
@@ -29,7 +27,7 @@ void setupIMU() {
 //   float xAngle[10];
 //   float yAngle[10];
 //   float zAngle[10];
-//   for (int i = 0; i < NUM_FILTERS; i++) {
+//   for (int i = 0; i < SENSOR_NUM_SAMPLES; i++) {
 //     sensors_event_t event; 
 //     bno.getEvent(&event);
 //     xAngle[i] = event.orientation.x;
@@ -46,7 +44,7 @@ void getIMUData() {
   int count = 0;
   float xAngle[10];
   float yAngle[10];
-  for (int i = 0; i < NUM_FILTERS; i++) {
+  for (int i = 0; i < SENSOR_NUM_SAMPLES; i++) {
     sensors_event_t event; 
     bno.getEvent(&event);  
     xAngle[i] = event.orientation.x;

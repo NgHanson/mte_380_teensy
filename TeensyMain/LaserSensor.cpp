@@ -12,7 +12,7 @@ void setUpLaserSensor() {
 
 float getLaserDistance() {
   float distance[10];
-  for (int i = 0; i < NUM_FILTERS; i++) {
+  for (int i = 0; i < SENSOR_NUM_SAMPLES; i++) {
     distance[i] = myLidarLite.distance();
   }
   float filteredDistance = filteredMean(distance);
