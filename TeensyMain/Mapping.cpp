@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "Movement.h"
 #include "IMU.h"
+#include "LaserSensor.h"
 
 //NEED SOME SORT OF ENUMS for objectives
 
@@ -25,42 +26,54 @@ void updateMap(int x, int y, char type) {
 // We will face forward at the same location everytime
 // Assume we're starting X: 3 - Y: 0
 void initialScan() {
-  rotateLeft(90);
+  Serial.println("Rotating 90");
+  rotateLeft(270);
   /* @ 270
    X: 0 - Y:0
    X: 1 - Y:0
    X: 2 - Y:0
    */
-
+  Serial.print("IMU Data: ");
+  Serial.print(cwHeading);
+  float distance = getLaserDistance();
+  Serial.print(" Distance: ");
+  Serial.println(distance);
+  delay(5000);
   //CHANGE THIS TO A FOR LOOP OF ANGLES
-  rotateRight(18);
+  Serial.println("Rotating 18");
+  rotateRight(270+18);
   /* @ 288.434948822922
    X: 0 - Y:1
    */
-
-  rotateRight(8);
+  Serial.print("IMU Data: ");
+  Serial.print(cwHeading);
+  distance = getLaserDistance();
+  Serial.print(" Distance: ");
+  Serial.println(distance);
+  delay(5000);
+  rotateRight((270+18+8)%360);
   /* @ 296.565051177078
    X: 1 - Y:1
   */
-
-  rotateRight(7);
+  delay(5000);
+  rotateRight((270+18+8+7)%360);
   /* 303.69006752597977
    X: 0 - Y:2
   */
-
-  rotateRight(11);
+  delay(5000);
+  rotateRight((270+18+8+7+11)%360);
   /* 315.0
   X: 0 - Y:3
   X: 1 - Y:2
   X: 2 - Y:1
   */
 
-  rotateRight(8);
+  rotateRight((270+18+8+7+11+8)%360);
   /* 323.13010235415595
   X: 0 - Y:4
   */
 
-  rotateRight(4);
+  rotateRight((270+18+8+7+11+8+4)%360);
   /*326.30993247402023
   X: 1 - Y:3
   */

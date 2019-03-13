@@ -40,11 +40,12 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
+  setUpLaserSensor();
   setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
-  //setUpLaserSensor();
+  
   Serial.begin(115200);
 
   // timerSetup();
@@ -89,7 +90,9 @@ void loop() {
   // detectFlame();
   // analogWrite(fanPin, 255);
   // moveForward(10);
-  testRotateLeft();
+  //testRotateLeft();
+  initialScan();
+  delay(50000);
 }
 
 void testTileDetection() {

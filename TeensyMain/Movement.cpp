@@ -4,7 +4,7 @@
 #include "IMU.h"
 
 #define MOVE_SPEED 200
-#define ROTATION_SPEED 80
+#define ROTATION_SPEED 70
 
 #define FORWARD_ENCODER_DIST 5000
 #define FORWARD_ENCODER_DIST_PIT 1000
@@ -70,6 +70,7 @@ void moveForwardTile() {
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
 //The casting stuff for the rotations are wack ...
 
+// Takes in number from 0-360 with +ve cw
 void rotateRight(int angle) {
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
@@ -109,7 +110,7 @@ void rotateRight(int angle) {
   delay(100);
   getIMUData();
 }
-
+// Takes in number from 0-360, with +ve cw (turning left 90 deg from 0 would be rotateLeft(270))
 void rotateLeft(int angle) {
   Serial.println("rotateLeft");
   if (angle < 0 || angle >= 360) {

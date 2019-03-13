@@ -15,8 +15,8 @@
 #define colorOut A16
 
 #define fanPin A17
-#define flamePin A18
-#define IR_SENSOR A19
+#define flamePin A0
+#define IR_SENSOR A1
 
 #define LED_PIN LED_BUILTIN
 // No longer using cheap ultrasonic...
