@@ -40,12 +40,13 @@ void setupIMU() {
 // }
 
 // NOTE - CLOCKWISE IS POSITIVE
-void getIMUData() {
+void _getIMUData() {
   int count = 0;
   float xAngle[10];
   float yAngle[10];
+  sensors_event_t event; 
   for (int i = 0; i < SENSOR_NUM_SAMPLES; i++) {
-    sensors_event_t event; 
+    
     bno.getEvent(&event);  
     xAngle[i] = event.orientation.x;
     yAngle[i] = event.orientation.y;
@@ -53,16 +54,28 @@ void getIMUData() {
   cwHeading = filteredMean(xAngle);
   frontTilt = filteredMean(yAngle);
 
-  if (cwHeading > 0.0) {
-    digitalWrite(LED_PIN, HIGH);
-  } else {
-    digitalWrite(LED_PIN, LOW);
-  }
+  // if (cwHeading > 0.0) {
+  //   digitalWrite(LED_PIN, HIGH);
+  // } else {
+  //   digitalWrite(LED_PIN, LOW);
+  // }
   
   // ccwHeading = event.orientation.x;//(float)((int)(event.orientation.x + 360 - calibXAngle) % 360);
   // // if 
   // frontTilt = event.orientation.y;//(float)((int)(event.orientation.y + 360 - calibYAngle) % 360);
-  ccwRollFromBack = 999;
+  // ccwRollFromBack = 999;
+}
+
+void getIMUData() {
+  int currHeading = cwHeading;
+  _getIMUData();
+  while ((cwHeading > 360 || cwHeading < 0) || abs(currHeading - cwHeading) > 10 && abs(currHeading - cwHeading) < 350) {
+    Serial.print("IMU data is bad... ");
+    Serial.println(cwHeading);
+    cwHeading = currHeading;  
+    _getIMUData();
+  }
+
 }
 
 bool didDetectMagnet() {

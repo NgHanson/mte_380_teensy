@@ -71,7 +71,7 @@ void moveForwardTile() {
 //The casting stuff for the rotations are wack ...
 
 void rotateRight(int angle) {
-  if (angle < 0 || angle > 360) {
+  if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
     return;
   }
@@ -80,15 +80,13 @@ void rotateRight(int angle) {
   
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
-  // int target = (angle + (int) cwHeading)%360;
-  //cwHeading = (int) cwHeading;
-  Serial.println(angle);
-  Serial.println(cwHeading);
+  // Serial.println(angle);
+  // Serial.println(cwHeading);
   if (angle == 0) {
     // angle = 357.5;
     while (!(cwHeading >= 0 && cwHeading < 1)) {
       getIMUData();
-      Serial.println(cwHeading);      
+      // Serial.println(cwHeading);      
     }
   }
   else {
@@ -100,46 +98,68 @@ void rotateRight(int angle) {
         Serial.println(cwHeading);
       }
     } else if (cwHeading > angle) {
-      bool started = false;
       while ((cwHeading - 360) < angle) {
         getIMUData();
         Serial.println(cwHeading);
       }
     }    
   }
-
-  // while(cwHeading < angle || (cwHeading-360) < angle) { //DEFINITELY NEED TO TUNE THIS
-  //   getIMUData();
-  //   Serial.println(cwHeading);
-  // }
-  Serial.println("Good");
-  //RUN A FINE TUNE FUNCTION TO GET EXACT HEADING
-  
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
+  delay(100);
+  getIMUData();
 }
 
 void rotateLeft(int angle) {
+  Serial.println("rotateLeft");
+  if (angle < 0 || angle >= 360) {
+    Serial.println("Angle is invalid");
+    return;
+  }
   digitalWrite(LEFT_MOTOR_DIR, 0);
   digitalWrite(RIGHT_MOTOR_DIR, 1);
   
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
-
-  float target = (cwHeading - angle);
-  if (target < 0) {
-    target = target + 360;
+  if (angle == 0) {
+    while (!(cwHeading > 1 && cwHeading < 3)) {
+      getIMUData();
+      Serial.print("Heading ");
+      Serial.println(cwHeading);
+    }
+  } else {
+    angle = angle + 2.5;
+    // Serial.print("cwHeading");
+    if (cwHeading < angle) {
+      Serial.println("cwHeading < angle");
+      while (!(cwHeading < angle && cwHeading > angle - 2.5)) {
+        getIMUData();
+        Serial.println(cwHeading);
+      }
+    } else if (cwHeading > angle) {
+      Serial.println("cwHeading > angle");
+      while (cwHeading > angle) {
+        getIMUData();
+        Serial.println(cwHeading);
+      }
+    }
   }
+  // float target = (cwHeading - angle);
+  // if (target < 0) {
+  //   target = target + 360;
+  // }
   
-  while(cwHeading > target || cwHeading < target - 3) { //DEFINITELY NEED TO TUNE THIS
-    getIMUData();
-    Serial.println(cwHeading);
-  }
-  Serial.println("Good");
+  // while(cwHeading > target || cwHeading < target - 3) { //DEFINITELY NEED TO TUNE THIS
+  //   getIMUData();
+  //   Serial.println(cwHeading);
+  // }
+  // Serial.println("Good");
   //RUN A FINE TUNE FUNCTION TO GET EXACT HEADING
   
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);  
+  delay(100);
+  getIMUData();
 }
 
 

@@ -40,7 +40,7 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  //setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -89,6 +89,7 @@ void loop() {
   // detectFlame();
   // analogWrite(fanPin, 255);
   // moveForward(10);
+  testRotateLeft();
 }
 
 void testTileDetection() {
@@ -108,6 +109,21 @@ void testRotationWithIMU() {
   Serial.println("rotateRight(0) ============================");
   rotateRight(0);
   delay(5000);  
+}
+
+void testRotateLeft() {
+  Serial.println("rotateLeft(270) ============================");
+  rotateLeft(270);
+  delay(5000);
+  Serial.println("rotateLeft(180) ============================");
+  rotateLeft(180);
+  delay(5000);
+  Serial.println("rotateLeft(90) ============================");
+  rotateLeft(90);
+  delay(5000);
+  Serial.println("rotateLeft(0) ============================");
+  rotateLeft(0);
+  delay(5000);   
 }
 
 void testIRSensor() {
