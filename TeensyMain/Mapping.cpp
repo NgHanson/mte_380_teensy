@@ -82,7 +82,7 @@ void initialScan() {
   Serial.print(distance);
   toGridOffset(cwHeading, distance, offset);
   toTileOffset(offset, tileOffset);
-  updateMap((int)tileOffset[0], (int)tileOffset[1], 'o');
+  updateMap(xTile + (int)tileOffset[0], yTile + (int)tileOffset[1], 'o');
   Serial.print(" Offset: ");
   Serial.print(offset[0]);
   Serial.print(" ");

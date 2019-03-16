@@ -22,6 +22,8 @@ extern float ccwRollFromBack;
 
 extern int xPos;
 extern int yPos;
+extern int xTile = 3;
+extern int yTile = 0;
 
 extern bool inPit;
 
