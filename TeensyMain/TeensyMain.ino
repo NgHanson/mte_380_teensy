@@ -41,7 +41,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   setUpLaserSensor();
-  //setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
