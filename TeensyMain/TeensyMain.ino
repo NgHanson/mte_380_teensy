@@ -41,7 +41,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   setUpLaserSensor();
-  setupIMU();
+  //setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -82,7 +82,7 @@ void loop() {
   //testEncoders();
   //testIRSensor();
   //testRotationWithIMU();
-  // testLaserSensor();
+  //testLaserSensor();
   // int cData[3];
   // colourRead(cData);
   // printColorValues(cData);

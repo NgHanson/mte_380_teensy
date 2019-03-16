@@ -31,8 +31,9 @@
 // No longer using hall effect...
 // #define hallPin A3
 
-#define TILE_DIST 0.3048 //m
+#define TILE_DIST_M 0.3048 //m
 
 // Math function
 #define SENSOR_NUM_SAMPLES 10
 #define TILT_TOLERANCE 15
+#define DEG_PER_RAD 57.2957795
