@@ -21,7 +21,12 @@
  */
 
 void updateMap(int x, int y, char type) {
-  levelMap[x][y] = type;
+	Serial.println("UpdateMap");
+	Serial.println(x);
+	Serial.println(y);
+	Serial.println(type);
+  levelMap[5-y][x] = type;
+  Serial.println(levelMap[y][x]);
 }
 
 double getDecimalPlaces(float number) {
@@ -30,29 +35,56 @@ double getDecimalPlaces(float number) {
   return fractpart;
 }
 
+void printMap() {
+	Serial.println();
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			Serial.print(levelMap[i][j]);
+			Serial.print(" ");
+		}
+		Serial.println();
+	}
+}
+
 void toGridOffset(float angle_deg, float distance, float offset[]) {
 	if (angle_deg >= 270 && angle_deg < 360) {
 		angle_deg = angle_deg - 270;
 	} else if (angle_deg >= 0 && angle_deg < 90) {
 		angle_deg = 90 - angle_deg;
 	}
-	offset[0] = distance*cos(angle_deg/DEG_PER_RAD);
-	offset[1] = distance*sin(angle_deg/DEG_PER_RAD);
+	offset[0] = distance*sin(angle_deg/DEG_PER_RAD);
+	offset[1] = distance*cos(angle_deg/DEG_PER_RAD);
 }
 
 void toTileOffset(float offset[], float tileOffset[]) {
 	tileOffset[0] = offset[0] / TILE_DIST_M;
 	double decimals = getDecimalPlaces(tileOffset[0]);
 	if (decimals > 0.5) {
+		Serial.println("dec at 0 greater than 0.5");
 		tileOffset[0] += 1;
 	}
 	tileOffset[1] = offset[1] / TILE_DIST_M;
 	decimals = getDecimalPlaces(tileOffset[1]);
 	if (decimals > 0.5) {
+		Serial.println("dec at 1 greater than 0.5");
 		tileOffset[1] += 1;
 	}
 }
 
+float getMinDist(int minAngle, int maxAngle, int array[]) {
+	Serial.println("getMinDist");
+	float min = 9999.0;
+	for (int curr = minAngle; curr < maxAngle; curr++) {
+		Serial.println(curr);
+		if (array[curr] < min) {
+			min = array[curr];
+		}
+		// min = (array[curr] < min) ? array[curr] : min;
+		Serial.println(min);
+	}
+	Serial.println(min);
+	return min;
+}
 // void arrayMax(int arr[]) {
 
 // }
@@ -60,20 +92,61 @@ void toTileOffset(float offset[], float tileOffset[]) {
 // We will face forward at the same location everytime
 // Assume we're starting X: 3 - Y: 0
 void initialScan() {
+  for (int i = 0; i < 360; i++) {
+    initialSweepDistances[i] = 9999;
+  }
   float distances[10];
   float offset[2];
   float tileOffset[2];
   Serial.println("Rotating 90");
-  rotateLeft(270);
+  rotateLeft(265);
   /* @ 270
    X: 0 - Y:0
    X: 1 - Y:0
    X: 2 - Y:0
    */
+  Serial.println("EAT SHIT YAAAA");
+  rotateRightWhileSweeping(180);
+  printSweepDistanceArray();
+  int angles[] = {270, 288, 297, 304, 315, 323, 326, 329, 333, 338, 342, 346, 349, 0, 11, 14, 18, 22, 27, 34, 45, 63, 90};
+  for (int i = 0; i < 23; i++) {
+  	int minAngle = angles[i] - 3;
+  	int maxAngle = angles[i] + 3;
+  	minAngle = minAngle < 0 ? 360+minAngle : minAngle;
+  	maxAngle = maxAngle > 360 ? maxAngle - 360 : maxAngle;
+  	Serial.print("minAngle: ");
+  	Serial.print(minAngle);
+  	Serial.print(" maxAngle: ");
+  	Serial.print(maxAngle);
+  	float minDist = getMinDist(minAngle, maxAngle, angles);
+  	Serial.print(" minDist: ");
+  	Serial.print(minDist);
+  	toGridOffset(angles[i], minDist, offset);
+  	toTileOffset(offset, tileOffset);
+  	updateMap(xPos + (int)tileOffset[0], yPos + (int)tileOffset[1], 'o');
+  	printMap();
+  }
   Serial.print("IMU Data: ");
   Serial.print(cwHeading);
-  float distance = getFilteredLaserDistance();
-
+  Serial.println("=======================================================");
+  // float distance1 = getFilteredLaserDistance();
+  // Serial.println("here1");
+  // rotateRight(269);
+  // float distance2 = getFilteredLaserDistance();
+  // Serial.println("here2");
+  // rotateRight(273);
+  // float distance3 = getFilteredLaserDistance();
+  // Serial.println("here3");
+  delay(10000);
+  Serial.println();
+  Serial.println("here");
+  // Serial.println(distance0);
+  // Serial.println(distance1);
+  // Serial.println(distance2);
+  // Serial.println(distance3);
+  Serial.println("eieieie");
+  delay(1000);
+  float distance = 100;
   // for (int i = 0; i < 10; i++) {
   // 	distances[i] = getLaserDistance();
   // }
@@ -82,7 +155,11 @@ void initialScan() {
   Serial.print(distance);
   toGridOffset(cwHeading, distance, offset);
   toTileOffset(offset, tileOffset);
-  updateMap(xTile + (int)tileOffset[0], yTile + (int)tileOffset[1], 'o');
+  Serial.print("xPos: ");
+  Serial.print(xPos);
+  Serial.print("yPos: ");
+  Serial.print(yPos);
+  updateMap(xPos + (int)tileOffset[0], yPos + (int)tileOffset[1], 'o');
   Serial.print(" Offset: ");
   Serial.print(offset[0]);
   Serial.print(" ");
@@ -91,6 +168,8 @@ void initialScan() {
   Serial.print(tileOffset[0]);
   Serial.print(" ");
   Serial.print(tileOffset[1]);
+  printMap();
+  Serial.print("Map ^");
   delay(5000);
   //CHANGE THIS TO A FOR LOOP OF ANGLES
   Serial.println("Rotating 18");

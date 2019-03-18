@@ -22,14 +22,16 @@ extern float ccwRollFromBack;
 
 extern int xPos;
 extern int yPos;
-extern int xTile = 3;
-extern int yTile = 0;
 
 extern bool inPit;
 
+extern float initialSweepDistances[360];
+extern float initialSweepFlameVals[360];
 //Encoders
 extern Encoder leftEncoder;
 extern Encoder rightEncoder;
 
 
 #endif
+
+void printSweepDistanceArray(void);

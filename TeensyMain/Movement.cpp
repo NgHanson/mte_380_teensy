@@ -4,7 +4,7 @@
 #include "IMU.h"
 
 #define MOVE_SPEED 200
-#define ROTATION_SPEED 70
+#define ROTATION_SPEED 60
 
 #define FORWARD_ENCODER_DIST 5000
 #define FORWARD_ENCODER_DIST_PIT 1000
@@ -78,9 +78,10 @@ void rotateRight(int angle) {
   }
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0); 
-  
+  getIMUData();
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
+  getIMUData();
   // Serial.println(angle);
   // Serial.println(cwHeading);
   if (angle == 0) {
@@ -91,14 +92,20 @@ void rotateRight(int angle) {
     }
   }
   else {
-    angle = angle - 2.5;
+    Serial.println("rotateright else");
+    // angle = angle - 2.5;
     if (cwHeading < angle) {
-
-      while(cwHeading < angle) { //DEFINITELY NEED TO TUNE THIS
+      Serial.println("cwHeading < angle");
+      getIMUData();
+      while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
         getIMUData();
-        Serial.println(cwHeading);
+        Serial.print("cwHeading: ");
+        Serial.print(cwHeading);
+        Serial.print(" angle: ");
+        Serial.println(angle);
       }
     } else if (cwHeading > angle) {
+      Serial.println("cwHeading > angle");
       while ((cwHeading - 360) < angle) {
         getIMUData();
         Serial.println(cwHeading);
