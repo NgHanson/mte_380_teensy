@@ -50,6 +50,10 @@ float getFilteredLaserDistance() {
 
 void updateRollingMin(float distance) {
 	int headingDeg = (int) round(cwHeading);
+	if (initialSweepDistances[headingDeg] != 9999) {
+		Serial.print("overwriting value at angle ");
+		Serial.println(headingDeg);
+	}
 	if (distance < initialSweepDistances[headingDeg]) {
 		initialSweepDistances[headingDeg] = distance;
 	}
@@ -82,6 +86,10 @@ void rotateRightWhileSweeping(int angle) {
     // angle = 357.5;
     while (!(cwHeading >= 0 && cwHeading < 1)) {
       getIMUData();
+              Serial.print("cwHeading: ");
+        Serial.print(cwHeading);
+        Serial.print(" angle: ");
+        Serial.println(angle);
         distance = getLaserDistance();
         updateRollingMin(distance);
       // Serial.println(cwHeading);      
@@ -95,26 +103,32 @@ void rotateRightWhileSweeping(int angle) {
       getIMUData();
       while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
         getIMUData();
-        // Serial.print("cwHeading: ");
-        // Serial.print(cwHeading);
-        // Serial.print(" angle: ");
-        // Serial.println(angle);
+        Serial.print("cwHeading: ");
+        Serial.print(cwHeading);
+        Serial.print(" angle: ");
+        Serial.println(angle);
         distance = getLaserDistance();
         updateRollingMin(distance);
         Serial.println(distance);
       }
     } else if (cwHeading > angle) {
       Serial.println("cwHeading > angle");
-      while (cwHeading < 359 && cwHeading > 10) {
+      while (cwHeading < 360 && cwHeading > 10) {
         getIMUData();
-        // Serial.println(cwHeading);
+        Serial.print("cwHeading: ");
+        Serial.print(cwHeading);
+        Serial.print(" angle: ");
+        Serial.println(angle);
         distance = getLaserDistance();
         updateRollingMin(distance);
       }
       Serial.println("eifeiefjioejfeoj");
       while (cwHeading < angle) {
         getIMUData();
-        // Serial.println(cwHeading);
+        Serial.print("cwHeading: ");
+        Serial.print(cwHeading);
+        Serial.print(" angle: ");
+        Serial.println(angle);
         distance = getLaserDistance();
         updateRollingMin(distance);
       }
