@@ -13,7 +13,7 @@ LIDARLite myLidarLite;
 
 void setUpLaserSensor() {
   myLidarLite.begin(0, true);  // Set configuration to default and I2C to 400 kHz
-  myLidarLite.configure(0); // Change this number to try out alternate configurations
+  myLidarLite.configure(1); // Change this number to try out alternate configurations
 }
 
 float getLaserDistance() {
@@ -31,7 +31,7 @@ float getLaserDistance() {
   // return 23.1 - 2.42*filteredDistance + 0.195*pow(filteredDistance, 2) - 6.66*pow(10, 3)*pow(filteredDistance, 3) + 1.11*pow(10, -4)*pow(filteredDistance, 4) - 8.97*pow(10, -7)*pow(filteredDistance, 5) + 2.76*pow(10, -9)*pow(filteredDistance, 6);
   // Need to change this from cm to m
   if (filteredDistance < 120) {
-  	return (-112+13.4*filteredDistance-0.587*pow(filteredDistance, 2) + 0.0135*pow(filteredDistance, 3) - 1.63*pow(10, -4)*pow(filteredDistance, 4) + 9.87*pow(10, -7)*pow(filteredDistance, 5) - 2.35*pow(10, -9)*pow(filteredDistance, 6)) / 100.0;	
+  	return (5+-112+13.4*filteredDistance-0.587*pow(filteredDistance, 2) + 0.0135*pow(filteredDistance, 3) - 1.63*pow(10, -4)*pow(filteredDistance, 4) + 9.87*pow(10, -7)*pow(filteredDistance, 5) - 2.35*pow(10, -9)*pow(filteredDistance, 6)) / 100.0;	
   } else {
   	return filteredDistance / 100.0;
   }
