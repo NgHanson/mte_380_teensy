@@ -6,7 +6,7 @@
 #define MOVE_SPEED 200
 #define ROTATION_SPEED 60
 
-#define FORWARD_ENCODER_DIST 5000
+#define FORWARD_ENCODER_DIST 5100
 #define FORWARD_ENCODER_DIST_PIT 1000
 
 //if we only want to move in up/down/left/right our relative angles will always be either 0, 90, 180, 270

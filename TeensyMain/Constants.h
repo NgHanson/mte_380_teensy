@@ -1,7 +1,7 @@
-#define RIGHT_ENC_2 A2
-#define RIGHT_ENC_1 A3
-#define LEFT_ENC_1 A4
-#define LEFT_ENC_2 A5
+#define RIGHT_ENC_1 A2
+#define RIGHT_ENC_2 A3
+#define LEFT_ENC_2 A4
+#define LEFT_ENC_1 A5
 
 #define LEFT_MOTOR_DIR A6
 #define LEFT_MOTOR_SPEED A7
