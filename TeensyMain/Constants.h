@@ -15,7 +15,7 @@
 #define colorOut A16
 
 #define fanPin A17
-#define flamePin A0
+#define FLAME_PIN A0
 #define IR_SENSOR A1
 
 #define LED_PIN LED_BUILTIN

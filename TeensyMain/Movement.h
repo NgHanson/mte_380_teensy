@@ -3,3 +3,4 @@ void moveForward(int);
 void rotateRight(int);
 void rotateLeft(int);
 void rotate180();
+void moveForwardTile();

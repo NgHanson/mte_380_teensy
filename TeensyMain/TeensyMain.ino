@@ -29,12 +29,6 @@ bool flameInfront;
 
 long lenHC_1, lenHC_2;
 long lenPing = 10000;
-void detectFlame() {
-  flamePresent(flamePin);
-  // Serial.println("DetectFlame: ");
-  // Serial.println(flamePresent(flamePin)); //bool to tell if flame was detected
-}
-
 
 void setup() {
   delay(1000);
@@ -47,16 +41,16 @@ void setup() {
   // calibrateIMU();
   
   Serial.begin(115200);
-
-  // timerSetup();
+  
   pinMode(LEFT_MOTOR_SPEED,OUTPUT);
   pinMode(RIGHT_MOTOR_SPEED,OUTPUT);
   pinMode(LEFT_MOTOR_DIR,OUTPUT);
   pinMode(RIGHT_MOTOR_DIR,OUTPUT);
-  pinMode(flamePin, INPUT);
+  pinMode(FLAME_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
   pinMode(IR_SENSOR, INPUT);
   
+  // timerSetup();
 }
 
 
@@ -91,7 +85,7 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
-  initialScan();
+  rowScanSequence();
   delay(50000);
 }
 
@@ -145,30 +139,6 @@ void testEncoders() {
   Serial.println();
 }
 
-// void constructionCheckLoop(){
-
-//   moveForward(100);
-//   moveForward(-100);
-  
-//   while(!detectedFlame) {
-//     detectFlame();
-//   }
-//   detectedFlame = false;
-
-//   rotateRight(90);
-//   rotateLeft(90);
-
-//   while(lenPing > 10) {
-//     ultrasonicPulse();
-//   }
-//   lenPing = 10000;
-
-//   rotateRight(90);
-//   rotateLeft(90);
-
-//   delay(5000);
-// }
-
 int determinePriority() {
 
   if (!flameDetected){
@@ -209,8 +179,4 @@ void signalComplete(){
   delay(1000);
   digitalWrite(LED_PIN, LOW);
   delay(1000);
-  Serial.println("LED pin not chosen yet...");
-  // digitalWrite(ledPin, HIGH);
-  // delay(1000);
-  // digitalWrite(ledPin, LOW);
 }

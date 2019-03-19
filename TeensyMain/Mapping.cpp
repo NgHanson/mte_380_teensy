@@ -4,6 +4,7 @@
 #include "Movement.h"
 #include "IMU.h"
 #include "LaserSensor.h"
+#include "FlameSensor.h"
 
 #include <math.h>       /* modf */
 
@@ -362,4 +363,64 @@ float lidarToWallDist(int x, int y) {
   getIMUData();
 
   
+}
+
+// ------------------------- NEW SCAN METHOD STUFF -------------------------------------- //
+float getMinDistance() {
+  float min = 9999.0;
+
+  int toCheck[] = {358, 359, 0, 1, 2};
+
+  for (int i = 0; i < 5; i++) {
+    if (initialSweepDistances[toCheck[i]] < min) {
+      min = initialSweepDistances[toCheck[i]];
+    }
+  }
+  return min;
+}
+
+void verticalScan(int colNum) {
+  float minDist = getMinDistance();
+  
+  //WE FOUND AN OBJECT
+  if (minDist < TILE_DIST_M * 6) {
+    
+    int tileLocation = minDist/TILE_DIST_M;
+    double decimals = getDecimalPlaces(minDist);
+    if (decimals >= 0.4) {
+      tileLocation++;
+    }
+    
+    /*
+    if (flamePresent()) {
+      updateMap(colNum, tileLocation,'c');
+    } else {
+      updateMap(colNum, tileLocation,'o');
+    }*/
+    updateMap(colNum, tileLocation,'o');
+  }
+}
+
+//ASSUME WE ARE AT col 3, row 0 and the entire row 0 is flat
+void rowScanSequence() {
+
+  rotateRight(90);
+  for (int i = 0; i < 2; i++) {
+    moveForwardTile();
+  }
+  //GET TO col 0, row 0
+  rotateLeft(357);// GET CLOSE ENOUGH TO 0
+  rotateRightWhileSweeping(3);
+  //SCAN
+  verticalScan(5);
+  rotateLeft(270);
+  for (int j = 4; j >= 0; j--) {
+      moveForwardTile();
+      rotateRight(357);// GET CLOSE ENOUGH TO 0
+      rotateRightWhileSweeping(3); //GET sweep value of 4 degrees
+      verticalScan(j);
+      rotateLeft(270);
+  }
+  //ALL COLUMNS SHOULD BE SCANNED AT THIS POINT
+  printMap();
 }

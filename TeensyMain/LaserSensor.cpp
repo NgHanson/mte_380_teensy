@@ -48,6 +48,8 @@ float getFilteredLaserDistance() {
   // return filteredMean(distances);
 }
 
+
+
 void updateRollingMin(float distance) {
 	int headingDeg = (int) round(cwHeading);
 	if (initialSweepDistances[headingDeg] != 9999) {
