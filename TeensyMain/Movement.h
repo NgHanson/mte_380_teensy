@@ -1,4 +1,6 @@
 #include <Arduino.h>
 void moveForward(int);
-void rotateCW (int);
-void rotateCCW(int);
+void rotateRight(int);
+void rotateLeft(int);
+void rotate180();
+void moveForwardTile(void);

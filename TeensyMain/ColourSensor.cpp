@@ -1,9 +1,5 @@
 #include "ColourSensor.h"
-#define colorS0 A12
-#define colorS1 A13
-#define colorS2 A14
-#define colorS3 A15
-#define colorOut A16
+#include "Constants.h"
 
 void colourSetup() {
   pinMode(colorS0, OUTPUT);
@@ -16,6 +12,30 @@ void colourSetup() {
   digitalWrite(colorS0,HIGH);
   digitalWrite(colorS1,LOW);
 
+}
+
+void printColorValues(int cData[]) {
+  Serial.print("Red= ");
+  Serial.print(cData[0]);
+  Serial.print("  ");
+  Serial.print("G= ");
+  Serial.print(cData[1]);
+  Serial.print("  ");
+  Serial.print("B= ");
+  Serial.print(cData[2]);
+  Serial.println("  ");
+}
+
+void printColourDistribution(float r_val, float g_val, float b_val) {
+  float colMagAvg = sqrt(pow(r_val, 2) + pow(g_val, 2) + pow(b_val, 2));
+  Serial.print("R/Mag: ");
+  Serial.print(r_val/colMagAvg);
+  Serial.print(" G/Mag: ");
+  Serial.print(g_val/colMagAvg);
+  Serial.print(" B/Mag: ");
+  Serial.print(b_val/colMagAvg);
+  Serial.print(" Mag: ");
+  Serial.print(colMagAvg);  
 }
 
 void colourRead(int cData[]) {
@@ -34,21 +54,12 @@ void colourRead(int cData[]) {
   digitalWrite(colorS2,LOW);
   digitalWrite(colorS3,HIGH);
   cData[2] = pulseIn(colorOut, LOW); //blue
- 
+  // printColourValues(cData);
+  // return cData;
    /* 
   will need to do some comparison checking if freqColor is in some range to see if lego was found
   i.e: if( (freqRed > X || freqRed < Y) && etc etc) ) for a specific color.
   */
 }
 
-void printColourValues(int cData[]) {
-  Serial.print("Red= ");
-  Serial.print(cData[0]);
-  Serial.print("  ");
-  Serial.print("G= ");
-  Serial.print(cData[1]);
-  Serial.print("  ");
-  Serial.print("B= ");
-  Serial.print(cData[2]);
-  Serial.println("  ");
-}
+

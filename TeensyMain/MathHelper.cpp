@@ -1,9 +1,9 @@
 #include "MathHelper.h"
-#define US_ARR_LEN 10
+#include "Constants.h"
 
 float calculateAdjustedMean(float data[], float mean, float stdDev) {
   float sum = 0.0, count = 0.0;
-  for (int i = 0; i < US_ARR_LEN; ++i) {
+  for (int i = 0; i < SENSOR_NUM_SAMPLES; ++i) {
     if (data[i] >= mean - stdDev && data[i] <= mean + stdDev) {
       sum += data[i];
       count += 1.0;
@@ -13,16 +13,16 @@ float calculateAdjustedMean(float data[], float mean, float stdDev) {
 }
 float calculateMean(float data[]) {
     float sum = 0.0;
-    for(int i = 0; i < US_ARR_LEN; ++i) {
+    for(int i = 0; i < SENSOR_NUM_SAMPLES; ++i) {
         sum += data[i];
     }
-    return sum/US_ARR_LEN;
+    return sum/SENSOR_NUM_SAMPLES;
 }
 float calculateSD(float data[], float mean) {
     float standardDeviation = 0.0;
-    for(int i = 0; i < US_ARR_LEN; ++i)
+    for(int i = 0; i < SENSOR_NUM_SAMPLES; ++i)
         standardDeviation += pow(data[i] - mean, 2);
-    return sqrt(standardDeviation/US_ARR_LEN);
+    return sqrt(standardDeviation/SENSOR_NUM_SAMPLES);
 }
 float filteredMean(float data[]){
   float mean = calculateMean(data);

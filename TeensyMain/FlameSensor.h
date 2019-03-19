@@ -1,2 +1,2 @@
 #include <Arduino.h>
-bool flameDetected(const int);
+bool flamePresent();
