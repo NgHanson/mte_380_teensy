@@ -380,16 +380,29 @@ float getMinDistance() {
 }
 
 void verticalScan(int colNum) {
+  float offset[2];
+  int tileOffset[2];
   float minDist = getMinDistance();
-  
+  Serial.print("mindist: ");
+  Serial.println(minDist);
+  offset[0] = minDist;
+  offset[1] = 0;
   //WE FOUND AN OBJECT
   if (minDist < TILE_DIST_M * 6) {
-    
-    int tileLocation = minDist/TILE_DIST_M;
-    double decimals = getDecimalPlaces(minDist);
-    if (decimals >= 0.4) {
-      tileLocation++;
-    }
+  	toTileOffset(offset, tileOffset);
+  	Serial.print("Offset x: ");
+  	Serial.print(offset[1]);
+  	Serial.print("Offset y: ");
+  	Serial.println(offset[0]);
+  	Serial.print("tileOffset x: ");
+  	Serial.print(tileOffset[1]);
+  	Serial.print("tileOffset y");
+  	Serial.println(tileOffset[0]);
+    // int tileLocation = minDist/TILE_DIST_M;
+    // double decimals = getDecimalPlaces(minDist);
+    // if (decimals >= 0.4) {
+    //   tileLocation++;
+    // }
     
     /*
     if (flamePresent()) {
@@ -397,24 +410,37 @@ void verticalScan(int colNum) {
     } else {
       updateMap(colNum, tileLocation,'o');
     }*/
-    updateMap(colNum, tileLocation,'o');
+    updateMap(colNum, tileOffset[0],'o');
   }
 }
 
 //ASSUME WE ARE AT col 3, row 0 and the entire row 0 is flat
 void rowScanSequence() {
-
+  for (int i = 0; i < 360; i++) {
+    initialSweepDistances[i] = 9999;
+  }
   rotateRight(90);
   for (int i = 0; i < 2; i++) {
     moveForwardTile();
   }
+  Serial.println("moved fwd 2 tiles");
   //GET TO col 0, row 0
-  rotateLeft(357);// GET CLOSE ENOUGH TO 0
+  rotateLeft(356);// GET CLOSE ENOUGH TO 0
+  Serial.println("rotateleft 357");
   rotateRightWhileSweeping(3);
+  Serial.println("rotaterightwhilesleeping");
+  for (int i = 0; i < 360; i++) {
+    initialSweepDistances[i] = 9999;
+  }
   //SCAN
   verticalScan(5);
+  Serial.println("verticalscan");
   rotateLeft(270);
+  Serial.println("rotateleft 270");
   for (int j = 4; j >= 0; j--) {
+			  for (int i = 0; i < 360; i++) {
+			    initialSweepDistances[i] = 9999;
+			  }  	
       moveForwardTile();
       rotateRight(357);// GET CLOSE ENOUGH TO 0
       rotateRightWhileSweeping(3); //GET sweep value of 4 degrees
