@@ -3,7 +3,7 @@
 #include "Constants.h"
 #include "IMU.h"
 
-#define MOVE_SPEED 200
+#define MOVE_SPEED 130
 #define ROTATION_SPEED 60
 
 #define FORWARD_ENCODER_DIST 5100
@@ -33,24 +33,25 @@ void moveForward(int dist) {
 }
 
 void moveForwardTile() {
+  Serial.println("here");
   leftEncoder.write(0);
   rightEncoder.write(0);
-  
+  Serial.println("done writing encoders");
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 1);
-
+  Serial.println("wrote/ firection");
   analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
-
+  Serial.println("wrote speed");
   int encoder_dist = FORWARD_ENCODER_DIST;
-  if (inPit) { //MIGHT NEED TO START DIFFERENTIATING MOVEMENT BETWEEN SAND, PITS, and ROCKS
-    encoder_dist = FORWARD_ENCODER_DIST_PIT;
-    //GET OUT OF PIT FIRST
-    while(inPit){
+  // if (inPit) { //MIGHT NEED TO START DIFFERENTIATING MOVEMENT BETWEEN SAND, PITS, and ROCKS
+  //   encoder_dist = FORWARD_ENCODER_DIST_PIT;
+  //   //GET OUT OF PIT FIRST
+  //   while(inPit){
       
-    }
+  //   }
     
-  }
+  // }
 
   int avgEncoderVal = 0;
   while(avgEncoderVal < encoder_dist) {
@@ -58,6 +59,12 @@ void moveForwardTile() {
       inPit = true;
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
+    Serial.print("leftEncoder: ");
+    Serial.print(leftEncoder.read());
+    Serial.print(" rightEncoder: ");
+    Serial.println(rightEncoder.read());
+    // delay(200);
+    // Serial.println(avgEncoderVal);
   }
 
 

@@ -86,6 +86,8 @@ void loop() {
   // moveForward(10);
   //testRotateLeft();
   rowScanSequence();
+  //rotateRight(355);
+  //initialScan();
   delay(50000);
 }
 
