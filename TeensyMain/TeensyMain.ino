@@ -34,8 +34,8 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  setUpLaserSensor();
-  setupIMU();
+  //setUpLaserSensor();
+  //setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -85,10 +85,19 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
-  rowScanSequence();
+  //rowScanSequence();
   //rotateRight(355);
   //initialScan();
-  delay(50000);
+  //delay(50000);
+
+  /*
+  Serial.print("RUNNING");
+  rotateRight(90);
+  delay(1000);
+  rotateLeft(0);
+  delay(1000);
+  */
+  moveForward(100);
 }
 
 void testTileDetection() {

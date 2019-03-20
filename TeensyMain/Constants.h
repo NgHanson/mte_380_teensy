@@ -3,10 +3,10 @@
 #define LEFT_ENC_2 A4
 #define LEFT_ENC_1 A5
 
-#define LEFT_MOTOR_DIR A6
-#define LEFT_MOTOR_SPEED A7
-#define RIGHT_MOTOR_DIR A8
-#define RIGHT_MOTOR_SPEED A9
+#define RIGHT_MOTOR_DIR A6
+#define RIGHT_MOTOR_SPEED A7
+#define LEFT_MOTOR_DIR A8
+#define LEFT_MOTOR_SPEED A9
 
 #define colorS1 A12
 #define colorS0 A13

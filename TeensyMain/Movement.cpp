@@ -4,7 +4,9 @@
 #include "IMU.h"
 
 #define MOVE_SPEED 130
-#define ROTATION_SPEED 60
+#define LEFT_MOVE_SPEED 135
+#define RIGHT_MOVE_SPEED 130
+#define ROTATION_SPEED 115
 
 #define FORWARD_ENCODER_DIST 5100
 #define FORWARD_ENCODER_DIST_PIT 1000
@@ -16,15 +18,15 @@
 //DEPRECATE THIS
 void moveForward(int dist) {
   if (dist < 0) {
-    digitalWrite(LEFT_MOTOR_DIR, 0);
-    digitalWrite(RIGHT_MOTOR_DIR, 0);  
-  } else if (dist > 0) {
     digitalWrite(LEFT_MOTOR_DIR, 1);
-    digitalWrite(RIGHT_MOTOR_DIR, 1);
+    digitalWrite(RIGHT_MOTOR_DIR, 1);  
+  } else if (dist > 0) {
+    digitalWrite(LEFT_MOTOR_DIR, 0);
+    digitalWrite(RIGHT_MOTOR_DIR, 0);
   }
   
-  analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
-  analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
+  analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEED);
 
   delay(1000); //Change these to motor encoder counts
   analogWrite(LEFT_MOTOR_SPEED, 0);
@@ -37,21 +39,13 @@ void moveForwardTile() {
   leftEncoder.write(0);
   rightEncoder.write(0);
   Serial.println("done writing encoders");
-  digitalWrite(LEFT_MOTOR_DIR, 1);
-  digitalWrite(RIGHT_MOTOR_DIR, 1);
+  digitalWrite(LEFT_MOTOR_DIR, 0);
+  digitalWrite(RIGHT_MOTOR_DIR, 0);
   Serial.println("wrote/ firection");
   analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
   Serial.println("wrote speed");
   int encoder_dist = FORWARD_ENCODER_DIST;
-  // if (inPit) { //MIGHT NEED TO START DIFFERENTIATING MOVEMENT BETWEEN SAND, PITS, and ROCKS
-  //   encoder_dist = FORWARD_ENCODER_DIST_PIT;
-  //   //GET OUT OF PIT FIRST
-  //   while(inPit){
-      
-  //   }
-    
-  // }
 
   int avgEncoderVal = 0;
   while(avgEncoderVal < encoder_dist) {
@@ -83,8 +77,8 @@ void rotateRight(int angle) {
     Serial.println("Angle is invalid");
     return;
   }
-  digitalWrite(LEFT_MOTOR_DIR, 1);
-  digitalWrite(RIGHT_MOTOR_DIR, 0); 
+  digitalWrite(LEFT_MOTOR_DIR, 0);
+  digitalWrite(RIGHT_MOTOR_DIR, 1); 
   getIMUData();
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
@@ -131,8 +125,8 @@ void rotateLeft(int angle) {
     Serial.println("Angle is invalid");
     return;
   }
-  digitalWrite(LEFT_MOTOR_DIR, 0);
-  digitalWrite(RIGHT_MOTOR_DIR, 1);
+  digitalWrite(LEFT_MOTOR_DIR, 1);
+  digitalWrite(RIGHT_MOTOR_DIR, 0);
   
   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
