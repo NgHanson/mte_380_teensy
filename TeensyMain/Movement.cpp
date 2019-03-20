@@ -34,6 +34,18 @@ void moveForward(int dist) {
   delay(1000);
 }
 
+void moveForwardForever() {
+  digitalWrite(LEFT_MOTOR_DIR, 0);
+  digitalWrite(RIGHT_MOTOR_DIR, 0);
+  analogWrite(LEFT_MOTOR_SPEED, MOVE_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, MOVE_SPEED);
+}
+
+void stopMotors() {
+  analogWrite(LEFT_MOTOR_SPEED, 0);
+  analogWrite(RIGHT_MOTOR_SPEED, 0);
+}
+
 void moveForwardTile() {
   Serial.println("here");
   leftEncoder.write(0);

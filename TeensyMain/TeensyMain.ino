@@ -70,7 +70,6 @@ void timerSetup() {
 
 
 void loop() {
-  // debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
@@ -98,6 +97,12 @@ void loop() {
   delay(1000);
   */
   moveForward(100);
+  // rowScanSequence();
+  //rotateRight(355);
+  //initialScan();
+  // delay(50000);
+  // initialScan();
+  // delay(1000);
 }
 
 void testTileDetection() {

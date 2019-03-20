@@ -7,7 +7,7 @@
 #include <utility/imumaths.h>
 
 #define MIN_GARBAGE_THRESH 1000
-#define MIN_MAGNET_THRESH 250
+#define MIN_MAGNET_THRESH 110
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 float calibXAngle = 0;
