@@ -5,4 +5,4 @@ void rotateLeft(int);
 void rotate180();
 void moveForwardTile(void);
 void stopMotors(void);
-void moveForwardForever(void);
+void moveForwardForever(float, int);

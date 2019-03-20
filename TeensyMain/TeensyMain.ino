@@ -35,7 +35,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   //setUpLaserSensor();
-  //setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -49,6 +49,7 @@ void setup() {
   pinMode(FLAME_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
   pinMode(IR_SENSOR, INPUT);
+  pinMode(fanPin, OUTPUT);
   
   // timerSetup();
 }
@@ -96,7 +97,30 @@ void loop() {
   rotateLeft(0);
   delay(1000);
   */
-  moveForward(100);
+  // moveForwardTile();
+  // Serial.println("digitalwrite...");
+  // digitalWrite(fanPin, 1);
+  // delay(5000);
+  // digitalWrite(fanPin, 0);
+  // delay(5000);
+  Serial.println("Moving idx 0");
+  moveForwardForever(0, 0);  
+  delay(1000);
+  Serial.println("Moving idx 1");
+  moveForwardForever(0, 1);  
+  delay(1000);
+  Serial.println("Moving idx 2");
+  moveForwardForever(0, 2);  
+  delay(1000);
+  Serial.println("Moving idx 3");
+  moveForwardForever(0, 3);  
+  delay(1000);
+  Serial.println("Moving idx 4");
+  moveForwardForever(0, 4);  
+  delay(1000);
+  Serial.println("Moving idx 5");
+  moveForwardForever(0, 5);  
+  delay(1000);
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
