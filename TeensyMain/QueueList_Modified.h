@@ -3,7 +3,6 @@ Modified version of QueueList.h to allow for private variable access to a child 
 Edits by Collin Dietz
 Email: c4dietz@gmail.com
 Original header is below 
-
 edits:
 moved head, tail, and size to protected
 */
@@ -58,6 +57,8 @@ moved head, tail, and size to protected
 // include Arduino basic header.
 #include <Arduino.h>
 
+#include "TilePath.h"
+
 // the definition of the queue class.
 template<typename T>
 class QueueList {
@@ -90,6 +91,10 @@ class QueueList {
     typedef struct node {
       T item;      // the item in the node.
       node * next; // the next node in the list.
+
+      node(){
+        
+      }
     } node;
 
     typedef node * link; // synonym for pointer to a node.

@@ -10,8 +10,19 @@ bool lostDone = false;
 bool detectedFlame = false;
 bool magnetDetected = false;
 
+/*
+ u - unknown (default)
+ v - visited -> do we want to differentiate visited to water, sand, gravel, and normal tiles?
+ o - object location (not sure which object though)
+ c - candle
+ m - magnet
+ h - house
+ s - survivor
+ */
+
 // Global map/position/orientation
-char levelMap[6][6] = {{'u', 'u', 'u', 'u', 'u', 'u'},
+char levelMap[6][6] = {
+{'u', 'u', 'u', 'u', 'u', 'u'},
 {'u', 'u', 'u', 'u', 'u', 'u'},
 {'u', 'u', 'u', 'u', 'u', 'u'},
 {'u', 'u', 'u', 'u', 'u', 'u'},

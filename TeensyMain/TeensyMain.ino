@@ -18,6 +18,8 @@
 #include "IMU.h"
 #include "Mapping.h"
 
+#include "PathFinding.h"
+
 //Timer
 //IntervalTimer flameTimer;
 
@@ -99,9 +101,9 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
-  // delay(50000);
-  // initialScan();
-  // delay(1000);
+  Serial.println("START SHORTEST PATH");
+  shortestPath(3,3);
+  delay(50000);
 }
 
 void testTileDetection() {
