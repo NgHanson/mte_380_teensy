@@ -27,13 +27,16 @@ int yPos = 0;
 
 bool inPit = false;
 
-float initialSweepDistances[360];
+float initialSweepDistances[5000][2];
+int curr_sweep_meas_idx = 0;
 float initialSweepFlameVals[360];
 
 void printSweepDistanceArray() {
-  for (int i = 0; i < 360; i++) {
-  	Serial.print(initialSweepDistances[i]);
+	Serial.println("printSweepDistanceArray");
+  for (int i = 0; i < 500; i++) {
+  	Serial.print(initialSweepDistances[i][0]);
   	Serial.print(" ");
+  	Serial.println(initialSweepDistances[i][1]);
   }
   Serial.println();
 }

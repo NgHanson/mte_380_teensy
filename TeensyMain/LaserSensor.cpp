@@ -31,13 +31,19 @@ float getLaserDistance() {
   // return 23.1 - 2.42*filteredDistance + 0.195*pow(filteredDistance, 2) - 6.66*pow(10, 3)*pow(filteredDistance, 3) + 1.11*pow(10, -4)*pow(filteredDistance, 4) - 8.97*pow(10, -7)*pow(filteredDistance, 5) + 2.76*pow(10, -9)*pow(filteredDistance, 6);
   // Need to change this from cm to m
   if (filteredDistance < 120) {
+  	// return filteredDistance / 100.0; 
   	return (5+-112+13.4*filteredDistance-0.587*pow(filteredDistance, 2) + 0.0135*pow(filteredDistance, 3) - 1.63*pow(10, -4)*pow(filteredDistance, 4) + 9.87*pow(10, -7)*pow(filteredDistance, 5) - 2.35*pow(10, -9)*pow(filteredDistance, 6)) / 100.0;	
+  	// return (5+-112+13.4*filteredDistance-0.587*pow(filteredDistance, 2) + 0.0135*pow(filteredDistance, 3) - 1.63*pow(10, -4)*pow(filteredDistance, 4) + 9.87*pow(10, -7)*pow(filteredDistance, 5) - 2.35*pow(10, -9)*pow(filteredDistance, 6)) / 100.0;	
   } else {
   	return filteredDistance / 100.0;
   }
   
   // return 1.01*filteredDistance - 15.6;
 }
+
+float getRawLaserDistance() {
+	return getLaserDistance();
+} 
 
 float getFilteredLaserDistance() {
   float distances[10];
@@ -51,14 +57,9 @@ float getFilteredLaserDistance() {
 
 
 void updateRollingMin(float distance) {
-	int headingDeg = (int) round(cwHeading);
-	if (initialSweepDistances[headingDeg] != 9999) {
-		Serial.print("overwriting value at angle ");
-		Serial.println(headingDeg);
-	}
-	if (distance < initialSweepDistances[headingDeg]) {
-		initialSweepDistances[headingDeg] = distance;
-	}
+	initialSweepDistances[curr_sweep_meas_idx][0] = cwHeading;
+	initialSweepDistances[curr_sweep_meas_idx][1] = distance;
+	curr_sweep_meas_idx += 1;
 }
 // float minDist = 99999;
 // void updateRollingMin(float meas) {
@@ -92,7 +93,7 @@ void rotateRightWhileSweeping(int angle) {
         Serial.print(cwHeading);
         Serial.print(" angle: ");
         Serial.println(angle);
-        distance = getLaserDistance();
+        distance = getRawLaserDistance();
         updateRollingMin(distance);
       // Serial.println(cwHeading);      
     }
@@ -109,7 +110,7 @@ void rotateRightWhileSweeping(int angle) {
         Serial.print(cwHeading);
         Serial.print(" angle: ");
         Serial.println(angle);
-        distance = getLaserDistance();
+        distance = getRawLaserDistance();
         updateRollingMin(distance);
         Serial.println(distance);
       }
@@ -121,7 +122,7 @@ void rotateRightWhileSweeping(int angle) {
         Serial.print(cwHeading);
         Serial.print(" angle: ");
         Serial.println(angle);
-        distance = getLaserDistance();
+        distance = getRawLaserDistance();
         updateRollingMin(distance);
       }
       Serial.println("eifeiefjioejfeoj");
@@ -131,7 +132,7 @@ void rotateRightWhileSweeping(int angle) {
         Serial.print(cwHeading);
         Serial.print(" angle: ");
         Serial.println(angle);
-        distance = getLaserDistance();
+        distance = getRawLaserDistance();
         updateRollingMin(distance);
       }
     }    

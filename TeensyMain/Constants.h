@@ -34,6 +34,6 @@
 #define TILE_DIST_M 0.3048 //m
 
 // Math function
-#define SENSOR_NUM_SAMPLES 10
+#define SENSOR_NUM_SAMPLES 5
 #define TILT_TOLERANCE 15
 #define DEG_PER_RAD 57.2957795

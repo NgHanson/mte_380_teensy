@@ -70,7 +70,7 @@ void timerSetup() {
 
 
 void loop() {
-  // debugIMUData();
+  debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
@@ -85,10 +85,22 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
-  rowScanSequence();
+  // rowScanSequence();
+  // Serial.println(getLaserDistance()*100);
+
+  // TESTING TIMINGS =================================================
+  // unsigned long time = millis();
+  // getIMUData();
+  // Serial.print("Time required for IMU: ");
+  // Serial.print(millis() - time);
+  // time = millis();
+  // getLaserDistance();
+  // Serial.print(" Time required for laserDistance: ");
+  // Serial.println(millis() - time);
+  // =================================================================
   //rotateRight(355);
-  //initialScan();
-  delay(50000);
+  // initialScan();
+  delay(1000);
 }
 
 void testTileDetection() {

@@ -1,6 +1,5 @@
 // Jessens wheel changes make the rock worse.  Keep this in mind for later
 #include "Encoder.h"
-
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
@@ -25,7 +24,8 @@ extern int yPos;
 
 extern bool inPit;
 
-extern float initialSweepDistances[360];
+extern float initialSweepDistances[5000][2];
+extern int curr_sweep_meas_idx;
 extern float initialSweepFlameVals[360];
 //Encoders
 extern Encoder leftEncoder;
