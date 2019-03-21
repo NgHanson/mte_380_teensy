@@ -1,8 +1,12 @@
 #include "Globals.h"
 #include "Constants.h"
 
+#include "Coordinate.h"
+
 bool flameDetected = false;
 bool flameDone = false;
+Coordinate flameTile;
+
 bool survivorsDetected = false;
 bool foodDelivered = false;
 bool lostDetected = false;

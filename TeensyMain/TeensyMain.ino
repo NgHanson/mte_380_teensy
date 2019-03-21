@@ -101,8 +101,9 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
-  Serial.println("START SHORTEST PATH");
-  shortestPath(1,5);
+  Coordinate newObject(1, 5, 'o');
+  flameTile = newObject;
+  shortestPath(flameTile);
   delay(50000);
 }
 
@@ -185,10 +186,6 @@ int determinePriority() {
   }
 
   return 8; // Return home
-}
-
-void goToLocation() {
-
 }
 
 void signalComplete(){

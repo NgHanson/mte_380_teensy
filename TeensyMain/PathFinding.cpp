@@ -113,7 +113,9 @@ void printCoord(Coordinate curr) {
   Serial.println();
 }
 
-void shortestPath(int objectiveX, int objectiveY) {
+void shortestPath(Coordinate objective) {
+  int objectiveX = objective.x;
+  int objectiveY = objective.y;
   // --- SETUP STEPS --- //
   int minCost[6][6][4];
   for (int i = 0; i < 6; i++) {
