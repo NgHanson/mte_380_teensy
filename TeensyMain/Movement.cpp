@@ -96,7 +96,7 @@ void moveForwardTile() {
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
 //The casting stuff for the rotations are wack ...
 // Takes in number from 0-360 with +ve cw
-void rotateRight(int angle, int rotation_speed) {
+void rotateRight(int angle) {
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
     return;
@@ -104,8 +104,8 @@ void rotateRight(int angle, int rotation_speed) {
   digitalWrite(LEFT_MOTOR_DIR, 0);
   digitalWrite(RIGHT_MOTOR_DIR, 1); 
   getIMUData();
-  analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
-  analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);
+  analogWrite(LEFT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   getIMUData();
   if (angle == 0) {
     // angle = 357.5;
@@ -143,7 +143,7 @@ void rotateRight(int angle, int rotation_speed) {
 
 
 // Takes in number from 0-360, with +ve cw (turning left 90 deg from 0 would be rotateLeft(270))
-void rotateLeft(int angle, int rotation_speed) {
+void rotateLeft(int angle) {
   Serial.println("rotateLeft");
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
@@ -152,8 +152,8 @@ void rotateLeft(int angle, int rotation_speed) {
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0);
   
-  analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
-  analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);
+  analogWrite(LEFT_MOTOR_SPEED, LEFT_ROTATION_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, LEFT_ROTATION_SPEED);
   if (angle == 0) {
     while (!(cwHeading > 1 && cwHeading < 3)) {
       getIMUData();
