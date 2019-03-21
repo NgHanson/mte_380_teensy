@@ -5,9 +5,7 @@
 #include "Globals.h"
 #include "MathHelper.h"
 
-const int ELEMENT_COUNT_MAX = 5;
-
-int const MAX_VALUE = 999;
+int const MAX_COST_VALUE = 999;
 
 const char validDir[] = {'u', 'd', 'r', 'l'};
 
@@ -129,7 +127,7 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
   for (int i = 0; i < 6; i++) {
     for (int j = 0; j < 6; j++) {
       for (int k = 0; k < 4; k++) {
-        minCost[i][j][k] = MAX_VALUE;
+        minCost[i][j][k] = MAX_COST_VALUE;
       }
     }
   }
@@ -236,10 +234,8 @@ int getPath(int pathResult[], Coordinate objectiveTile) {
   2 - rotate 90
   3 - rotate 180
   4 - rotate 270
-  -1 - end
   */
 
-  // TODO: ADJUST BASED ON OUR FINAL COORDINATE SYSTEM
   for (int i = 0; i <= pathSize; i++) {
     char start = coordResult[i].dir;
     char next = coordResult[i+1].dir;

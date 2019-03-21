@@ -1,4 +1,3 @@
-// Jessens wheel changes make the rock worse.  Keep this in mind for later
 #include "Encoder.h"
 #include "Coordinate.h"
 
