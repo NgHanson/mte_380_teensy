@@ -37,7 +37,7 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  //setUpLaserSensor();
+  // setUpLaserSensor();
   setupIMU();
   // delay(1000);
   // getIMUData();
@@ -189,11 +189,9 @@ void executeMovementInstructions(int movements[], int numMoves) {
     int movement = movements[i];
 
     if (movement == 0) {
-      Serial.println("MOVE FORWARD");
       moveForwardTile();
 
     } else if (movement == 1) {
-      Serial.println("ROTATE TO 0");
       if (shouldTurnLeft(cwHeading, 0.0)) {
         rotateLeft(0);
       } else {
@@ -201,27 +199,27 @@ void executeMovementInstructions(int movements[], int numMoves) {
       }
       
     } else if (movement == 2) {
-      Serial.println("ROTATE TO 90");
       if (shouldTurnLeft(cwHeading, 90.0)) {
         rotateLeft(90);
       } else {
         rotateRight(90);
       }
 
-    } else if (movement == 3) {
-      Serial.println("ROTATE TO 180");
+    } else if (movement == 3) {;
       if (shouldTurnLeft(cwHeading, 180.0)) {
         rotateLeft(180);
       } else {
         rotateRight(180);
       }
+
     } else if (movement == 4) {
-      Serial.println("ROTATE TO 270");
       if (shouldTurnLeft(cwHeading, 270.0)) {
         rotateLeft(270);
       } else {
         rotateRight(270);
       }
+    } else {
+      //SHOULD SIGNAL SOMETHING
     }
 
   }
@@ -246,15 +244,6 @@ void lookForMagnet() {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
     executeMovementInstructions(results, numMoves);
-    Serial.println("ARRIVE ON TOP OF LOCATION");
-    Serial.println("CHECK NEXT LOCATION");
-    Serial.println();
-    Serial.println();
-  }
-
-  Serial.println("WENT TO 3 MAGNET TILE LOCATIONS");
-  while(true) {
-    
   }
 }
 
