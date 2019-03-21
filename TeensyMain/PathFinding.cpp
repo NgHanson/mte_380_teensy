@@ -4,6 +4,7 @@
 #include "PriorityQueue.h"
 #include "Globals.h"
 #include "MathHelper.h"
+#include "Movement.h"
 
 int const MAX_COST_VALUE = 999;
 
@@ -76,22 +77,6 @@ bool validLocation(int x, int y, char objectiveTileType) {
     char tileType = levelMap[y][x];
     return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
           (tileType == 'u' || tileType == 'r' || tileType == objectiveTileType));
-}
-
-char convertHeadingToCharDirection(float heading) {
-  //PROBABLY SHOULDNT ROUND TO NEARIST 90
-  if ((345.0 <= heading && heading < 360.0) || (heading >= 0.0 && heading <= 15.0)) {
-    return 'u';
-  } else if (heading >= 75.0 && heading <= 105.0) {
-    return 'r';
-  } else if (heading >= 165.0 && heading <= 195.0) {
-    return 'd';
-  } else if (heading >= 255.0 && heading <= 285.0) {
-    return 'l';
-  } else { // CURRENTLY HEADING IS COMPLETELY OFF FROM a 90 deg
-    Serial.print("WRONG");
-    return '-'; //SHOULD PROB THROW ERR OR PERFORM RE ALIGN 
-  }
 }
 
 int dirValue(char c) {
