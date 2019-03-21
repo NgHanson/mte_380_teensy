@@ -101,14 +101,11 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
-  Coordinate newObject(1, 5, 'o');
+  Coordinate newObject(0, 4, 'o');
   flameTile = newObject;
-  int results[60];
-  getPath(results, flameTile);
-  for (int i = 0; i < 60; i++) {
-    if (results[i] == -1) {
-      break;
-    }
+  int results[MAX_PATH_FINDING_SIZE];
+  int numMoves = getPath(results, flameTile);
+  for (int i = 0; i < numMoves; i++) {
 
     int movement = results[i];
 
@@ -131,9 +128,9 @@ void loop() {
     } else if (movement == 4) {
       Serial.println("ROTATE TO 270");
     }
-    Serial.println("ARRIVE ON TOP OF LOCATION");
-  }
 
+  }
+  Serial.println("ARRIVE ON TOP OF LOCATION");
   while(true) {
 
   }

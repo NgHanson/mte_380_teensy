@@ -32,7 +32,7 @@ bool magnetDetected = false;
            down
             ^
             |
-right < _ _ |_ _ > left
+ left < _ _ |_ _ > right
             |
             |
             v
@@ -40,23 +40,61 @@ right < _ _ |_ _ > left
    */
 
 // Global map/position/orientation
+
+// -- GRID 1 -- //
 char levelMap[6][6] = {          //  y
-  {'u', 'u', 'r', 'p', 'u', 'u'},//  0
-  {'u', 'g', 'u', 'u', 's', 'u'},//  1
-  {'p', 'u', 'u', 'u', 'u', 'u'},//  2
-  {'u', 'u', 'u', 's', 'u', 'g'},//  3
-  {'u', 's', 'u', 'u', 'p', 'u'},//  4
-  {'u', 'u', 'g', 'u', 'u', 'u'}};// 5
+  {'u', 'u', 'p', 'r', 'u', 'u'},//  0
+  {'u', 's', 'u', 'u', 'g', 'u'},//  1
+  {'u', 'u', 'u', 'u', 'u', 'p'},//  2
+  {'g', 'u', 's', 'u', 'u', 'u'},//  3
+  {'u', 'p', 'u', 'u', 's', 'u'},//  4
+  {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
-// --- THE TV IS ON THIS SIDE --- //
+
+// -- GRID 2 -- //
+/*
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'p', 'r', 'u', 'u'},//  0
+  {'u', 'g', 'u', 'u', 's', 'u'},//  1
+  {'u', 'u', 'u', 'u', 'u', 'g'},//  2
+  {'p', 'u', 'u', 's', 'u', 'u'},//  3
+  {'u', 's', 'u', 'u', 'p', 'u'},//  4
+  {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
+*/
+
+// -- GRID 3 -- //
+/*
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'g', 'r', 'u', 'u'},//  0
+  {'u', 's', 'u', 'u', 'p', 'u'},//  1
+  {'u', 'u', 'u', 's', 'u', 'g'},//  2
+  {'p', 'u', 'u', 'u', 'u', 'u'},//  3
+  {'u', 'g', 'u', 'u', 's', 'u'},//  4
+  {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
+*/
+
+// -- GRID 4 -- //
+/*
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'g', 'r', 'u', 'u'},//  0
+  {'u', 'p', 'u', 'u', 's', 'u'},//  1
+  {'u', 'u', 's', 'u', 'u', 'p'},//  2
+  {'g', 'u', 'u', 'u', 'u', 'u'},//  3
+  {'u', 's', 'u', 'u', 'g', 'u'},//  4
+  {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
+*/
+
+//Assume always starting from location levelMap[0][3];
+//levelMap[y][x]
+int xPos = 3;
+int yPos = 0;
 
 float cwHeading = 0.0;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
-
-//Assume starting from location (2, 0);
-int xPos = 2;
-int yPos = 0;
 
 bool inPit = false;
 

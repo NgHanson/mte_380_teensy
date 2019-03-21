@@ -117,11 +117,10 @@ void copyIntoResults(Coordinate coordResult[], Coordinate shortestPath[], int pa
   for (int i = 0; i <= pathSize; i++) {
     coordResult[i] = shortestPath[i];
   }
-  Coordinate exitCoord(-1, -1, '-');
-  coordResult[pathSize+1] = exitCoord;
 }
 
-void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
+// Return number of unique coords to get to a location
+int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
 
   // --- SETUP STEPS --- //
   int minCost[6][6][4];
@@ -139,7 +138,7 @@ void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
   char currHeading = convertHeadingToCharDirection(cwHeading);
   Coordinate startLocation(xPos, yPos, currHeading); // OUR GLOBAL CURRENT LOCATION
   
-  Coordinate startingPath[60];
+  Coordinate startingPath[MAX_PATH_FINDING_SIZE];
   startingPath[0] = startLocation;
 
   TilePath startingTilePath(startingPath, 0, euclideanDist(startLocation.x, objectiveX, startLocation.y, objectiveY), 0);
@@ -165,26 +164,27 @@ void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
     if (currDir == 'u') {
       forwardY++;
     } else if (currDir == 'l') {
-      forwardX++;
-    } else if (currDir == 'r') {
       forwardX--;
+    } else if (currDir == 'r') {
+      forwardX++;
     } else if (currDir == 'd') {
       forwardY--;
     }
 
     if (validLocation(forwardX, forwardY)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
+        Coordinate newCoord(forwardX, forwardY, currDir);
+        currList[currPathIndex+1] = newCoord;
         //printPath(currList, currPathIndex, curr);
-        currList[currPathIndex+1] = curr;
         copyIntoResults(coordResult, currList, currPathIndex+1);
-        return;
+        return currPathIndex + 1;
       } else {
         int updatedPathCost = currPathCost + 1;          
         if (updatedPathCost < minCost[forwardY][forwardX][dirValue(currDir)] ) {
           double distCost = euclideanDist(forwardX, objectiveX, forwardY, objectiveY); //Heuristic for PriorityQueue comparator
           minCost[forwardY][forwardX][dirValue(currDir)] = updatedPathCost;
           Coordinate newCoord(forwardX, forwardY, currDir);
-          Coordinate newPath[60];
+          Coordinate newPath[MAX_PATH_FINDING_SIZE];
           deepCopy(currList, newPath, currPathIndex);
           newPath[currPathIndex+1] = newCoord;
           TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
@@ -202,7 +202,7 @@ void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
           double distCost = euclideanDist(curr.x, objectiveX, curr.y, objectiveY); //Heuristic for PriorityQueue comparator
           minCost[curr.y][curr.x][dirValue(c)] = updatedPathCost;
           Coordinate newCoord(curr.x, curr.y, c);
-          Coordinate newPath[60];
+          Coordinate newPath[MAX_PATH_FINDING_SIZE];
           deepCopy(currList, newPath, currPathIndex);
           newPath[currPathIndex+1] = newCoord;
           TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
@@ -214,26 +214,19 @@ void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
   }
   // NO PATH FOUND
   Serial.println("NO PATH FOUND");
-  Coordinate exitCoord(-1, -1, '-');
-  coordResult[0] = exitCoord;
+  return 0;
 }
 
-void getPath(int pathResult[], Coordinate objectiveTile) {
+// Pretty terrible but because we can't really return arrays
+// we can pass one in and modify it instead
+int getPath(int pathResult[], Coordinate objectiveTile) {
 
-  Coordinate coordResult[60]; //MAX SIZE FOR NOW
+  Coordinate coordResult[MAX_PATH_FINDING_SIZE];
 
-  shortestPath(coordResult, objectiveTile.x, objectiveTile.y);
-
-  int pathSize = 0;
-  for (int i = 0; i < 60; i++) {
-    if (coordResult[i].x == -1) { // SUPER HACKY
-      break;
-    }
+  int pathSize = shortestPath(coordResult, objectiveTile.x, objectiveTile.y);
+  for (int i = 0; i <= pathSize; i++) {
     printCoord(coordResult[i]);
-    pathSize++;
   }
-  Serial.print("PATH SIZE: ");
-  Serial.println(pathSize);
 
   /*
   0 - forward
@@ -245,7 +238,7 @@ void getPath(int pathResult[], Coordinate objectiveTile) {
   */
 
   // TODO: ADJUST BASED ON OUR FINAL COORDINATE SYSTEM
-  for (int i = 0; i < pathSize; i++) {
+  for (int i = 0; i <= pathSize; i++) {
     char start = coordResult[i].dir;
     char next = coordResult[i+1].dir;
 
@@ -261,7 +254,7 @@ void getPath(int pathResult[], Coordinate objectiveTile) {
       pathResult[i] = 2;
     }
 
-
   }
-  pathResult[pathSize] = -1;
+
+  return pathSize;
 }
