@@ -11,6 +11,7 @@ float calculateAdjustedMean(float data[], float mean, float stdDev) {
   }
   return sum/count;
 }
+
 float calculateMean(float data[]) {
     float sum = 0.0;
     for(int i = 0; i < SENSOR_NUM_SAMPLES; ++i) {
@@ -18,14 +19,20 @@ float calculateMean(float data[]) {
     }
     return sum/SENSOR_NUM_SAMPLES;
 }
+
 float calculateSD(float data[], float mean) {
     float standardDeviation = 0.0;
     for(int i = 0; i < SENSOR_NUM_SAMPLES; ++i)
         standardDeviation += pow(data[i] - mean, 2);
     return sqrt(standardDeviation/SENSOR_NUM_SAMPLES);
 }
+
 float filteredMean(float data[]){
   float mean = calculateMean(data);
   float std_dev = calculateSD(data, mean);
   return calculateAdjustedMean(data, mean, std_dev);
+}
+
+float euclideanDist(int x1, int x2, int y1, int y2) {
+  return pow( pow(x1 - x2,2) + pow(y1-y2,2),0.5);
 }

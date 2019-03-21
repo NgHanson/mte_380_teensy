@@ -7,7 +7,7 @@
 #include <utility/imumaths.h>
 
 #define MIN_GARBAGE_THRESH 1000
-#define MIN_MAGNET_THRESH 250
+#define MIN_MAGNET_THRESH 110
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 float calibXAngle = 0;
@@ -40,7 +40,7 @@ void setupIMU() {
 // }
 
 // NOTE - CLOCKWISE IS POSITIVE
-void _getIMUData() {
+void getRawIMUData() {
   int count = 0;
   float xAngle[10];
   float yAngle[10];
@@ -68,12 +68,12 @@ void _getIMUData() {
 
 void getIMUData() {
   int currHeading = cwHeading;
-  _getIMUData();
+  getRawIMUData();
   while ((cwHeading > 360 || cwHeading < 0) || abs(currHeading - cwHeading) > 10 && abs(currHeading - cwHeading) < 350) {
     Serial.print("IMU data is bad... ");
     Serial.println(cwHeading);
     cwHeading = currHeading;  
-    _getIMUData();
+    getRawIMUData();
   }
 
 }
