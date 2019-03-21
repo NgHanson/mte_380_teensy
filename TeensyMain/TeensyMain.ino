@@ -70,7 +70,8 @@ void timerSetup() {
 
 
 void loop() {
-  debugIMUData();
+  Serial.println("Start loop");
+  // debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
@@ -86,7 +87,10 @@ void loop() {
   // moveForward(10);
   //testRotateLeft();
   // rowScanSequence();
-  // Serial.println(getLaserDistance()*100);
+
+  // TESTING LASER SENSOR ============================================
+  Serial.println(getLaserDistance()*100);
+  // =================================================================
 
   // TESTING TIMINGS =================================================
   // unsigned long time = millis();
@@ -99,8 +103,8 @@ void loop() {
   // Serial.println(millis() - time);
   // =================================================================
   //rotateRight(355);
-  // initialScan();
-  delay(1000);
+  //initialScan();
+  // delay(1000);
 }
 
 void testTileDetection() {
