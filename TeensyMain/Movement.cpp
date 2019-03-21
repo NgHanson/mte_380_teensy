@@ -55,26 +55,26 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
     Serial.println(cwHeading);
     if (angle == 0) {
       if (cwHeading > 355) {
-        float correction_factor = 2*(360 - cwHeading);
+        float correction_factor = (360 - cwHeading);
         Serial.print("cwHeading > 355... left speed: ");
-        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2));
+        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         Serial.print(" right speed: ");
-        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor / 2));
-        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2));
-        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor / 2)); 
+        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
       } else if (cwHeading < 5) {
         float correction_factor = cwHeading;
         Serial.print("cwHeading < 5... left speed: ");
-        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor / 2));
+        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         Serial.print(" right speed: ");
-        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2));
-        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor / 2));
-        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2)); 
+        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
       }
     } else {
       float correction_factor = angle - cwHeading;
-      analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2));
-      analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor / 2)); 
+      analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+      analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
     Serial.print("leftEncoder: ");
