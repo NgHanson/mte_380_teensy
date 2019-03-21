@@ -17,8 +17,9 @@
 #include "UltrasonicSensor.h"
 #include "IMU.h"
 #include "Mapping.h"
-
 #include "PathFinding.h"
+
+#include "PriorityQueue.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -101,39 +102,8 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
-  Coordinate newObject(0, 4, 'o');
-  flameTile = newObject;
-  int results[MAX_PATH_FINDING_SIZE];
-  int numMoves = getPath(results, flameTile);
-  for (int i = 0; i < numMoves; i++) {
 
-    int movement = results[i];
-
-    /*
-    0 - forward
-    1 - rotate 0
-    2 - rotate 90
-    3 - rotate 180
-    4 - rotate 270
-    -1 - end
-    */
-    if (movement == 0) {
-      Serial.println("MOVE FORWARD");
-    } else if (movement == 1) {
-      Serial.println("ROTATE TO 0");
-    } else if (movement == 2) {
-      Serial.println("ROTATE TO 90");
-    } else if (movement == 3) {
-      Serial.println("ROTATE TO 180");
-    } else if (movement == 4) {
-      Serial.println("ROTATE TO 270");
-    }
-
-  }
-  Serial.println("ARRIVE ON TOP OF LOCATION");
-  while(true) {
-
-  }
+  lookForMagnet();
 }
 
 void testTileDetection() {
@@ -184,6 +154,67 @@ void testEncoders() {
   Serial.print(", Right = ");
   Serial.print(rightEncoder.read());
   Serial.println();
+}
+
+// Sort by tile with the closts euclidean distance
+bool compareTile(Coordinate c1, Coordinate c2){
+  return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
+}
+
+// Will go to all magnet tiles (sand tiles that we havent confirmed a magnet is in)
+void lookForMagnet() {
+  PriorityQueue<Coordinate> pq = PriorityQueue<Coordinate>(compareTile);
+  for(int y = 0; y < 6; y++) {
+    for (int x = 0; x < 6; x++) {
+
+      if (levelMap[y][x] == 'm') {
+        Coordinate magnetTile(x, y,'m');
+        pq.push(magnetTile);
+      }
+
+    }
+  }
+
+  int results[MAX_PATH_FINDING_SIZE];
+  while(!pq.isEmpty()) {
+    Coordinate closestMagnetTile = pq.pop();
+    int numMoves = getPath(results, closestMagnetTile);
+
+    for (int i = 0; i < numMoves; i++) {
+
+      int movement = results[i];
+
+      /*
+      0 - forward
+      1 - rotate 0
+      2 - rotate 90
+      3 - rotate 180
+      4 - rotate 270
+      -1 - end
+      */
+      if (movement == 0) {
+        Serial.println("MOVE FORWARD");
+      } else if (movement == 1) {
+        Serial.println("ROTATE TO 0");
+      } else if (movement == 2) {
+        Serial.println("ROTATE TO 90");
+      } else if (movement == 3) {
+        Serial.println("ROTATE TO 180");
+      } else if (movement == 4) {
+        Serial.println("ROTATE TO 270");
+      }
+
+    }
+    Serial.println("ARRIVE ON TOP OF LOCATION");
+    Serial.println("CHECK NEXT LOCATION");
+    Serial.println();
+    Serial.println();
+  }
+
+  Serial.println("WENT TO 3 MAGNET TILE LOCATIONS");
+  while(true) {
+    
+  }
 }
 
 int determinePriority() {

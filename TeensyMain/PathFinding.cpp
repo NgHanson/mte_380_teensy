@@ -3,6 +3,7 @@
 #include "Coordinate.h"
 #include "PriorityQueue.h"
 #include "Globals.h"
+#include "MathHelper.h"
 
 const int ELEMENT_COUNT_MAX = 5;
 
@@ -10,57 +11,7 @@ int const MAX_VALUE = 999;
 
 const char validDir[] = {'u', 'd', 'r', 'l'};
 
-void deepCopy(Coordinate toBeCopied[], Coordinate newCopy[], int valsToCopy) {
-  for (int i = 0; i <= valsToCopy; i++) {
-    Coordinate newCopyCoord = toBeCopied[i];
-    Coordinate copyVal(newCopyCoord.x, newCopyCoord.y, newCopyCoord.dir);
-    newCopy[i] = copyVal;
-  }
-}
-
-bool validLocation(int x, int y) {
-    return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
-          (levelMap[y][x] == 'u' || levelMap[y][x] == 'r'));
-}
-
-float euclideanDist(int x1, int x2, int y1, int y2) {
-  return pow( pow(x1 - x2,2) + pow(y1-y2,2),0.5);
-}
-
-char convertHeadingToCharDirection(float heading) {
-  //PROBABLY SHOULDNT ROUND TO NEARIST 90
-  if ((345.0 <= heading && heading < 360.0) || (heading >= 0.0 && heading <= 15.0)) {
-    return 'u';
-  } else if (heading >= 75.0 && heading <= 105.0) {
-    return 'r';
-  } else if (heading >= 165.0 && heading <= 195.0) {
-    return 'd';
-  } else if (heading >= 255.0 && heading <= 285.0) {
-    return 'l';
-  } else { // CURRENTLY HEADING IS COMPLETELY OFF FROM a 90 deg
-    Serial.print("WRONG");
-    return '-'; //SHOULD PROB THROW ERR OR PERFORM RE ALIGN 
-  }
-}
-
-int dirValue(char c) {
-    if (c == 'u') {
-      return 0;
-    } else if(c == 'd') {
-      return 1;
-    } else if (c == 'r') {
-      return 2;
-    } else if (c == 'l') {
-      return 3;
-    } else {
-      return -1;
-    }
-}
-
-// Sort by tile with the closts euclidean distance
-bool comparePaths(TilePath path1, TilePath path2){
-  return path1.distCost < path2.distCost;
-}
+// --- Debugging/Printing Functions --- //
 
 void printPath(Coordinate list[], int listSize, Coordinate currTile) {
   Serial.println("FINAL PATH");
@@ -113,6 +64,57 @@ void printCoord(Coordinate curr) {
   Serial.println();
 }
 
+// -----------------------------------------//
+
+void deepCopy(Coordinate toBeCopied[], Coordinate newCopy[], int valsToCopy) {
+  for (int i = 0; i <= valsToCopy; i++) {
+    Coordinate newCopyCoord = toBeCopied[i];
+    Coordinate copyVal(newCopyCoord.x, newCopyCoord.y, newCopyCoord.dir);
+    newCopy[i] = copyVal;
+  }
+}
+
+bool validLocation(int x, int y, char objectiveTileType) {
+    char tileType = levelMap[y][x];
+    return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
+          (tileType == 'u' || tileType == 'r' || tileType == objectiveTileType));
+}
+
+char convertHeadingToCharDirection(float heading) {
+  //PROBABLY SHOULDNT ROUND TO NEARIST 90
+  if ((345.0 <= heading && heading < 360.0) || (heading >= 0.0 && heading <= 15.0)) {
+    return 'u';
+  } else if (heading >= 75.0 && heading <= 105.0) {
+    return 'r';
+  } else if (heading >= 165.0 && heading <= 195.0) {
+    return 'd';
+  } else if (heading >= 255.0 && heading <= 285.0) {
+    return 'l';
+  } else { // CURRENTLY HEADING IS COMPLETELY OFF FROM a 90 deg
+    Serial.print("WRONG");
+    return '-'; //SHOULD PROB THROW ERR OR PERFORM RE ALIGN 
+  }
+}
+
+int dirValue(char c) {
+    if (c == 'u') {
+      return 0;
+    } else if(c == 'd') {
+      return 1;
+    } else if (c == 'r') {
+      return 2;
+    } else if (c == 'l') {
+      return 3;
+    } else {
+      return -1;
+    }
+}
+
+// Sort by tile with the closts euclidean distance
+bool comparePaths(TilePath path1, TilePath path2){
+  return path1.distCost < path2.distCost;
+}
+
 void copyIntoResults(Coordinate coordResult[], Coordinate shortestPath[], int pathSize) {
   for (int i = 0; i <= pathSize; i++) {
     coordResult[i] = shortestPath[i];
@@ -121,7 +123,7 @@ void copyIntoResults(Coordinate coordResult[], Coordinate shortestPath[], int pa
 
 // Return number of unique coords to get to a location
 int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
-
+  char objectiveTileType = levelMap[objectiveY][objectiveX];
   // --- SETUP STEPS --- //
   int minCost[6][6][4];
   for (int i = 0; i < 6; i++) {
@@ -171,7 +173,7 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
       forwardY--;
     }
 
-    if (validLocation(forwardX, forwardY)) {
+    if (validLocation(forwardX, forwardY, objectiveTileType)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
         Coordinate newCoord(forwardX, forwardY, currDir);
         currList[currPathIndex+1] = newCoord;

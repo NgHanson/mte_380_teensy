@@ -17,11 +17,11 @@ bool magnetDetected = false;
 /*
  u - unknown (default)
  g - gravel
- s - sand
+ s - sand (checked for magnet, nothing there)
  p - pit
  o - object location (not sure which object though)
  c - candle
- m - magnet
+ m - magnet (potentital magnet locations/ unchecked sand)
  h - house
  s - survivor
  r - robot start
@@ -44,10 +44,10 @@ bool magnetDetected = false;
 // -- GRID 1 -- //
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'p', 'r', 'u', 'u'},//  0
-  {'u', 's', 'u', 'u', 'g', 'u'},//  1
+  {'u', 'm', 'u', 'u', 'g', 'u'},//  1
   {'u', 'u', 'u', 'u', 'u', 'p'},//  2
-  {'g', 'u', 's', 'u', 'u', 'u'},//  3
-  {'u', 'p', 'u', 'u', 's', 'u'},//  4
+  {'g', 'u', 'm', 'u', 'u', 'u'},//  3
+  {'u', 'p', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
 
@@ -55,10 +55,10 @@ char levelMap[6][6] = {          //  y
 /*
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'p', 'r', 'u', 'u'},//  0
-  {'u', 'g', 'u', 'u', 's', 'u'},//  1
+  {'u', 'g', 'u', 'u', 'm', 'u'},//  1
   {'u', 'u', 'u', 'u', 'u', 'g'},//  2
-  {'p', 'u', 'u', 's', 'u', 'u'},//  3
-  {'u', 's', 'u', 'u', 'p', 'u'},//  4
+  {'p', 'u', 'u', 'm', 'u', 'u'},//  3
+  {'u', 'm', 'u', 'u', 'p', 'u'},//  4
   {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
 */
@@ -67,10 +67,10 @@ char levelMap[6][6] = {          //  y
 /*
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'g', 'r', 'u', 'u'},//  0
-  {'u', 's', 'u', 'u', 'p', 'u'},//  1
-  {'u', 'u', 'u', 's', 'u', 'g'},//  2
+  {'u', 'm', 'u', 'u', 'p', 'u'},//  1
+  {'u', 'u', 'u', 'm', 'u', 'g'},//  2
   {'p', 'u', 'u', 'u', 'u', 'u'},//  3
-  {'u', 'g', 'u', 'u', 's', 'u'},//  4
+  {'u', 'g', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
 */
@@ -79,10 +79,10 @@ char levelMap[6][6] = {          //  y
 /*
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'g', 'r', 'u', 'u'},//  0
-  {'u', 'p', 'u', 'u', 's', 'u'},//  1
-  {'u', 'u', 's', 'u', 'u', 'p'},//  2
+  {'u', 'p', 'u', 'u', 'm', 'u'},//  1
+  {'u', 'u', 'm', 'u', 'u', 'p'},//  2
   {'g', 'u', 'u', 'u', 'u', 'u'},//  3
-  {'u', 's', 'u', 'u', 'g', 'u'},//  4
+  {'u', 'm', 'u', 'u', 'g', 'u'},//  4
   {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
 */
