@@ -48,6 +48,8 @@ char levelMap[6][6] = {          //  y
   {'u', 's', 'u', 'u', 'p', 'u'},//  4
   {'u', 'u', 'g', 'u', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
+// --- THE TV IS ON THIS SIDE --- //
+
 float cwHeading = 0.0;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
