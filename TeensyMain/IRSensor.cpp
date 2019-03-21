@@ -9,12 +9,6 @@ float getIRDistance() {
     distance[i] = 65*pow(volts, -1.10);          // worked out from graph 65 = theretical distance / (1/Volts)S - luckylarry.co.uk=
   }
   float filteredDistance = filteredMean(distance);
-  
-  // Serial.print("Volts: ");
-  // Serial.print(volts);
-  // Serial.print(" Distance: ");
-  // Serial.print(distance);
   Serial.println(filteredDistance);                       // print the distance
   return filteredDistance;
-  // delay(100);
 }
