@@ -8,19 +8,6 @@
 
 #include <math.h>       /* modf */
 
-
-//NEED SOME SORT OF ENUMS for objectives
-
-/*
- u - unknown (default)
- v - visited -> do we want to differentiate visited to water, sand, gravel, and normal tiles?
- o - object location (not sure which object though)
- c - candle
- m - magnet
- h - house
- s - survivor
- */
-
 void updateMap(int x, int y, char type) {
 	Serial.println("UpdateMap");
 	Serial.println(x);

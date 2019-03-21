@@ -1,5 +1,5 @@
-// Jessens wheel changes make the rock worse.  Keep this in mind for later
 #include "Encoder.h"
+#include "Coordinate.h"
 
 #ifndef GLOBALS_H
 #define GLOBALS_H
@@ -7,6 +7,8 @@
 //State Variables
 extern bool flameDetected;
 extern bool flameDone;
+extern Coordinate flameTile;
+
 extern bool survivorsDetected;
 extern bool foodDelivered;
 extern bool lostDetected;

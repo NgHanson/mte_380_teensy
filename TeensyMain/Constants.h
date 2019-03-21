@@ -37,3 +37,6 @@
 #define SENSOR_NUM_SAMPLES 10
 #define TILT_TOLERANCE 15
 #define DEG_PER_RAD 57.2957795
+
+// TODO: Confirm this max size ... may lead to missing vals if not large enough
+#define MAX_PATH_FINDING_SIZE 40
