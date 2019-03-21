@@ -85,43 +85,17 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
-  //rowScanSequence();
-  //rotateRight(355);
-  //initialScan();
-  //delay(50000);
 
-  /*
-  Serial.print("RUNNING");
-  rotateRight(90);
-  delay(1000);
-  rotateLeft(0);
-  delay(1000);
-  */
+  // Move Forward One Tile =======================================
   // moveForwardTile();
-  // Serial.println("digitalwrite...");
-  // digitalWrite(fanPin, 1);
   // delay(5000);
-  // digitalWrite(fanPin, 0);
+  // =============================================================
+  
+  // Calibrate Left And Right Turns ==============================
+  // calibrateRotateRight();
+  // calibrateRotateLeft();
   // delay(5000);
-  // testEncoders();
-  Serial.println("Moving idx 0");
-  moveForwardTile();
-  delay(10000);
-  Serial.println("Moving idx 1");
-  moveForwardForDistance(0, 1, 5100);
-  delay(1000);
-  Serial.println("Moving idx 2");
-  moveForwardForDistance(0, 2, 5100);
-  delay(1000);
-  Serial.println("Moving idx 3");
-  moveForwardForDistance(0, 3, 5100);
-  delay(1000);
-  Serial.println("Moving idx 4");
-  moveForwardForDistance(0, 4, 5100);
-  delay(1000);
-  Serial.println("Moving idx 5");
-  moveForwardForDistance(0, 5, 5100)  ;
-  delay(1000);
+  // =============================================================
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();

@@ -6,13 +6,14 @@
 #define MOVE_SPEED 130
 #define LEFT_MOVE_SPEED 135
 #define RIGHT_MOVE_SPEED 130
-#define ROTATION_SPEED 115
+#define RIGHT_ROTATION_SPEED 75
+#define LEFT_ROTATION_SPEED 66
 // Left
 int LEFT_MOVE_SPEEDS[] = {96, 100, 109, 117, 135, 151};
   // Right
 int RIGHT_MOVE_SPEEDS[] = {94, 96, 107, 114, 130, 144};
 
-#define FORWARD_ENCODER_DIST 5100
+#define FORWARD_ENCODER_DIST 4797
 #define FORWARD_ENCODER_DIST_PIT 1000
 
 //if we only want to move in up/down/left/right our relative angles will always be either 0, 90, 180, 270
@@ -51,23 +52,13 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
       inPit = true;
     }
     getIMUData();
-    Serial.print("cwHeading: ");
-    Serial.println(cwHeading);
     if (angle == 0) {
       if (cwHeading > 355) {
         float correction_factor = (360 - cwHeading);
-        Serial.print("cwHeading > 355... left speed: ");
-        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
-        Serial.print(" right speed: ");
-        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
       } else if (cwHeading < 5) {
         float correction_factor = cwHeading;
-        Serial.print("cwHeading < 5... left speed: ");
-        Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
-        Serial.print(" right speed: ");
-        Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
       }
@@ -77,10 +68,7 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
       analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
-    Serial.print("leftEncoder: ");
-    Serial.print(leftEncoder.read());
-    Serial.print(" rightEncoder: ");
-    Serial.println(rightEncoder.read());
+    Serial.println(avgEncoderVal);
   }
 }
 
@@ -103,44 +91,12 @@ void moveForwardForever(float angle, int speed_idx) {
 
 void moveForwardTile() {
   moveForwardThenStop(0, 1, FORWARD_ENCODER_DIST);
-  // Serial.println("here");
-  // leftEncoder.write(0);
-  // rightEncoder.write(0);
-  // Serial.println("done writing encoders");
-  // digitalWrite(LEFT_MOTOR_DIR, 0);
-  // digitalWrite(RIGHT_MOTOR_DIR, 0);
-  // Serial.println("wrote/ firection");
-  // analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEED);
-  // analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEED);
-  // Serial.println("wrote speed");
-  // int encoder_dist = FORWARD_ENCODER_DIST;
-
-  // int avgEncoderVal = 0;
-  // while(avgEncoderVal < encoder_dist) {
-  //   if (frontTilt > 100.0) { //TEST VALUE AND SET THIS AS A CONST
-  //     inPit = true;
-  //   }
-  //   avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
-  //   Serial.print("leftEncoder: ");
-  //   Serial.print(leftEncoder.read());
-  //   Serial.print(" rightEncoder: ");
-  //   Serial.println(rightEncoder.read());
-  //   // delay(200);
-  //   // Serial.println(avgEncoderVal);
-  // }
-
-
-  // analogWrite(LEFT_MOTOR_SPEED, 0);
-  // analogWrite(RIGHT_MOTOR_SPEED, 0);
-
-  // //REALIGN TO ITS CURRENT ORIENTATION (0, 90, 180, 270)
 }
 
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
 //The casting stuff for the rotations are wack ...
-
 // Takes in number from 0-360 with +ve cw
-void rotateRight(int angle) {
+void _rotateRight(int angle, int rotation_speed) {
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
     return;
@@ -148,11 +104,9 @@ void rotateRight(int angle) {
   digitalWrite(LEFT_MOTOR_DIR, 0);
   digitalWrite(RIGHT_MOTOR_DIR, 1); 
   getIMUData();
-  analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
-  analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
+  analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
+  analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);
   getIMUData();
-  // Serial.println(angle);
-  // Serial.println(cwHeading);
   if (angle == 0) {
     // angle = 357.5;
     while (!(cwHeading >= 0 && cwHeading < 1)) {
@@ -186,8 +140,10 @@ void rotateRight(int angle) {
   delay(100);
   getIMUData();
 }
+
+
 // Takes in number from 0-360, with +ve cw (turning left 90 deg from 0 would be rotateLeft(270))
-void rotateLeft(int angle) {
+void _rotateLeft(int angle, int rotation_speed) {
   Serial.println("rotateLeft");
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
@@ -196,8 +152,8 @@ void rotateLeft(int angle) {
   digitalWrite(LEFT_MOTOR_DIR, 1);
   digitalWrite(RIGHT_MOTOR_DIR, 0);
   
-  analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
-  analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
+  analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
+  analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);
   if (angle == 0) {
     while (!(cwHeading > 1 && cwHeading < 3)) {
       getIMUData();
@@ -239,6 +195,13 @@ void rotateLeft(int angle) {
   getIMUData();
 }
 
+void rotateRight(int angle) {
+  _rotateRight(angle, RIGHT_ROTATION_SPEED);
+}
+
+void rotateLeft(int angle) {
+  _rotateLeft(angle, LEFT_ROTATION_SPEED);
+}
 
 void rotate180() {
   rotateRight(180);
@@ -252,6 +215,59 @@ void realignHeading() {
 
 void alignToAngle(int angle) {
 
+}
+
+// CALIBRATION FUNCTIONS FOR MOTORS... USE VALUES THAT ARE AT LEAST A BIT HIGHER THAT WHAT IS GIVEN
+void calibrateRotateRight() {
+  Serial.println("calibrateRotateRight");
+  int rotation_speed = 66;
+  int ok_counts = 0;
+  while(ok_counts < 40) {
+    leftEncoder.write(0);
+    rightEncoder.write(0);
+    Serial.print("Rotation speed: ");
+    Serial.println(rotation_speed);
+    digitalWrite(LEFT_MOTOR_DIR, 0);
+    digitalWrite(RIGHT_MOTOR_DIR, 1); 
+    analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
+    analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);  
+    delay(500);
+    if (abs(leftEncoder.read()) < 10 || abs(rightEncoder.read()) < 10) {
+      rotation_speed += 3;
+      ok_counts = 0;
+    } else {
+      ok_counts += 1;
+    }
+  }
+  Serial.println(rotation_speed);
+  stopMotors();
+  delay(5000);
+}
+
+void calibrateRotateLeft() {
+  Serial.println("calibrateRotateLeft");
+  int rotation_speed = 66;
+  int ok_counts = 0;
+  while(ok_counts < 40) {
+    leftEncoder.write(0);
+    rightEncoder.write(0);
+    Serial.print("Rotation speed: ");
+    Serial.println(rotation_speed);
+    digitalWrite(LEFT_MOTOR_DIR, 1);
+    digitalWrite(RIGHT_MOTOR_DIR, 0); 
+    analogWrite(LEFT_MOTOR_SPEED, rotation_speed);
+    analogWrite(RIGHT_MOTOR_SPEED, rotation_speed);  
+    delay(500);
+    if (abs(leftEncoder.read()) < 10 || abs(rightEncoder.read()) < 10) {
+      rotation_speed += 3;
+      ok_counts = 0;
+    } else {
+      ok_counts += 1;
+    }
+  }
+  Serial.println(rotation_speed);
+  stopMotors();
+  delay(5000);
 }
 
 void calibrateEncoders() {
