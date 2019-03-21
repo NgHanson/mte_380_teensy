@@ -37,7 +37,7 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  //setUpLaserSensor();
+  // setUpLaserSensor();
   setupIMU();
   // delay(1000);
   // getIMUData();
@@ -161,6 +161,70 @@ bool compareTile(Coordinate c1, Coordinate c2){
   return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
 }
 
+bool shouldTurnLeft(float startAngle, float finalAngle) {
+  float left = startAngle - finalAngle;
+  if (left < 0.0) {
+    left += 360.0;
+  }
+
+  float right = finalAngle - startAngle;
+  if (right < 0.0) {
+    right += 360.0;
+  }
+
+  return left < right;
+}
+
+/*
+  a set of movement instructions will be given as an array of integers that will be decoded
+  0 - forward
+  1 - rotate 0
+  2 - rotate 90
+  3 - rotate 180
+  4 - rotate 270
+*/
+void executeMovementInstructions(int movements[], int numMoves) {
+
+  for (int i = 0; i < numMoves; i++) {
+    int movement = movements[i];
+
+    if (movement == 0) {
+      moveForwardTile();
+
+    } else if (movement == 1) {
+      if (shouldTurnLeft(cwHeading, 0.0)) {
+        rotateLeft(0);
+      } else {
+        rotateRight(0);
+      }
+      
+    } else if (movement == 2) {
+      if (shouldTurnLeft(cwHeading, 90.0)) {
+        rotateLeft(90);
+      } else {
+        rotateRight(90);
+      }
+
+    } else if (movement == 3) {;
+      if (shouldTurnLeft(cwHeading, 180.0)) {
+        rotateLeft(180);
+      } else {
+        rotateRight(180);
+      }
+
+    } else if (movement == 4) {
+      if (shouldTurnLeft(cwHeading, 270.0)) {
+        rotateLeft(270);
+      } else {
+        rotateRight(270);
+      }
+    } else {
+      //SHOULD SIGNAL SOMETHING
+    }
+
+  }
+}
+
 // Will go to all magnet tiles (sand tiles that we havent confirmed a magnet is in)
 void lookForMagnet() {
   PriorityQueue<Coordinate> pq = PriorityQueue<Coordinate>(compareTile);
@@ -179,41 +243,7 @@ void lookForMagnet() {
   while(!pq.isEmpty()) {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
-
-    for (int i = 0; i < numMoves; i++) {
-
-      int movement = results[i];
-
-      /*
-      0 - forward
-      1 - rotate 0
-      2 - rotate 90
-      3 - rotate 180
-      4 - rotate 270
-      -1 - end
-      */
-      if (movement == 0) {
-        Serial.println("MOVE FORWARD");
-      } else if (movement == 1) {
-        Serial.println("ROTATE TO 0");
-      } else if (movement == 2) {
-        Serial.println("ROTATE TO 90");
-      } else if (movement == 3) {
-        Serial.println("ROTATE TO 180");
-      } else if (movement == 4) {
-        Serial.println("ROTATE TO 270");
-      }
-
-    }
-    Serial.println("ARRIVE ON TOP OF LOCATION");
-    Serial.println("CHECK NEXT LOCATION");
-    Serial.println();
-    Serial.println();
-  }
-
-  Serial.println("WENT TO 3 MAGNET TILE LOCATIONS");
-  while(true) {
-    
+    executeMovementInstructions(results, numMoves);
   }
 }
 
