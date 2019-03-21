@@ -102,7 +102,7 @@ void loop() {
   //rotateRight(355);
   //initialScan();
   Serial.println("START SHORTEST PATH");
-  shortestPath(3,3);
+  shortestPath(0,5);
   delay(50000);
 }
 

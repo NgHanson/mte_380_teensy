@@ -15,24 +15,30 @@ int const MAX_VALUE = 999;
 
 const char validDir[] = {'u', 'd', 'r', 'l'};
 
-Vector<Coordinate> deepCopy(Vector<Coordinate> vector) {
-  Coordinate storage[20];
-  Vector<Coordinate> copy(storage);
+void deepCopy(Coordinate toBeCopied[], Coordinate newCopy[], int valsToCopy) {
+  for (int i = 0; i <= valsToCopy; i++) {
+    Coordinate newCopyCoord = toBeCopied[i];
 
-  for(int i = 0; i < vector.size(); i++) {
-    copy.push_back(vector[i]);
+    Coordinate copyVal(newCopyCoord.x, newCopyCoord.y, newCopyCoord.dir);
+    /*
+    Coordinate copyVal;
+    copyVal.x = toBeCopied[i].x;
+    copyVal.y = toBeCopied[i].y;
+    copyVal.dir = toBeCopied[i].dir;*/
+    newCopy[i] = copyVal;
   }
-
-  return copy;
 }
 
 bool validLocation(int x, int y) {
+  /*
     return (x < 6 && x >= 0 &&
           y < 6 && y >= 0 &&
-          levelMap[y][x] == 'u'); // TODO: CONFIRM THIS, ONLY GO ON FLAT TILES
+          levelMap[y][x] == 'u'); // TODO: CONFIRM THIS, ONLY GO ON FLAT TILES*/
+    return (x < 6 && x >= 0 && y < 6 && y >= 0);
 }
 
 float euclideanDist(int x1, int x2, int y1, int y2) {
+  Serial.println( pow( pow(x1 - x2,2) + pow(y1-y2,2),0.5));
   return pow( pow(x1 - x2,2) + pow(y1-y2,2),0.5);
 }
 
@@ -71,12 +77,50 @@ bool comparePaths(TilePath path1, TilePath path2){
   return path1.distCost < path2.distCost;
 }
 
-void printPath(Vector<Coordinate> list) {
-
-  for(int i = 0; i < list.size(); i++) {
+void printPath(Coordinate list[], int listSize) {
+  Serial.println("FINAL PATH");
+  for(int i = 0; i < listSize; i++) {
+    Serial.print("X: ");
     Serial.print(list[i].x);
+    Serial.print(" Y: ");
+    Serial.print(list[i].y);
+    Serial.print(" DIR: ");
+    Serial.println(list[i].dir);
   }
   
+}
+
+void printTilePath(TilePath currTilePath) {
+  int currPathIndex = currTilePath.pathIndex;
+  int currPathCost = currTilePath.pathCost;
+
+  Coordinate* currList = currTilePath.path;
+  
+  Coordinate curr = currList[currPathIndex];
+  char currDir = curr.dir;
+  Serial.print("CURR TILE INDEX: ");
+  Serial.print(currPathIndex);
+  Serial.print(" CURR POS - X: ");
+  Serial.print(curr.x);
+  Serial.print(" Y: ");
+  Serial.print(curr.y);
+  Serial.print(" DIR: ");
+  Serial.print(currDir);
+  Serial.print(" CURR COST: ");
+  Serial.println(currPathCost);
+  Serial.print(" DIST COST: ");
+  Serial.println(currTilePath.distCost);
+  Serial.println();
+}
+
+void printCoord(Coordinate curr) {
+  Serial.print(" CURR POS - X: ");
+  Serial.print(curr.x);
+  Serial.print(" Y: ");
+  Serial.print(curr.y);
+  Serial.print(" DIR: ");
+  Serial.print(curr.dir);
+  Serial.println();
 }
 
 void shortestPath(int objectiveX, int objectiveY) {
@@ -90,6 +134,8 @@ void shortestPath(int objectiveX, int objectiveY) {
     }
   }
 
+
+
   PriorityQueue<TilePath> pq = PriorityQueue<TilePath>(comparePaths);
   // --- ADD START POS --- //
   char currHeading = convertHeadingToCharDirection(cwHeading);
@@ -102,21 +148,18 @@ void shortestPath(int objectiveX, int objectiveY) {
   Serial.print(" DIR: ");
   Serial.print(startLocation.dir);
   Serial.println();
-  Serial.println();
 
   Serial.print("OBJ POS - X: ");
   Serial.print(objectiveX);
   Serial.print(" Y: ");
   Serial.print(objectiveY);
   Serial.println();
-  Serial.println();
   
-  Coordinate storage_array[20];
-  Vector<Coordinate> startingPath(storage_array);
-  startingPath.push_back(startLocation);
-  Serial.print("STARTING PATH: ");
-  Serial.println(startingPath.size());
-  TilePath startingTilePath(startingPath, 0, euclideanDist(startLocation.x, objectiveX, startLocation.y, objectiveY));
+  Coordinate startingPath[60];
+  startingPath[0] = startLocation;
+
+  Serial.println("STARTING PATH: ");
+  TilePath startingTilePath(startingPath, 0, euclideanDist(startLocation.x, objectiveX, startLocation.y, objectiveY), 0);
   pq.push(startingTilePath);
   minCost[startLocation.y][startLocation.x][dirValue(startLocation.dir)] = 0;
   // --------------------//
@@ -126,14 +169,18 @@ void shortestPath(int objectiveX, int objectiveY) {
   
   while(!pq.isEmpty()){
     TilePath currTilePath = pq.pop();
+    int currPathIndex = currTilePath.pathIndex;
     int currPathCost = currTilePath.pathCost;
 
-    Vector<Coordinate> currList = currTilePath.path;
+    Coordinate* currList = currTilePath.path;
     
-    Coordinate curr = currList[currList.size() - 1];
+    Coordinate curr = currList[currPathIndex];
     char currDir = curr.dir;
 
-    Serial.print("CURR POS - X: ");
+    Serial.println("ONE ITERATION");
+    Serial.print("CURR PATH INDEX: ");
+    Serial.print(currPathIndex);
+    Serial.print(" CURR POS - X: ");
     Serial.print(curr.x);
     Serial.print(" Y: ");
     Serial.print(curr.y);
@@ -160,27 +207,6 @@ void shortestPath(int objectiveX, int objectiveY) {
       forwardY--;
     }
 
-    Serial.print("CHECK FOR VALID FORWARD ADDED:  ");
-    Serial.println(validLocation(forwardX, forwardY));
-    Serial.print("PQ SIZE: ");
-    Serial.println(pq.count());
-    if (validLocation(forwardX, forwardY)) {
-        if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
-          printPath(currList);
-          return;
-        } else {
-          int updatedPathCost = currPathCost + 1;          
-          if (updatedPathCost < minCost[forwardY][forwardX][dirValue(currDir)] ) {
-            double distCost = euclideanDist(forwardX, objectiveX, forwardY, objectiveY); //Heuristic for PriorityQueue comparator
-            minCost[forwardY][forwardX][dirValue(currDir)] = updatedPathCost;
-            Coordinate newCoord(forwardX, forwardY, currDir);
-            Vector<Coordinate> newPath = deepCopy(currList);
-            newPath.push_back(newCoord);
-            TilePath newTilePath(newPath, updatedPathCost, distCost);
-            pq.push(newTilePath);
-          }
-        }
-      }
       int count = 0;
       // WE CAN ROTATE TO DIRECTIONS WHICH THE ROBOT CURRENTLY ISNT FACING
       for (int i = 0; i < 4; i++) {
@@ -194,9 +220,10 @@ void shortestPath(int objectiveX, int objectiveY) {
             double distCost = euclideanDist(curr.x, objectiveX, curr.y, objectiveY); //Heuristic for PriorityQueue comparator
             minCost[curr.y][curr.x][dirValue(c)] = updatedPathCost;
             Coordinate newCoord(curr.x, curr.y, c);
-            Vector<Coordinate> newPath = deepCopy(currList);
-            newPath.push_back(newCoord);
-            TilePath newTilePath(newPath, updatedPathCost, distCost);
+            Coordinate newPath[60];
+            deepCopy(currList, newPath, currPathIndex);
+            newPath[currPathIndex+1] = newCoord;
+            TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
             pq.push(newTilePath);
           }
         }
@@ -205,6 +232,55 @@ void shortestPath(int objectiveX, int objectiveY) {
       Serial.println(count);
       Serial.print("PQ SIZE: ");
       Serial.println(pq.count());
+      Serial.println();
+
+      Serial.print("CHECK FOR VALID FORWARD ADDED:  ");
+      Serial.println(validLocation(forwardX, forwardY));
+      if (validLocation(forwardX, forwardY)) {
+        if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
+          printPath(currList, currPathIndex);
+          return;
+        } else {
+          int updatedPathCost = currPathCost + 1;          
+          if (updatedPathCost < minCost[forwardY][forwardX][dirValue(currDir)] ) {
+            double distCost = euclideanDist(forwardX, objectiveX, forwardY, objectiveY); //Heuristic for PriorityQueue comparator
+            minCost[forwardY][forwardX][dirValue(currDir)] = updatedPathCost;
+            //Coordinate newCoord(forwardX, forwardY, currDir);
+
+            Coordinate newCoord;
+            newCoord.x = forwardX;
+            newCoord.y = forwardY;
+            newCoord.dir = currDir;
+
+
+            
+            Coordinate newPath[60];
+            deepCopy(currList, newPath, currPathIndex);
+            newPath[currPathIndex+1] = newCoord;
+            TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
+            pq.push(newTilePath);
+          }
+        }
+      }
+      Serial.print("PQ SIZE: ");
+      Serial.println(pq.count());
+
+      /*
+      while(!pq.isEmpty()){
+          TilePath tp = pq.pop();
+          int pathIndex = tp.pathIndex;
+          Coordinate currLocation = tp.path[0];
+          printCoord(currLocation);
+      }*/
+
+      
+      Serial.println("PEEK WHAT IS NEXT UP BASED ON PRIO");
+      TilePath whyTHO = pq.peek();
+      printTilePath(whyTHO);
+      
+
+      Serial.println();
+      Serial.println();
       Serial.println();
   }
   // NO PATH FOUND
