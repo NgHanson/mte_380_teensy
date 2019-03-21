@@ -113,9 +113,16 @@ void printCoord(Coordinate curr) {
   Serial.println();
 }
 
-void shortestPath(Coordinate objective) {
-  int objectiveX = objective.x;
-  int objectiveY = objective.y;
+void copyIntoResults(Coordinate coordResult[], Coordinate shortestPath[], int pathSize) {
+  for (int i = 0; i <= pathSize; i++) {
+    coordResult[i] = shortestPath[i];
+  }
+  Coordinate exitCoord(-1, -1, '-');
+  coordResult[pathSize+1] = exitCoord;
+}
+
+void shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
+
   // --- SETUP STEPS --- //
   int minCost[6][6][4];
   for (int i = 0; i < 6; i++) {
@@ -167,7 +174,9 @@ void shortestPath(Coordinate objective) {
 
     if (validLocation(forwardX, forwardY)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
-        printPath(currList, currPathIndex, curr);
+        //printPath(currList, currPathIndex, curr);
+        currList[currPathIndex+1] = curr;
+        copyIntoResults(coordResult, currList, currPathIndex+1);
         return;
       } else {
         int updatedPathCost = currPathCost + 1;          
@@ -205,5 +214,54 @@ void shortestPath(Coordinate objective) {
   }
   // NO PATH FOUND
   Serial.println("NO PATH FOUND");
-  // FIGURE OUT RETURN
+  Coordinate exitCoord(-1, -1, '-');
+  coordResult[0] = exitCoord;
+}
+
+void getPath(int pathResult[], Coordinate objectiveTile) {
+
+  Coordinate coordResult[60]; //MAX SIZE FOR NOW
+
+  shortestPath(coordResult, objectiveTile.x, objectiveTile.y);
+
+  int pathSize = 0;
+  for (int i = 0; i < 60; i++) {
+    if (coordResult[i].x == -1) { // SUPER HACKY
+      break;
+    }
+    printCoord(coordResult[i]);
+    pathSize++;
+  }
+  Serial.print("PATH SIZE: ");
+  Serial.println(pathSize);
+
+  /*
+  0 - forward
+  1 - rotate 0
+  2 - rotate 90
+  3 - rotate 180
+  4 - rotate 270
+  -1 - end
+  */
+
+  // TODO: ADJUST BASED ON OUR FINAL COORDINATE SYSTEM
+  for (int i = 0; i < pathSize; i++) {
+    char start = coordResult[i].dir;
+    char next = coordResult[i+1].dir;
+
+    if (start == next) { //MAINTAIN SAME DIR ... MEANING IT MOVED FORWARD
+      pathResult[i] = 0;
+    } else if (next == 'u') {
+      pathResult[i] = 1;
+    } else if (next == 'd') {
+      pathResult[i] = 3;
+    } else if (next == 'l') {
+      pathResult[i] = 4;
+    } else if (next == 'r') {
+      pathResult[i] = 2;
+    }
+
+
+  }
+  pathResult[pathSize] = -1;
 }

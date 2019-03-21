@@ -103,8 +103,40 @@ void loop() {
   //initialScan();
   Coordinate newObject(1, 5, 'o');
   flameTile = newObject;
-  shortestPath(flameTile);
-  delay(50000);
+  int results[60];
+  getPath(results, flameTile);
+  for (int i = 0; i < 60; i++) {
+    if (results[i] == -1) {
+      break;
+    }
+
+    int movement = results[i];
+
+    /*
+    0 - forward
+    1 - rotate 0
+    2 - rotate 90
+    3 - rotate 180
+    4 - rotate 270
+    -1 - end
+    */
+    if (movement == 0) {
+      Serial.println("MOVE FORWARD");
+    } else if (movement == 1) {
+      Serial.println("ROTATE TO 0");
+    } else if (movement == 2) {
+      Serial.println("ROTATE TO 90");
+    } else if (movement == 3) {
+      Serial.println("ROTATE TO 180");
+    } else if (movement == 4) {
+      Serial.println("ROTATE TO 270");
+    }
+    Serial.println("ARRIVE ON TOP OF LOCATION");
+  }
+
+  while(true) {
+
+  }
 }
 
 void testTileDetection() {
