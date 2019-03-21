@@ -12,28 +12,44 @@ bool magnetDetected = false;
 
 /*
  u - unknown (default)
- v - visited -> do we want to differentiate visited to water, sand, gravel, and normal tiles?
+ g - gravel
+ s - sand
+ p - pit
  o - object location (not sure which object though)
  c - candle
  m - magnet
  h - house
  s - survivor
+ r - robot start
  */
 
+  /*
+    VIEW DIRECTIONS AS
+           down
+            ^
+            |
+right < _ _ |_ _ > left
+            |
+            |
+            v
+            up
+   */
+
 // Global map/position/orientation
-char levelMap[6][6] = {
-{'u', 'u', 'u', 'u', 'u', 'u'},
-{'u', 'u', 'u', 'u', 'u', 'u'},
-{'u', 'u', 'u', 'u', 'u', 'u'},
-{'u', 'u', 'u', 'u', 'u', 'u'},
-{'u', 'u', 'u', 'u', 'u', 'u'},
-{'u', 'u', 'u', 'u', 'u', 'u'}};
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'r', 'p', 'u', 'u'},//  0
+  {'u', 'g', 'u', 'u', 's', 'u'},//  1
+  {'p', 'u', 'u', 'u', 'u', 'u'},//  2
+  {'u', 'u', 'u', 's', 'u', 'g'},//  3
+  {'u', 's', 'u', 'u', 'p', 'u'},//  4
+  {'u', 'u', 'g', 'u', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
 float cwHeading = 0.0;
 float frontTilt = 0.0;
 float ccwRollFromBack = 0.0;
 
-//Assume starting from location (3, 0);
-int xPos = 3;
+//Assume starting from location (2, 0);
+int xPos = 2;
 int yPos = 0;
 
 bool inPit = false;
