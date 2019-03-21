@@ -70,12 +70,12 @@ void timerSetup() {
 
 
 void loop() {
-  Serial.println("Start loop");
+  // Serial.println("Start loop");
   // debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
-  //testIRSensor();
+  testIRSensor();
   //testRotationWithIMU();
   //testLaserSensor();
   // int cData[3];
@@ -89,7 +89,7 @@ void loop() {
   // rowScanSequence();
 
   // TESTING LASER SENSOR ============================================
-  Serial.println(getLaserDistance()*100);
+  // Serial.println(getLaserDistance()*100);
   // =================================================================
 
   // TESTING TIMINGS =================================================

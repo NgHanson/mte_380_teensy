@@ -26,7 +26,7 @@
 // #define echoPin_HCSR04_2 A1
 
 // No longer using ultrasonic...
-// #define pingPin A2
+#define pingPin A20
 
 // No longer using hall effect...
 // #define hallPin A3
