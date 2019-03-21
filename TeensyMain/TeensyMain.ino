@@ -34,7 +34,7 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  setUpLaserSensor();
+  //setUpLaserSensor();
   setupIMU();
   // delay(1000);
   // getIMUData();
@@ -49,6 +49,7 @@ void setup() {
   pinMode(FLAME_PIN, INPUT);
   pinMode(LED_PIN, OUTPUT);
   pinMode(IR_SENSOR, INPUT);
+  pinMode(fanPin, OUTPUT);
   
   // timerSetup();
 }
@@ -84,6 +85,17 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
+
+  // Move Forward One Tile =======================================
+  // moveForwardTile();
+  // delay(5000);
+  // =============================================================
+  
+  // Calibrate Left And Right Turns ==============================
+  // calibrateRotateRight();
+  // calibrateRotateLeft();
+  // delay(5000);
+  // =============================================================
   // rowScanSequence();
   //rotateRight(355);
   //initialScan();
