@@ -240,9 +240,10 @@ void courseLogic() {
   }
 
   // Return home
+  int homePath[MAX_PATH_FINDING_SIZE];
   Coordinate homeTile(0, 3, 'r');
-  int numMoves = getPath(results, homeTile);
-  executeMovementInstructions(results, numMoves);
+  int homeMoves = getPath(homePath, homeTile);
+  executeMovementInstructions(homePath, homeMoves);
   signalComplete();
 
   while(true){
