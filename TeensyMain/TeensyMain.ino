@@ -190,7 +190,7 @@ void lookForMagnet() {
       magnetDetected = true;
       signalComplete();
       // TODO: Update the state of the grid? ...
-      break;
+      return;
     } else {
       delay(1000);
       // TODO: Update the state of the grid? ...
@@ -198,17 +198,27 @@ void lookForMagnet() {
   }
 }
 
+void wiggleFlame() {
+  bool exists = flamePresent();
+  digitalWrite(fanPin,HIGH);
+  while(exists){
+    rotateLeft(5);
+    rotateRight(10);
+    rotateLeft(5);
+    exists = flamePresent();
+  }
+  digitalWrite(fanPin,LOW);
+}
+
 void courseLogic() {
 
-
-    //TAKE OUT FLAME
-    int flamePath[MAX_PATH_FINDING_SIZE];
-    int flameMoves = getPath(flamePath, flameTile);
-    executeMovementInstructions(flamePath, flameMoves);
-
-
-    signalComplete();
-    delay(1000);
+  //TAKE OUT FLAME
+  int flamePath[MAX_PATH_FINDING_SIZE];
+  int flameMoves = getPath(flamePath, flameTile);
+  executeMovementInstructions(flamePath, flameMoves);
+  wiggleFlame();
+  signalComplete();
+  delay(1000);
 
   //at this point, flame stuff is done
   lookForMagnet();
@@ -220,13 +230,13 @@ void courseLogic() {
   int house1Moves = getPath(house1Path, houseTile1);
   executeMovementInstructions(house1Path, house1Moves);
   signalComplete();
-  delay(1000);
+  //SCAN HOUSE HERE - CUSTOM DELAY BASED ON COLOUR
 
   int house2Path[MAX_PATH_FINDING_SIZE];
   int house2Moves = getPath(house2Path, houseTile2);
   executeMovementInstructions(house2Path, house2Moves);
   signalComplete();
-  delay(1000);
+  //SCAN HOUSE HERE - CUSTOM DELAY BASED ON COLOUR
 
   // Return home
   int homePath[MAX_PATH_FINDING_SIZE];
