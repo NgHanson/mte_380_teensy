@@ -131,9 +131,9 @@ void loop() {
   // =============================================================
   // rowScanSequence();
   //rotateRight(355);
-  initialScan();
-  extinguishFlame();
-  // lookForMagnet();
+  // initialScan();
+  // extinguishFlame();
+  lookForMagnet();
   //initialScan();
 
   lookForMagnet();
@@ -252,7 +252,8 @@ void lookForMagnet() {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
     executeMovementInstructions(results, numMoves);
-
+    // GOING TO BE FACING MAGNET
+    dipIntoMagnet();
     if (didDetectMagnet()) {
       magnetDetected = true;
       signalComplete();
