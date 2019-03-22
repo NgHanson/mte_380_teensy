@@ -98,11 +98,23 @@ void loop() {
   //rotateRight(355);
   //initialScan();
 
-  lookForMagnet();
+  //lookForMagnet();
+  lookForHouseTest();
   Serial.println("END OF EXECUTION, INFINITE LOOP");
   while(true) {
 
   }
+}
+
+void lookForHouseTest(){
+  //in this test, thes houses will be infront of the vehicle, one directly in front and the other two tiles to the right.
+  moveForwardTile();
+  detectHouseColor();
+  moveLeft(90); //pretend to be looking for another house
+  moveRight(180); //pretend to be looking for a house
+  delay(250);
+  moveForwardTile();
+  detectHouseColor();
 }
 
 // Sort by tile with the closts euclidean distance
