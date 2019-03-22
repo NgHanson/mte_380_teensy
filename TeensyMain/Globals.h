@@ -27,9 +27,9 @@ extern int yPos;
 
 extern bool inPit;
 
-extern float initialSweepDistances[5000][2];
+extern float initialSweepDistancesAndFlames[5000][3];
 extern int curr_sweep_meas_idx;
-extern float initialSweepFlameVals[5000][2];
+// extern float initialSweepFlameVals[5000][2];
 //Encoders
 extern Encoder leftEncoder;
 extern Encoder rightEncoder;

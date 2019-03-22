@@ -99,18 +99,19 @@ float ccwRollFromBack = 0.0;
 
 bool inPit = false;
 
-float initialSweepDistances[5000][2];
+float initialSweepDistancesAndFlames[5000][3];
 int curr_sweep_meas_idx = 0;
-float initialSweepFlameVals[360];
 
 void printSweepDistanceArray() {
-	Serial.println("printSweepDistanceArray");
-  for (int i = 0; i < 500; i++) {
-  	Serial.print(initialSweepDistances[i][0]);
+  Serial.println("printSweepDistanceArray");
+  for (int i = 0; i < 5000; i++) {
+  	Serial.print(initialSweepDistancesAndFlames[i][0]);
   	Serial.print(" ");
-  	Serial.println(initialSweepDistances[i][1]);
+  	Serial.print(initialSweepDistancesAndFlames[i][1]);
+  	Serial.print(" ");
+  	Serial.print(initialSweepDistancesAndFlames[i][2]);
   }
-  Serial.println();
+  Serial.println("=======================================");
 }
 
 Encoder leftEncoder(LEFT_ENC_1, LEFT_ENC_2);

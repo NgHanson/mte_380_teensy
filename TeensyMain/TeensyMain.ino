@@ -132,13 +132,26 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   initialScan();
-
+  extinguishFlame();
   // lookForMagnet();
 }
 
 // Sort by tile with the closts euclidean distance
 bool compareTile(Coordinate c1, Coordinate c2){
   return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
+}
+
+void extinguishFlame() {
+  int angle = -1;
+  int maxFlameVal = 0;
+  for (int i = 0; i < curr_sweep_meas_idx; i++) {
+    if (initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] > maxFlameVal) {
+      maxFlameVal = initialSweepDistancesAndFlames[curr_sweep_meas_idx][2];
+      angle = initialSweepDistancesAndFlames[curr_sweep_meas_idx][0];
+    }
+  }
+  rotateRight(angle);
+  Serial.print("Blow dat boi out");
 }
 
 /*

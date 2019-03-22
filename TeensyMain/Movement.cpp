@@ -2,11 +2,11 @@
 #include "Globals.h"
 #include "Constants.h"
 #include "IMU.h"
-
+#include "DetectionHelper.h"
 #define MOVE_SPEED 130
 #define LEFT_MOVE_SPEED 135
 #define RIGHT_MOVE_SPEED 130
-#define RIGHT_ROTATION_SPEED 75
+#define RIGHT_ROTATION_SPEED 80//75
 #define LEFT_ROTATION_SPEED 66
 // Left
 int LEFT_MOVE_SPEEDS[] = {96, 100, 109, 117, 135, 151};
@@ -138,27 +138,9 @@ void rotateRight(int angle) {
   getIMUData();
 }
 
-// MOVE THESE LATER ===================================================================================================================================
-void updateDistance() {
-  float distance = getMergedDistance();
-  updateRollingMin(distance);
-}
-
-void updateFlame() {
-
-}
-
-void updateRollingMin(float distance) {
-  Serial.print("update rolling min with distance: ");
-  Serial.println(distance);
-  initialSweepDistances[curr_sweep_meas_idx][0] = cwHeading;
-  initialSweepDistances[curr_sweep_meas_idx][1] = distance;
-  curr_sweep_meas_idx += 1;
-}
-
-// ====================================================================================================================================================
-
 void rotateRightWhileSweeping(int angle) {
+  Serial.println("rotateRightWhileSweeping ");
+  Serial.println(cwHeading);
   if (angle < 0 || angle >= 360) {
     Serial.println("Angle is invalid");
     return;
@@ -169,45 +151,51 @@ void rotateRightWhileSweeping(int angle) {
   analogWrite(LEFT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   getIMUData();
+  Serial.println("here");
   if (angle == 0) {
     while (!(cwHeading >= 0 && cwHeading < 1)) {
         getIMUData();
         // distance = getMergedDistance();
         // updateRollingMin(distance);
-        updateDistance();
+        updateHeadingVals();
     }
   }
   else {
     if (cwHeading < angle) {
+      Serial.print("cwHeading < angle");
+      Serial.println(cwHeading);
       getIMUData();
       while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
         getIMUData();
         // distance = getMergedDistance();
         // updateRollingMin(distance);
-        updateDistance();
+        updateHeadingVals();
       }
+      Serial.print("Done Rotating here");
+      Serial.println(cwHeading);
     } else if (cwHeading > angle) {
       Serial.println("cwHeading > angle");
       while (cwHeading < 360 && cwHeading > 10) {
         getIMUData();
         // distance = getMergedDistance();
         // updateRollingMin(distance);
-        updateDistance();
+        updateHeadingVals();
       }
       while (cwHeading < angle) {
         getIMUData();
         // distance = getMergedDistance();
         // updateRollingMin(distance);
-        updateDistance();
+        updateHeadingVals();
       }
     }    
   }
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
   delay(100);
+  Serial.println("Done");
   getIMUData();
-  Serial.println();
-  Serial.println("Printing out distance array");
+  // Serial.println();
+  // Serial.println("Printing out distance array");
   // return avg;
 }
 

@@ -3,6 +3,8 @@
 #include "Constants.h"
 #include "IRSensor.h"
 #include "UltrasonicSensor.h"
+#include "FlameSensor.h"
+#include "Globals.h"
 
 void detectTileInFront() {
   // int cData[3];
@@ -55,4 +57,14 @@ float getMergedDistance() {
     return us_distance;
   }
   return ir_distance;
+}
+
+void updateHeadingVals() {
+  float distance = 10;//getMergedDistance();
+  int flameVal = getFlameValue();
+  Serial.println(flameVal);
+  initialSweepDistancesAndFlames[curr_sweep_meas_idx][0] = cwHeading;
+  initialSweepDistancesAndFlames[curr_sweep_meas_idx][1] = distance;
+  initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] = flameVal;
+  curr_sweep_meas_idx += 1;
 }

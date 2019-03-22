@@ -4,6 +4,7 @@
 #include "Movement.h"
 #include "IMU.h"
 #include "LaserSensor.h"
+#include "DetectionHelper.h"
 #include "FlameSensor.h"
 
 #include <math.h>       /* modf */
@@ -103,7 +104,7 @@ void toTileOffset(float offset[], int tileOffset[]) {
 	Serial.println();
 }
 
-float getMinDist(float minAngle, float maxAngle, float array[][2], int array_length) {
+float getMinDist(float minAngle, float maxAngle, float array[][3], int array_length) {
 	Serial.println("getMinDist");
 	float min = 9999.0;
 	for (int i = 0; i < array_length; i++) {
@@ -148,7 +149,7 @@ float getMinDist(float minAngle, float maxAngle, float array[][2], int array_len
 // Assume we're starting X: 3 - Y: 0
 void initialScan() {
   // for (int i = 0; i < 360; i++) {
-  //   initialSweepDistances[i] = 9999;
+  //   initialSweepDistancesAndFlames[i] = 9999;
   // }
   float distances[10];
   float offset[2];
@@ -160,11 +161,12 @@ void initialScan() {
    X: 1 - Y:0
    X: 2 - Y:0
    */
-  Serial.println("EAT SHIT YAAAA");
   rotateRightWhileSweeping(180);
-  rotateRightWhileSweeping(360);
+  rotateRightWhileSweeping(0);
   printSweepDistanceArray();
-  // delay(10000);
+  // TODO ====================================================================================
+  // NEED PROPER ANGLES HERE =================================================================
+  // YA ======================================================================================
   float angles[] = {270, 288.434948822922, 296.565051177078, 303.69006752597977, 315.0, 323.13010235415595, 326.30993247402023, 329.03624346792645, 333.434948822922, 338.1985905136482, 341.565051177078, 345.96375653207355, 348.69006752597977, 0.0, 11.309932474020213, 14.036243467926477, 18.43494882292201, 21.80140948635181, 26.56505117707799, 33.690067525979785, 45.0, 63.43494882292201, 90};
   for (int i = 0; i < 23; i++) {
   	float minAngle = angles[i] - 2;
@@ -175,7 +177,7 @@ void initialScan() {
   	Serial.print(minAngle);
   	Serial.print(" maxAngle: ");
   	Serial.println(maxAngle);
-  	float minDist = getMinDist(minAngle, maxAngle, initialSweepDistances, curr_sweep_meas_idx);
+  	float minDist = getMinDist(minAngle, maxAngle, initialSweepDistancesAndFlames, curr_sweep_meas_idx);
   	Serial.print(" minDist: ");
   	Serial.println(minDist);
   	toGridOffset(angles[i], minDist, offset);
@@ -390,8 +392,8 @@ float getMinDistance() {
   // int toCheck[] = {358, 359, 0, 1, 2};
 
   // for (int i = 0; i < 5; i++) {
-  //   if (initialSweepDistances[toCheck[i]] < min) {
-  //     min = initialSweepDistances[toCheck[i]];
+  //   if (initialSweepDistancesAndFlames[toCheck[i]] < min) {
+  //     min = initialSweepDistancesAndFlames[toCheck[i]];
   //   }
   // }
   // return min;
@@ -435,7 +437,7 @@ void verticalScan(int colNum) {
 //ASSUME WE ARE AT col 3, row 0 and the entire row 0 is flat
 void rowScanSequence() {
   // for (int i = 0; i < 360; i++) {
-  //   initialSweepDistances[i] = 9999;
+  //   initialSweepDistancesAndFlames[i] = 9999;
   // }
   // rotateRight(90);
   // for (int i = 0; i < 2; i++) {
@@ -448,7 +450,7 @@ void rowScanSequence() {
   // rotateRightWhileSweeping(3);
   // Serial.println("rotaterightwhilesleeping");
   // for (int i = 0; i < 360; i++) {
-  //   initialSweepDistances[i] = 9999;
+  //   initialSweepDistancesAndFlames[i] = 9999;
   // }
   // //SCAN
   // verticalScan(5);
@@ -457,7 +459,7 @@ void rowScanSequence() {
   // Serial.println("rotateleft 270");
   // for (int j = 4; j >= 0; j--) {
 		// 	  for (int i = 0; i < 360; i++) {
-		// 	    initialSweepDistances[i] = 9999;
+		// 	    initialSweepDistancesAndFlames[i] = 9999;
 		// 	  }  	
   //     moveForwardTile();
   //     rotateRight(357);// GET CLOSE ENOUGH TO 0
