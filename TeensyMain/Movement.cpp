@@ -6,8 +6,8 @@
 #define MOVE_SPEED 130
 #define LEFT_MOVE_SPEED 135
 #define RIGHT_MOVE_SPEED 130
-#define RIGHT_ROTATION_SPEED 80//75
-#define LEFT_ROTATION_SPEED 66
+#define RIGHT_ROTATION_SPEED 130//80//75
+#define LEFT_ROTATION_SPEED 110//66
 // Left
 int LEFT_MOVE_SPEEDS[] = {96, 100, 109, 117, 135, 151};
   // Right
@@ -101,7 +101,7 @@ void moveBackwardForDistance(float angle, int speed_idx, unsigned long encoder_c
     getIMUData();
     if (angle == 0) {
       if (cwHeading > 355) {
-        float correction_factor = (360 - cwHeading);
+        float correction_factor = 5*(360 - cwHeading);
         Serial.print("grater tahn 355 - left: ");
         Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         Serial.print(" right ");
@@ -109,7 +109,7 @@ void moveBackwardForDistance(float angle, int speed_idx, unsigned long encoder_c
         analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
       } else if (cwHeading < 5) {
-        float correction_factor = cwHeading;
+        float correction_factor = 5*cwHeading;
         Serial.print("here - left: ");
         Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         Serial.print(" right ");
@@ -118,11 +118,11 @@ void moveBackwardForDistance(float angle, int speed_idx, unsigned long encoder_c
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
       }
     } else {
-      float correction_factor = angle - cwHeading;
+      float correction_factor = 5*(angle - cwHeading);
       analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
       analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
     }
-    avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
+    avgEncoderVal = abs(leftEncoder.read() + rightEncoder.read())/2;
     Serial.println(avgEncoderVal);
   }
 }
@@ -143,10 +143,6 @@ void moveForwardForever(float angle, int speed_idx) {
   while (1) {
     moveForwardForDistance(angle, speed_idx, 4294967295);  
   }
-}
-
-void dipIntoMagnet() {
-  Serial.println("dipIntoMagnet not implemented...");
 }
 
 float addToleranceForEdge(float distance) {
@@ -170,11 +166,13 @@ void moveForwardInSand() {
       }
     }
     Serial.println("Needs to go: ");
-    float dist = (current_furthest - yPos - 1)*TILE_DIST_M + tolerance;
+    Serial.println(yPos);
+    Serial.println(current_furthest);
+    float dist = (current_furthest - yPos)*TILE_DIST_M + tolerance;
     dist = addToleranceForEdge(dist);
     Serial.println(dist);
     while (getMergedDistance() > dist) {
-      moveForwardForDistance(0, 5, 1);
+      moveForwardForDistance(0, 2, 1);
     }
     stopMotors();
   } else if ((cwHeading > 80 && cwHeading < 100) && xPos > 0) {
@@ -185,12 +183,12 @@ void moveForwardInSand() {
         break;
       }
     }
-    float dist = (current_furthest - xPos - 1)*TILE_DIST_M + tolerance;
+    float dist = (current_furthest - xPos)*TILE_DIST_M + tolerance;
     dist = addToleranceForEdge(dist);
     Serial.print("Needs to go: ");
     Serial.println(dist);
     while (getMergedDistance() > dist) {
-      moveForwardForDistance(90, 5, 1);
+      moveForwardForDistance(90, 2, 1);
     }
     stopMotors();
   } else if ((cwHeading > 170 && cwHeading < 190) && yPos < 5) {
@@ -201,12 +199,12 @@ void moveForwardInSand() {
         break;
       }
     }
-    float dist = (yPos - current_furthest - 1)*TILE_DIST_M + tolerance;
+    float dist = (yPos - current_furthest)*TILE_DIST_M + tolerance;
     dist = addToleranceForEdge(dist);
     Serial.print("Needs to go: ");
     Serial.println(dist);
     while (getMergedDistance() > dist) {
-      moveForwardForDistance(180, 5, 1);
+      moveForwardForDistance(180, 2, 1);
     }
     stopMotors();
   } else if ((cwHeading > 260 && cwHeading < 280) && xPos < 5) {
@@ -221,12 +219,12 @@ void moveForwardInSand() {
     Serial.print("xPos: ");
     Serial.println(xPos);
 
-    float dist = (max(0, (xPos - current_furthest - 1)))*TILE_DIST_M + tolerance;
+    float dist = (max(0, (xPos - current_furthest)))*TILE_DIST_M + tolerance;
     dist = addToleranceForEdge(dist);
     Serial.print("Needs to go: ");
     Serial.println(dist);
     while (getMergedDistance() > dist) {
-      moveForwardForDistance(270, 5, 1);
+      moveForwardForDistance(270, 2, 1);
     }
     stopMotors();
   } else {
@@ -236,9 +234,42 @@ void moveForwardInSand() {
     delay(10000);
   }
 }
+void signalComplete(){
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_PIN, LOW);
+  delay(1000);
+}
 
+int getIdealHeading() {
+  if ((cwHeading > 350 || cwHeading < 10)) {
+    return 0;
+  } else if ((cwHeading > 80 && cwHeading < 100)) {
+    return 90;
+  } else if ((cwHeading > 170 && cwHeading < 190)) {
+    return 180;
+  } else if ((cwHeading > 260 && cwHeading < 280)) {
+    return 270;
+  }  
+}
+void dipIntoMagnet() {
+  moveForwardForDistance(getIdealHeading(), 4, FORWARD_ENCODER_DIST * 0.75);
+  Serial.print("moving backwars fuc");
+  delay(100);
+  if (didDetectMagnet()) {
+    Serial.println("DID DETECT MAGNET");
+      magnetDetected = true;
+      signalComplete();
+      delay(1000);
+  }
+  moveBackwardForDistance(getIdealHeading(), 5, FORWARD_ENCODER_DIST);
+  stopMotors();
+  delay(1000);
+  moveForwardInSand();
+}
 void moveForwardTile() {
   if (levelMap[yPos][xPos] == 'm') {
+    Serial.println("IN SAND - THIS SHOULD NEVER BE HAPPENING");
     moveForwardInSand();
   } else {
     moveForwardThenStop(0, 4, FORWARD_ENCODER_DIST);

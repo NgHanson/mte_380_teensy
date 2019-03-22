@@ -254,12 +254,14 @@ void lookForMagnet() {
     executeMovementInstructions(results, numMoves);
     // GOING TO BE FACING MAGNET
     dipIntoMagnet();
-    if (didDetectMagnet()) {
-      magnetDetected = true;
-      signalComplete();
+    if (magnetDetected) {
+      Serial.println("Magnet detected in pqueue hsit");
+      // magnetDetected = true;
+      // signalComplete();
       // TODO: Update the state of the grid? ...
-      break;
+      //break;
     } else {
+      Serial.println("doneaz");
       delay(1000);
       // TODO: Update the state of the grid? ...
     }
@@ -307,9 +309,9 @@ void courseLogic() {
   }
 }
 
-void signalComplete(){
-  digitalWrite(LED_PIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_PIN, LOW);
-  delay(1000);
-}
+// void signalComplete(){
+//   digitalWrite(LED_PIN, HIGH);
+//   delay(1000);
+//   digitalWrite(LED_PIN, LOW);
+//   delay(1000);
+// }

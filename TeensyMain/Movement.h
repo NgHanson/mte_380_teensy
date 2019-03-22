@@ -12,3 +12,4 @@ void calibrateRotateLeft(void);
 bool shouldTurnLeft(float startAngle, float finalAngle);
 void rotateRightWhileSweeping(int);
 void dipIntoMagnet();
+void signalComplete();
