@@ -153,8 +153,8 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
     if (validLocation(forwardX, forwardY, objectiveTileType)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
 
-        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
-        if (objectiveTileType != 'h' && objectiveTileType != 'c') {
+        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE, CANDLE TILE OR MAGNET TILE!!
+        if (objectiveTileType != 'h' && objectiveTileType != 'c' && objectiveTileType != 'm') {
           currPathIndex++;
           Coordinate newCoord(forwardX, forwardY, currDir);
           currList[currPathIndex] = newCoord;
