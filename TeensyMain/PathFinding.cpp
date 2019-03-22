@@ -158,11 +158,17 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
 
     if (validLocation(forwardX, forwardY, objectiveTileType)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
-        Coordinate newCoord(forwardX, forwardY, currDir);
-        currList[currPathIndex+1] = newCoord;
+
+        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
+        if (objectiveTileType != 'h' && objectiveTileType != 'c') { 
+          currPathIndex++;
+          Coordinate newCoord(forwardX, forwardY, currDir);
+          currList[currPathIndex+1] = newCoord;
+        }
+
         //printPath(currList, currPathIndex, curr);
-        copyIntoResults(coordResult, currList, currPathIndex+1);
-        return currPathIndex + 1;
+        copyIntoResults(coordResult, currList, currPathIndex);
+        return currPathIndex;
       } else {
         int updatedPathCost = currPathCost + 1;          
         if (updatedPathCost < minCost[forwardY][forwardX][dirValue(currDir)] ) {

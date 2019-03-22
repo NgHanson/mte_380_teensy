@@ -156,6 +156,27 @@ void executeMovementInstructions(int movements[], int numMoves) {
   }
 }
 
+void goToHouse() {
+
+  int results[MAX_PATH_FINDING_SIZE];
+  //TODO: SETUP LOGIC IF NO HOUSES FOUND, ONE FOUND ... cases that we need to scan more ...
+  if (houseOneDetected && !houseOneDone) {
+    int numHouseOneMoves = getPath(results, houseTile1);
+    executeMovementInstructions(results, numHouseOneMoves);
+    // TODO: Detect house type? flash for delivering food...
+    houseOneDone = true;
+    signalComplete();
+  }
+
+  if (houseTwoDetected && !houseTwoDone) {
+    int numHouseTwoMoves = getPath(results, houseTile2);
+    executeMovementInstructions(results, numHouseTwoMoves);
+    // TODO: Detect house type? flash for delivering food...
+    houseTwoDone = true;
+    signalComplete();
+  }
+}
+
 // Will go to all magnet tiles (sand tiles that we havent confirmed a magnet is in)
 void lookForMagnet() {
   PriorityQueue<Coordinate> pq = PriorityQueue<Coordinate>(compareTile);
