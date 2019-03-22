@@ -208,20 +208,6 @@ void rotateLeft(int angle) {
   getIMUData();
 }
 
-void rotate180() {
-  rotateRight(180);
-}
-
-
-//EVERYTIME WE DO WACK STUFF, LIKE COME OUT OF A DITCH, we want to do this?
-void realignHeading() {
-
-}
-
-void alignToAngle(int angle) {
-
-}
-
 char convertHeadingToCharDirection(float heading) {
   //PROBABLY SHOULDNT ROUND TO NEARIST 90
   if ((345.0 <= heading && heading < 360.0) || (heading >= 0.0 && heading <= 15.0)) {
@@ -353,4 +339,18 @@ void calibrateEncoders() {
     Serial.print(" ");
   }
   delay(10000);
+}
+
+bool shouldTurnLeft(float startAngle, float finalAngle) {
+  float left = startAngle - finalAngle;
+  if (left < 0.0) {
+    left += 360.0;
+  }
+
+  float right = finalAngle - startAngle;
+  if (right < 0.0) {
+    right += 360.0;
+  }
+
+  return left < right;
 }
