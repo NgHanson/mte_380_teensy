@@ -37,7 +37,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   // setUpLaserSensor();
-  setupIMU();
+  // setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -128,31 +128,35 @@ void executeMovementInstructions(int movements[], int numMoves) {
 
     } else if (movement == 1) {
       if (shouldTurnLeft(cwHeading, 0.0)) {
-        rotateLeft(0);
+        //rotateLeft(0);
       } else {
-        rotateRight(0);
+        //rotateRight(0);
       }
+      cwHeading = 0.0; //FOR TESTING
 
     } else if (movement == 2) {
       if (shouldTurnLeft(cwHeading, 90.0)) {
-        rotateLeft(90);
+        //rotateLeft(90);
       } else {
-        rotateRight(90);
+        //rotateRight(90);
       }
+      cwHeading = 90.0; //FOR TESTING
 
     } else if (movement == 3) {;
       if (shouldTurnLeft(cwHeading, 180.0)) {
-        rotateLeft(180);
+        //rotateLeft(180);
       } else {
-        rotateRight(180);
+        //rotateRight(180);
       }
+      cwHeading = 180.0; //FOR TESTING
 
     } else if (movement == 4) {
       if (shouldTurnLeft(cwHeading, 270.0)) {
-        rotateLeft(270);
+        //rotateLeft(270);
       } else {
-        rotateRight(270);
+        //rotateRight(270);
       }
+      cwHeading = 270.0; //FOR TESTING
 
     } else {
       //SHOULD SIGNAL SOMETHING
@@ -202,6 +206,7 @@ void lookForMagnet() {
     int numMoves = getPath(results, closestMagnetTile);
     executeMovementInstructions(results, numMoves);
 
+    /*
     if (didDetectMagnet()) {
       magnetDetected = true;
       signalComplete();
@@ -210,7 +215,9 @@ void lookForMagnet() {
     } else {
       delay(1000);
       // TODO: Update the state of the grid? ...
-    }
+    }*/
+    Serial.println("AT MAGNET LOCATION");
+    Serial.println();
   }
 }
 
