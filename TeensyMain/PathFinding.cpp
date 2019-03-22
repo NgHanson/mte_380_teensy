@@ -22,14 +22,6 @@ void printPath(Coordinate list[], int listSize, Coordinate currTile) {
     Serial.print(" DIR: ");
     Serial.println(list[i].dir);
   }
-
-  //THIS IS TECHNICALLY WRONG...
-  Serial.print("X: ");
-  Serial.print(currTile.x);
-  Serial.print(" Y: ");
-  Serial.print(currTile.y);
-  Serial.print(" DIR: ");
-  Serial.println(currTile.dir);
 }
 
 void printTilePath(TilePath currTilePath) {
@@ -163,7 +155,6 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
 
         // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
         if (objectiveTileType != 'h' && objectiveTileType != 'c') {
-          Serial.println("DRIVE IN");
           currPathIndex++;
           Coordinate newCoord(forwardX, forwardY, currDir);
           currList[currPathIndex] = newCoord;
