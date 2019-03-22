@@ -35,10 +35,10 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   //setUpLaserSensor();
-  //setupIMU();
+  setupIMU();
   // delay(1000);
-  // getIMUData();
-  // calibrateIMU();
+   getIMUData();
+   //calibrateIMU();
   
   Serial.begin(115200);
   
@@ -85,6 +85,9 @@ void loop() {
   // testTileDetection();
 
    moveForward(120);
+   rotateRight(90);
+   moveForward(120);
+   rotateLeft(90);
    flameDetectionAndExtinguishTest();
    delay(20000);
   //houseDistinguisherTest();
@@ -115,44 +118,28 @@ void loop() {
 }
 
 void houseDistinguisherTest(){
-   moveForwardTile();
-   rotateLeft(90);
-   moveForwardTile();
-   rotateRight(90);
    detectTileInFront();
 }
 
 void flameDetectionAndExtinguishTest(){
    bool test = flamePresent();
    if(test){
-   digitalWrite(fanPin, HIGH);
-   delay(1000);
-    if(flamePresent()){
-      moveForward(100);
-      delay(200);
-      digitalWrite(fanPin,LOW);
-      delay(100);
-      flameDetectionAndExtinguishTest();
-    }else{
-      taskComplete(100);
-      taskComplete(100);
-      delay(500);
-      return;
-    }
-   }else{
-    flameDetectionAndExtinguishTest();
-   }
-   /*
-   if(test){
     digitalWrite(fanPin, HIGH);
-    delay(1500);
-    digitalWrite(fanPin,LOW);
-    taskComplete(100);
-    return;
+      while(true){
+        rotateLeft(15);
+        rotateRight(30);
+        rotateLeft(15);
+        if(!flamePresent()){
+          taskComplete(1000);
+          taskComplete(1000);
+          digitalWrite(fanPin,LOW);
+          delay(50000);
+          return;
+        }
+      }
    }else{
     flameDetectionAndExtinguishTest();
    }
-  */ 
 }
 
 void taskComplete(int blinkLength){
