@@ -209,35 +209,44 @@ void lookForMagnet() {
   }
 }
 
-int determinePriority() {
+void courseLogic() {
 
-  if (!flameDetected){
-    return 1; //look for flame
-  } else if (flameDetected && !flameDone) {
-    return 2; //go to flame
+  while(!flameDetected) {
+    //LOOK FOR FLAME
+  }
+
+  while(!flameDone) {
+    //TAKE OUT FLAME
   }
 
   //at this point, flame stuff is done
-  if (!magnetDetected) {
-    return 3; //look for magnets
+  while (!magnetDetected) {
+    lookForMagnet();
   }
 
   //at this point, food has been found
   
-  //WE MAY NEED A GENERAL LEGO HAS BEEN DETECTED
+  // WE NEED UPDATED LOGIC HERE
   if (!survivorsDetected) {
-    return 4; //look for survivors
+    //look for survivors
   } else if (survivorsDetected && !foodDelivered){
-    return 5; //go to survivors
+    //go to survivors
   }
 
   if (!lostDetected) {
-    return 6; //look for lost
+    //look for lost
   } else if (lostDetected && !lostDone) {
-    return 7; // go to lost
+    // go to lost
   }
 
-  return 8; // Return home
+  // Return home
+  Coordinate homeTile(0, 3, 'r');
+  int numMoves = getPath(results, homeTile);
+  executeMovementInstructions(results, numMoves);
+  signalComplete();
+
+  while(true){
+  }
 }
 
 void signalComplete(){
