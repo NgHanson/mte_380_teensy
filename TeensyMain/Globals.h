@@ -13,7 +13,7 @@ extern bool survivorsDetected;
 extern bool foodDelivered;
 extern bool lostDetected;
 extern bool lostDone;
-extern bool detectedFlame;
+
 extern bool magnetDetected;
 
 // Global map/position/orientation
