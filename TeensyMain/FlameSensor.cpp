@@ -1,11 +1,11 @@
 #include "FlameSensor.h"
 #include "Constants.h"
 
-const int flameIgnoreValue = 70;
+const int flameIgnoreValue = 400;
 
 bool flamePresent(){
   int flameValue = analogRead(FLAME_PIN);
-  //Serial.println(flameValue);
+  Serial.println(flameValue);
   if(flameValue < flameIgnoreValue){
     return false;
   }else{

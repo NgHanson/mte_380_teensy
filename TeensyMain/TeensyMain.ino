@@ -83,10 +83,12 @@ void loop() {
   // colourRead(cData);
   // printColorValues(cData);
   // testTileDetection();
-  
- flameDetectionAndExtinguishTest();
+
+   moveForward(120);
+   flameDetectionAndExtinguishTest();
+   delay(20000);
   //houseDistinguisherTest();
-  delay(999999);
+  
    
   // analogWrite(fanPin, 255);
   // moveForward(10);
@@ -117,25 +119,40 @@ void houseDistinguisherTest(){
    rotateLeft(90);
    moveForwardTile();
    rotateRight(90);
-   int houseRead = 0;
    detectTileInFront();
 }
 
 void flameDetectionAndExtinguishTest(){
-   moveForward(100);
-   rotateLeft(90);
-   moveForward(100);
-   rotateRight(90);
    bool test = flamePresent();
    if(test){
+   digitalWrite(fanPin, HIGH);
+   delay(1000);
+    if(flamePresent()){
+      moveForward(100);
+      delay(200);
+      digitalWrite(fanPin,LOW);
+      delay(100);
+      flameDetectionAndExtinguishTest();
+    }else{
+      taskComplete(100);
+      taskComplete(100);
+      delay(500);
+      return;
+    }
+   }else{
+    flameDetectionAndExtinguishTest();
+   }
+   /*
+   if(test){
     digitalWrite(fanPin, HIGH);
-    delay(1999.99999);
+    delay(1500);
     digitalWrite(fanPin,LOW);
     taskComplete(100);
     return;
    }else{
     flameDetectionAndExtinguishTest();
    }
+  */ 
 }
 
 void taskComplete(int blinkLength){
