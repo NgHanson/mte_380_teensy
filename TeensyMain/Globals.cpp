@@ -102,8 +102,8 @@ char levelMap[6][6] = {          //  y
 
 //Assume always starting from location levelMap[0][3];
 //levelMap[y][x]
-int xPos = 3;
-int yPos = 0;
+int xPos = 5;
+int yPos = 1;
 
 float cwHeading = 0.0;
 float frontTilt = 0.0;

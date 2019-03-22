@@ -98,7 +98,12 @@ void loop() {
   //rotateRight(355);
   //initialScan();
 
-  lookForMagnet();
+  int results[MAX_PATH_FINDING_SIZE];
+  Coordinate testLocation(0, 4, '-');
+  int numHouseOneMoves = getPath(results, testLocation);
+  executeMovementInstructions(results, numHouseOneMoves);
+
+  //lookForMagnet();
   Serial.println("END OF EXECUTION, INFINITE LOOP");
   while(true) {
 
