@@ -234,12 +234,6 @@ void moveForwardInSand() {
     // delay(10000);
   }
 }
-void signalComplete(){
-  digitalWrite(LED_PIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_PIN, LOW);
-  delay(1000);
-}
 
 int getIdealHeading() {
   if ((cwHeading > 350 || cwHeading < 10)) {

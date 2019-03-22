@@ -60,6 +60,9 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   pinMode(IR_SENSOR, INPUT);
   pinMode(fanPin, OUTPUT);
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
   
   // timerSetup();
 }
@@ -138,7 +141,9 @@ void loop() {
   // moveForwardTile();
   // moveForwardTile();
   // =======================================================================================
-
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, HIGH);
   // MAP 3 =================================================================================
   moveForwardTile();
   rotateLeft(270);
@@ -191,7 +196,8 @@ void extinguishFlame() {
   rotateRight(angle);
   stopMotors();
   digitalWrite(fanPin, HIGH);
-  delay(10000);
+  delay(7000);
+  digitalWrite(fanPin, LOW);
   Serial.print("Blow dat boi out");
 }
 

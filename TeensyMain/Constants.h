@@ -40,3 +40,7 @@
 
 // TODO: Confirm this max size ... may lead to missing vals if not large enough
 #define MAX_PATH_FINDING_SIZE 40
+
+#define LED_R 24
+#define LED_G 12
+#define LED_B 11

@@ -68,3 +68,18 @@ void updateHeadingVals() {
   initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] = flameVal;
   curr_sweep_meas_idx += 1;
 }
+
+// This should totally not be here but whatever...
+void signalComplete(){
+  digitalWrite(LED_PIN, HIGH);
+  digitalWrite(LED_R, LOW);
+  digitalWrite(LED_B, LOW);
+  digitalWrite(LED_G, HIGH);
+
+  delay(1000);
+  digitalWrite(LED_PIN, LOW);
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_B, HIGH);
+  digitalWrite(LED_G, HIGH);
+  delay(1000);
+}

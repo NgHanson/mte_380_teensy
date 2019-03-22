@@ -68,7 +68,16 @@ void toTileOffset(float offset[], int tileOffset[]) {
 
 	float tileOffsety = offset[0] / TILE_DIST_M;
 	float tileOffsetx = offset[1] / TILE_DIST_M;
-	Serial.println(tileOffsety);
+	double decimals = abs(getDecimalPlaces(tileOffsety));
+	if (decimals >= 0.9) {
+		tileOffsety += 1;
+	}
+	decimals = abs(getDecimalPlaces(tileOffsetx));
+	if (decimals >= 0.9) {
+		tileOffsetx += 1;
+	}
+
+	// Serial.println(tileOffsety);
 	tileOffset[0] = ceil(tileOffsety);
 	tileOffset[1] = ceil(tileOffsetx);
 	// if (tileOffsety < 0)
