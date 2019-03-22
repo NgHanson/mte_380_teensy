@@ -244,6 +244,16 @@ void lookForMagnet() {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
     executeMovementInstructions(results, numMoves);
+
+    if (didDetectMagnet()) {
+      magnetDetected = true;
+      signalComplete();
+      // TODO: Update the state of the grid? ...
+      break;
+    } else {
+      // TODO: Update the state of the grid? ...
+    }
+
   }
 }
 

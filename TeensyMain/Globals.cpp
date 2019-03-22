@@ -11,7 +11,7 @@ bool survivorsDetected = false;
 bool foodDelivered = false;
 bool lostDetected = false;
 bool lostDone = false;
-bool detectedFlame = false;
+
 bool magnetDetected = false;
 
 /*
@@ -25,6 +25,7 @@ bool magnetDetected = false;
  h - house
  s - survivor
  r - robot start
+ a - avoid (just avoid this tile)
  */
 
   /*
