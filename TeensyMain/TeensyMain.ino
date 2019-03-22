@@ -37,7 +37,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   // setUpLaserSensor();
-  // setupIMU();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -99,6 +99,7 @@ void loop() {
   //initialScan();
 
   lookForMagnet();
+  Serial.println("END OF EXECUTION, INFINITE LOOP");
   while(true) {
 
   }
