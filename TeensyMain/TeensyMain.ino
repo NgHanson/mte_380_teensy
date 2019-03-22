@@ -69,37 +69,21 @@ void timerSetup() {
 
 
 void loop() {
-  //didDetectMagnet();
-  //constructionCheckLoop();
-  //testEncoders();
-  //testIRSensor();
-  //testRotationWithIMU();
-  //testLaserSensor();
-  // int cData[3];
-  // colourRead(cData);
-  // printColorValues(cData);
-  // testTileDetection();
-  // detectFlame();
-  // analogWrite(fanPin, 255);
-  // moveForward(10);
-  //testRotateLeft();
-
-  // Move Forward One Tile =======================================
-  // moveForwardTile();
-  // delay(5000);
-  // =============================================================
+  initialScan();
   
-  // Calibrate Left And Right Turns ==============================
-  // calibrateRotateRight();
-  // calibrateRotateLeft();
-  // delay(5000);
-  // =============================================================
-  // rowScanSequence();
-  //rotateRight(355);
-  //initialScan();
+  Coordinate flameCodeCoord(1, 3,'c');
+  flameTile = flameCodeCoord;
+  flameDetected = true;
 
-  lookForMagnet();
-  Serial.println("END OF EXECUTION, INFINITE LOOP");
+  Coordinate house1Coord(2, 5,'h');
+  houseTile1 = house1Coord;
+  houseOneDetected = true;
+
+  Coordinate house2Coord(5, 1,'h');
+  houseTile2 = house2Coord;
+  houseTwoDetected = true;
+
+  courseLogic();
   while(true) {
 
   }
@@ -216,33 +200,35 @@ void lookForMagnet() {
 
 void courseLogic() {
 
-  while(!flameDetected) {
-    //LOOK FOR FLAME
-  }
 
   while(!flameDone) {
     //TAKE OUT FLAME
+    int flamePath[MAX_PATH_FINDING_SIZE];
+    int flameMoves = getPath(flamePath, flameTile);
+    executeMovementInstructions(flamePath, flameMoves);
+
+
+    signalComplete();
   }
 
   //at this point, flame stuff is done
   while (!magnetDetected) {
     lookForMagnet();
+    break; //GOES TO EACH LOCATION AND LEAVES
   }
 
   //at this point, food has been found
   
   // WE NEED UPDATED LOGIC HERE
-  if (!survivorsDetected) {
-    //look for survivors
-  } else if (survivorsDetected && !foodDelivered){
-    //go to survivors
-  }
+  int house1Path[MAX_PATH_FINDING_SIZE];
+  int house1Moves = getPath(house1Path, houseTile1);
+  executeMovementInstructions(house1Path, house1Moves);
+  signalComplete();
 
-  if (!lostDetected) {
-    //look for lost
-  } else if (lostDetected && !lostDone) {
-    // go to lost
-  }
+  int house2Path[MAX_PATH_FINDING_SIZE];
+  int house2Moves = getPath(house2Path, houseTile2);
+  executeMovementInstructions(house2Path, house2Moves);
+  signalComplete();
 
   // Return home
   int homePath[MAX_PATH_FINDING_SIZE];

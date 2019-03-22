@@ -55,6 +55,7 @@ bool magnetDetected = false;
 // Global map/position/orientation
 
 // -- GRID 1 -- //
+/*
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'p', 'r', 'u', 'u'},//  0
   {'u', 'm', 'u', 'u', 'g', 'u'},//  1
@@ -63,7 +64,7 @@ char levelMap[6][6] = {          //  y
   {'u', 'p', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
-
+*/
 // -- GRID 2 -- //
 /*
 char levelMap[6][6] = {          //  y
@@ -99,6 +100,16 @@ char levelMap[6][6] = {          //  y
   {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
 */
+
+  // -- GRID 1 WITH TEST-- //
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'p', 'r', 'u', 'u'},//  0
+  {'u', 'm', 'u', 'u', 'g', 'h'},//  1
+  {'u', 'u', 'u', 'u', 'u', 'p'},//  2
+  {'g', 'c', 'm', 'u', 'u', 'u'},//  3
+  {'u', 'p', 'u', 'u', 'm', 'u'},//  4
+  {'u', 'u', 'h', 'g', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
 
 //Assume always starting from location levelMap[0][3];
 //levelMap[y][x]
