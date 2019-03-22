@@ -1,4 +1,5 @@
 #include "UltrasonicSensor.h"
+#include "Constants.h"
 #define trigPin_HCSR04_1 A19
 #define echoPin_HCSR04_1 A20
 #define trigPin_HCSR04_2 A0
@@ -32,23 +33,23 @@ long hcPulse(const int triggerPin, const int echoPin){
  * PARALLAX
  */
 
-long parallaxPulse(const int ultraPin){
-  long duration, cm;
-  
+float parallaxPulse(){
+  float duration, cm;
   // The PING))) is triggered by a HIGH pulse of 2 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
-  pinMode(ultraPin, OUTPUT);
-  digitalWrite(ultraPin, LOW);
+  pinMode(pingPin, OUTPUT);
+  digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
-  digitalWrite(ultraPin, HIGH);
+  digitalWrite(pingPin, HIGH);
   delayMicroseconds(5);
-  digitalWrite(ultraPin, LOW);
-
+  digitalWrite(pingPin, LOW);
+  delayMicroseconds(5);
   // The same pin is used to read the signal from the PING))): a HIGH pulse
   // whose duration is the time (in microseconds) from the sending of the ping
   // to the reception of its echo off of an object.
-  pinMode(ultraPin, INPUT);
-  duration = pulseIn(ultraPin, HIGH);
+  pinMode(pingPin, INPUT);
+  duration = pulseIn(pingPin, HIGH);
   cm = duration * 0.017;
-  return cm;
+  delay(300);
+  return cm / 100.0;
 }

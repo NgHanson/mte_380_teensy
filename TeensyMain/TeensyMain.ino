@@ -3,7 +3,7 @@
 #include "Constants.h"
 #include "Globals.h"
 #include "LaserSensor.h"
-#include "IRSensor.h"
+// #include "IRSensor.h"
 #include "DetectionHelper.h"
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
@@ -18,6 +18,7 @@
 #include "IMU.h"
 #include "Mapping.h"
 #include "PathFinding.h"
+#include "DetectionHelper.h"
 
 #include "PriorityQueue.h"
 
@@ -38,7 +39,7 @@ void setup() {
   // colourSetup();
   // hcUltrasonicSetup();
   //setUpLaserSensor();
-  setupIMU();
+ // setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -77,7 +78,6 @@ void loop() {
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
-  testIRSensor();
   //testRotationWithIMU();
   //testLaserSensor();
   // int cData[3];
@@ -88,6 +88,19 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
+
+  // TESTING COMBINED SENSOR =========================================
+  // float merged_dist = getMergedDistance();
+  // Serial.println(merged_dist);
+  // =================================================================
+
+  // TESTING ULTRASONIC SENSOR =======================================
+  // Serial.println(parallaxPulse());
+  // =================================================================
+
+  // TESTING IR SENSOR ===============================================
+  // Serial.println(testIRSensor());
+  // =================================================================
 
   // TESTING LASER SENSOR ============================================
   // Serial.println(getLaserDistance()*100);
@@ -116,9 +129,9 @@ void loop() {
   // =============================================================
   // rowScanSequence();
   //rotateRight(355);
-  //initialScan();
+  initialScan();
 
-  lookForMagnet();
+  // lookForMagnet();
 }
 
 void testTileDetection() {
@@ -155,9 +168,9 @@ void testRotateLeft() {
   delay(5000);   
 }
 
-void testIRSensor() {
-  getIRDistance();
-}
+// void testIRSensor() {
+//   getIRDistance();
+// }
 
 void testLaserSensor() {
    Serial.println(getLaserDistance());

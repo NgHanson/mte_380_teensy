@@ -154,14 +154,15 @@ void initialScan() {
   float offset[2];
   int tileOffset[2];
   Serial.println("Rotating 90");
-  rotateLeft(265);
+  // rotateLeft(265);
   /* @ 270
    X: 0 - Y:0
    X: 1 - Y:0
    X: 2 - Y:0
    */
   Serial.println("EAT SHIT YAAAA");
-  rotateRightWhileSweeping(90);
+  rotateRightWhileSweeping(180);
+  rotateRightWhileSweeping(360);
   printSweepDistanceArray();
   // delay(10000);
   float angles[] = {270, 288.434948822922, 296.565051177078, 303.69006752597977, 315.0, 323.13010235415595, 326.30993247402023, 329.03624346792645, 333.434948822922, 338.1985905136482, 341.565051177078, 345.96375653207355, 348.69006752597977, 0.0, 11.309932474020213, 14.036243467926477, 18.43494882292201, 21.80140948635181, 26.56505117707799, 33.690067525979785, 45.0, 63.43494882292201, 90};

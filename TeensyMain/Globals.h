@@ -29,7 +29,7 @@ extern bool inPit;
 
 extern float initialSweepDistances[5000][2];
 extern int curr_sweep_meas_idx;
-extern float initialSweepFlameVals[360];
+extern float initialSweepFlameVals[5000][2];
 //Encoders
 extern Encoder leftEncoder;
 extern Encoder rightEncoder;

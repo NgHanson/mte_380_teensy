@@ -74,13 +74,13 @@ float getFilteredLaserDistance() {
 
 
 
-void updateRollingMin(float distance) {
-	Serial.print("update rolling min with distance: ");
-	Serial.println(distance);
-	initialSweepDistances[curr_sweep_meas_idx][0] = cwHeading;
-	initialSweepDistances[curr_sweep_meas_idx][1] = distance;
-	curr_sweep_meas_idx += 1;
-}
+// void updateRollingMin(float distance) {
+// 	Serial.print("update rolling min with distance: ");
+// 	Serial.println(distance);
+// 	initialSweepDistances[curr_sweep_meas_idx][0] = cwHeading;
+// 	initialSweepDistances[curr_sweep_meas_idx][1] = distance;
+// 	curr_sweep_meas_idx += 1;
+// }
 // float minDist = 99999;
 // void updateRollingMin(float meas) {
 // 	if (meas < minDist) {
@@ -91,78 +91,78 @@ void updateRollingMin(float distance) {
 // void resetRollingMin() {
 // 	minDist = 99999;
 // }
-void rotateRightWhileSweeping(int angle) {
-  float distance;
-  if (angle < 0 || angle >= 360) {
-    Serial.println("Angle is invalid");
-    return;
-  }
-  digitalWrite(LEFT_MOTOR_DIR, 1);
-  digitalWrite(RIGHT_MOTOR_DIR, 0); 
-  getIMUData();
-  analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
-  analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
-  getIMUData();
-  // Serial.println(angle);
-  // Serial.println(cwHeading);
-  if (angle == 0) {
-    // angle = 357.5;
-    while (!(cwHeading >= 0 && cwHeading < 1)) {
-      getIMUData();
-              Serial.print("cwHeading: ");
-        Serial.print(cwHeading);
-        Serial.print(" angle: ");
-        Serial.println(angle);
-        distance = getRawLaserDistance();
-        updateRollingMin(distance);
-      // Serial.println(cwHeading);      
-    }
-  }
-  else {
-    Serial.println("rotateright else");
-    // angle = angle - 2.5;
-    if (cwHeading < angle) {
-      Serial.println("cwHeading < angle");
-      getIMUData();
-      while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
-        getIMUData();
-        Serial.print("cwHeading: ");
-        Serial.print(cwHeading);
-        Serial.print(" angle: ");
-        Serial.println(angle);
-        distance = getRawLaserDistance();
-        updateRollingMin(distance);
-        Serial.println(distance);
-      }
-    } else if (cwHeading > angle) {
-      Serial.println("cwHeading > angle");
-      while (cwHeading < 360 && cwHeading > 10) {
-        getIMUData();
-        Serial.print("cwHeading: ");
-        Serial.print(cwHeading);
-        Serial.print(" angle: ");
-        Serial.println(angle);
-        distance = getRawLaserDistance();
-        updateRollingMin(distance);
-      }
-      Serial.println("eifeiefjioejfeoj");
-      while (cwHeading < angle) {
-        getIMUData();
-        Serial.print("cwHeading: ");
-        Serial.print(cwHeading);
-        Serial.print(" angle: ");
-        Serial.println(angle);
-        distance = getRawLaserDistance();
-        updateRollingMin(distance);
-      }
-    }    
-  }
-  // float avg =minDist;
-  analogWrite(LEFT_MOTOR_SPEED, 0);
-  analogWrite(RIGHT_MOTOR_SPEED, 0);
-  delay(100);
-  getIMUData();
-  Serial.println();
-  Serial.println("Printing out distance array");
-  // return avg;
-}
+// void rotateRightWhileSweeping(int angle) {
+//   float distance;
+//   if (angle < 0 || angle >= 360) {
+//     Serial.println("Angle is invalid");
+//     return;
+//   }
+//   digitalWrite(LEFT_MOTOR_DIR, 1);
+//   digitalWrite(RIGHT_MOTOR_DIR, 0); 
+//   getIMUData();
+//   analogWrite(LEFT_MOTOR_SPEED, ROTATION_SPEED);
+//   analogWrite(RIGHT_MOTOR_SPEED, ROTATION_SPEED);
+//   getIMUData();
+//   // Serial.println(angle);
+//   // Serial.println(cwHeading);
+//   if (angle == 0) {
+//     // angle = 357.5;
+//     while (!(cwHeading >= 0 && cwHeading < 1)) {
+//       getIMUData();
+//               Serial.print("cwHeading: ");
+//         Serial.print(cwHeading);
+//         Serial.print(" angle: ");
+//         Serial.println(angle);
+//         distance = getRawLaserDistance();
+//         updateRollingMin(distance);
+//       // Serial.println(cwHeading);      
+//     }
+//   }
+//   else {
+//     Serial.println("rotateright else");
+//     // angle = angle - 2.5;
+//     if (cwHeading < angle) {
+//       Serial.println("cwHeading < angle");
+//       getIMUData();
+//       while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
+//         getIMUData();
+//         Serial.print("cwHeading: ");
+//         Serial.print(cwHeading);
+//         Serial.print(" angle: ");
+//         Serial.println(angle);
+//         distance = getRawLaserDistance();
+//         updateRollingMin(distance);
+//         Serial.println(distance);
+//       }
+//     } else if (cwHeading > angle) {
+//       Serial.println("cwHeading > angle");
+//       while (cwHeading < 360 && cwHeading > 10) {
+//         getIMUData();
+//         Serial.print("cwHeading: ");
+//         Serial.print(cwHeading);
+//         Serial.print(" angle: ");
+//         Serial.println(angle);
+//         distance = getRawLaserDistance();
+//         updateRollingMin(distance);
+//       }
+//       Serial.println("eifeiefjioejfeoj");
+//       while (cwHeading < angle) {
+//         getIMUData();
+//         Serial.print("cwHeading: ");
+//         Serial.print(cwHeading);
+//         Serial.print(" angle: ");
+//         Serial.println(angle);
+//         distance = getRawLaserDistance();
+//         updateRollingMin(distance);
+//       }
+//     }    
+//   }
+//   // float avg =minDist;
+//   analogWrite(LEFT_MOTOR_SPEED, 0);
+//   analogWrite(RIGHT_MOTOR_SPEED, 0);
+//   delay(100);
+//   getIMUData();
+//   Serial.println();
+//   Serial.println("Printing out distance array");
+//   // return avg;
+// }
