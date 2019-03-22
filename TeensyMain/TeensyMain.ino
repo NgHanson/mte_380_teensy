@@ -1,32 +1,22 @@
 #include "Arduino.h"
-
+#include "Encoder.h"
 #include "Constants.h"
 #include "Globals.h"
 #include "LaserSensor.h"
-// #include "IRSensor.h"
+#include "IRSensor.h"
 #include "DetectionHelper.h"
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BNO055.h>
 //#include <utility/imumaths.h>
 
 
-#include "Movement.h"
-#include "Mapping.h"
-#include "PathFinding.h"
-#include "DetectionHelper.h"
-
-#include "UltrasonicSensor.h"
-#include "IMU.h"
+#include "MathHelper.h"
 #include "ColourSensor.h"
 #include "FlameSensor.h"
-#include "LaserSensor.h"
-#include "IRSensor.h"
-
-#include "Encoder.h"
-#include "PriorityQueue.h"
-
-#include "DetectionHelper.h"
-#include "MathHelper.h"
+#include "Movement.h"
+#include "UltrasonicSensor.h"
+#include "IMU.h"
+#include "Mapping.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -44,8 +34,8 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  // setUpLaserSensor();
-  setupIMU();
+  //setUpLaserSensor();
+  //setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -72,37 +62,36 @@ void timerSetup() {
   /*
   ultrasonicTimer.begin(ultrasonicPulse, 125);
   ultrasonicTimer.priority(3);
+  
+  hallTimer.begin(detectMagnet, 125);
+  hallTimer.priority(3);
   */
+  Serial.print("Hello: Start");
 }
 
 
 void loop() {
+  // Serial.println("Start loop");
+  // debugIMUData();
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
+  //testIRSensor();
   //testRotationWithIMU();
   //testLaserSensor();
   // int cData[3];
   // colourRead(cData);
   // printColorValues(cData);
   // testTileDetection();
-  // detectFlame();
+  
+ flameDetectionAndExtinguishTest();
+  //houseDistinguisherTest();
+  delay(999999);
+   
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
-
-  // TESTING COMBINED SENSOR =========================================
-  // float merged_dist = getMergedDistance();
-  // Serial.println(merged_dist);
-  // =================================================================
-
-  // TESTING ULTRASONIC SENSOR =======================================
-  // Serial.println(parallaxPulse());
-  // =================================================================
-
-  // TESTING IR SENSOR ===============================================
-  // Serial.println(testIRSensor());
-  // =================================================================
+  // rowScanSequence();
 
   // TESTING LASER SENSOR ============================================
   // Serial.println(getLaserDistance()*100);
@@ -118,192 +107,130 @@ void loop() {
   // Serial.print(" Time required for laserDistance: ");
   // Serial.println(millis() - time);
   // =================================================================
-
-  // Move Forward One Tile =======================================
-  // moveForwardTile();
-  // delay(5000);
-  // =============================================================
-  
-  // Calibrate Left And Right Turns ==============================
-  // calibrateRotateRight();
-  // calibrateRotateLeft();
-  // delay(5000);
-  // =============================================================
-  // rowScanSequence();
   //rotateRight(355);
-  initialScan();
-  extinguishFlame();
-  // lookForMagnet();
   //initialScan();
+  // delay(1000);
+}
 
-  lookForMagnet();
-  Serial.println("END OF EXECUTION, INFINITE LOOP");
-  while(true) {
+void houseDistinguisherTest(){
+   moveForwardTile();
+   rotateLeft(90);
+   moveForwardTile();
+   rotateRight(90);
+   int houseRead = 0;
+   detectTileInFront();
+}
 
+void flameDetectionAndExtinguishTest(){
+   moveForward(100);
+   rotateLeft(90);
+   moveForward(100);
+   rotateRight(90);
+   bool test = flamePresent();
+   if(test){
+    digitalWrite(fanPin, HIGH);
+    delay(1999.99999);
+    digitalWrite(fanPin,LOW);
+    taskComplete(100);
+    return;
+   }else{
+    flameDetectionAndExtinguishTest();
+   }
+}
+
+void taskComplete(int blinkLength){
+  int blinked = 1;
+  digitalWrite(LED_PIN, HIGH);
+  for(int i = 0; i < 10; i++){
+    blinked ^= 1;
+    digitalWrite(LED_PIN, blinked);
+    delay(blinkLength);  
   }
 }
 
-// Sort by tile with the closts euclidean distance
-bool compareTile(Coordinate c1, Coordinate c2){
-  return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
+void testTileDetection() {
+  detectTileInFront();
 }
 
-void extinguishFlame() {
-  int angle = -1;
-  int maxFlameVal = 0;
-  for (int i = 0; i < curr_sweep_meas_idx; i++) {
-    if (initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] > maxFlameVal) {
-      maxFlameVal = initialSweepDistancesAndFlames[curr_sweep_meas_idx][2];
-      angle = initialSweepDistancesAndFlames[curr_sweep_meas_idx][0];
-    }
-  }
-  rotateRight(angle);
-  Serial.print("Blow dat boi out");
+void testRotationWithIMU() {
+  Serial.println("rotateRight(90) ============================");
+  rotateRight(90);
+  delay(5000);
+  Serial.println("rotateRight(180) ============================");
+  rotateRight(180);
+  delay(5000);
+  Serial.println("rotateRight(270) ============================");
+  rotateRight(270);
+  delay(5000);
+  Serial.println("rotateRight(0) ============================");
+  rotateRight(0);
+  delay(5000);  
 }
 
-/*
-  a set of movement instructions will be given as an array of integers that will be decoded
-  0 - forward
-  1 - rotate 0
-  2 - rotate 90
-  3 - rotate 180
-  4 - rotate 270
-*/
-void executeMovementInstructions(int movements[], int numMoves) {
-
-  for (int i = 0; i < numMoves; i++) {
-    int movement = movements[i];
-
-    if (movement == 0) {
-      moveForwardTile();
-
-    } else if (movement == 1) {
-      if (shouldTurnLeft(cwHeading, 0.0)) {
-        rotateLeft(0);
-      } else {
-        rotateRight(0);
-      }
-
-    } else if (movement == 2) {
-      if (shouldTurnLeft(cwHeading, 90.0)) {
-        rotateLeft(90);
-      } else {
-        rotateRight(90);
-      }
-
-    } else if (movement == 3) {;
-      if (shouldTurnLeft(cwHeading, 180.0)) {
-        rotateLeft(180);
-      } else {
-        rotateRight(180);
-      }
-
-    } else if (movement == 4) {
-      if (shouldTurnLeft(cwHeading, 270.0)) {
-        rotateLeft(270);
-      } else {
-        rotateRight(270);
-      }
-
-    } else {
-      //SHOULD SIGNAL SOMETHING
-    }
-
-  }
+void testRotateLeft() {
+  Serial.println("rotateLeft(270) ============================");
+  rotateLeft(270);
+  delay(5000);
+  Serial.println("rotateLeft(180) ============================");
+  rotateLeft(180);
+  delay(5000);
+  Serial.println("rotateLeft(90) ============================");
+  rotateLeft(90);
+  delay(5000);
+  Serial.println("rotateLeft(0) ============================");
+  rotateLeft(0);
+  delay(5000);   
 }
 
-void goToHouse() {
-
-  int results[MAX_PATH_FINDING_SIZE];
-  //TODO: SETUP LOGIC IF NO HOUSES FOUND, ONE FOUND ... cases that we need to scan more ...
-  if (houseOneDetected && !houseOneDone) {
-    int numHouseOneMoves = getPath(results, houseTile1);
-    executeMovementInstructions(results, numHouseOneMoves);
-    // TODO: Detect house type? flash for delivering food...
-    houseOneDone = true;
-    signalComplete();
-  }
-
-  if (houseTwoDetected && !houseTwoDone) {
-    int numHouseTwoMoves = getPath(results, houseTile2);
-    executeMovementInstructions(results, numHouseTwoMoves);
-    // TODO: Detect house type? flash for delivering food...
-    houseTwoDone = true;
-    signalComplete();
-  }
+void testIRSensor() {
+  getIRDistance();
 }
 
-// Will go to all magnet tiles (sand tiles that we havent confirmed a magnet is in)
-void lookForMagnet() {
-  PriorityQueue<Coordinate> pq = PriorityQueue<Coordinate>(compareTile);
-  for(int y = 0; y < 6; y++) {
-    for (int x = 0; x < 6; x++) {
-
-      if (levelMap[y][x] == 'm') {
-        Coordinate magnetTile(x, y,'m');
-        pq.push(magnetTile);
-      }
-
-    }
-  }
-
-  int results[MAX_PATH_FINDING_SIZE];
-  while(!pq.isEmpty()) {
-    Coordinate closestMagnetTile = pq.pop();
-    int numMoves = getPath(results, closestMagnetTile);
-    executeMovementInstructions(results, numMoves);
-
-    if (didDetectMagnet()) {
-      magnetDetected = true;
-      signalComplete();
-      // TODO: Update the state of the grid? ...
-      break;
-    } else {
-      delay(1000);
-      // TODO: Update the state of the grid? ...
-    }
-  }
+void testLaserSensor() {
+   Serial.println(getLaserDistance());
 }
 
-void courseLogic() {
+void testEncoders() {
+  Serial.print("Left = ");
+  Serial.print(leftEncoder.read());
+  Serial.print(", Right = ");
+  Serial.print(rightEncoder.read());
+  Serial.println();
+}
 
-  while(!flameDetected) {
-    //LOOK FOR FLAME
-  }
+int determinePriority() {
 
-  while(!flameDone) {
-    //TAKE OUT FLAME
+  if (!flameDetected){
+    return 1; //look for flame
+  } else if (flameDetected && !flameDone) {
+    return 2; //go to flame
   }
 
   //at this point, flame stuff is done
-  while (!magnetDetected) {
-    lookForMagnet();
+  if (!magnetDetected) {
+    return 3; //look for magnets
   }
 
   //at this point, food has been found
   
-  // WE NEED UPDATED LOGIC HERE
+  //WE MAY NEED A GENERAL LEGO HAS BEEN DETECTED
   if (!survivorsDetected) {
-    //look for survivors
+    return 4; //look for survivors
   } else if (survivorsDetected && !foodDelivered){
-    //go to survivors
+    return 5; //go to survivors
   }
 
   if (!lostDetected) {
-    //look for lost
+    return 6; //look for lost
   } else if (lostDetected && !lostDone) {
-    // go to lost
+    return 7; // go to lost
   }
 
-  // Return home
-  int homePath[MAX_PATH_FINDING_SIZE];
-  Coordinate homeTile(0, 3, 'r');
-  int homeMoves = getPath(homePath, homeTile);
-  executeMovementInstructions(homePath, homeMoves);
-  signalComplete();
+  return 8; // Return home
+}
 
-  while(true){
-  }
+void goToLocation() {
+
 }
 
 void signalComplete(){
