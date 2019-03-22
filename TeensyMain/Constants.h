@@ -3,6 +3,10 @@
 #define LEFT_ENC_2 A5
 #define LEFT_ENC_1 A4
 
+#define LED_R 24
+#define LED_G 12
+#define LED_B 11
+
 #define RIGHT_MOTOR_DIR A6
 #define RIGHT_MOTOR_SPEED A7
 #define LEFT_MOTOR_DIR A8

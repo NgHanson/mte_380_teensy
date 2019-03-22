@@ -10,8 +10,8 @@ void detectTileInFront() {
   float g_val = cData[1];
   float b_val = cData[2];
   float colMagAvg = sqrt(pow(r_val, 2) + pow(g_val, 2) + pow(b_val, 2));
-  printColourDistribution(r_val, g_val, b_val);
-  float distance = getIRDistance();
+  //printColourDistribution(r_val, g_val, b_val);
+  //float distance = getIRDistance();
   //Serial.print(" IR Distance: ");
   //Serial.println(distance);
   // TODO: Implement this logic...  
@@ -21,30 +21,26 @@ void detectTileInFront() {
     if (r_val/colMagAvg > 0.29 && r_val/colMagAvg < 0.31 &&
         g_val/colMagAvg > 0.57 && g_val/colMagAvg < 0.64 &&
         b_val/colMagAvg > 0.70 && b_val/colMagAvg < 0.75) {
-        //Serial.println("Yellow House");
-        digitalWrite(LED_PIN,HIGH);
-    } else {
-      //Serial.println("Red House");
+        Serial.println("Yellow House");
+        digitalWrite(LED_G,LOW);
+        return;
+    }else if(r_val/colMagAvg > 0.28 && r_val/colMagAvg < 0.4 &&
+       g_val/colMagAvg > 0.64 && g_val/colMagAvg < 0.69 &&
+       b_val/colMagAvg > 0.64 && b_val/colMagAvg < 0.69 && colMagAvg > 400){
+      Serial.println("NOT A HOUSE");
       int blinking = 1;
       for(int i = 0; i < 10; i++){
         blinking ^= 1;
-        digitalWrite(LED_PIN, blinking);
+        digitalWrite(LED_B, blinking);
         delay(250);
-      }
+        detectTileInFront();
+        }
     }
-  } else {
-    if (distance > 14) {
-      //Serial.println("Hole");
-    } else if (distance < 13) {
-      //Serial.println("Wood Tile");
-    } else {
-      if (r_val/colMagAvg > 0.28 && r_val/colMagAvg < 0.4 &&
-      g_val/colMagAvg > 0.64 && g_val/colMagAvg < 0.69 &&
-      b_val/colMagAvg > 0.64 && b_val/colMagAvg < 0.69 && colMagAvg > 400) {
-        //Serial.println("Sand");
-      } else {
-        //Serial.println("Rocks");
-      }
-    }
-  }
+    else{
+      Serial.println("Red House");
+      digitalWrite(LED_R,LOW);
+        return;
+      
+   }
+   }
 }
