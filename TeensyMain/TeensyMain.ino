@@ -131,9 +131,18 @@ void loop() {
   // =============================================================
   // rowScanSequence();
   //rotateRight(355);
-  // initialScan();
-  // extinguishFlame();
-  lookForMagnet();
+  // TINGS==================================================================================
+  moveForwardTile();
+  moveForwardTile();
+  initialScan();
+  extinguishFlame();
+  rotateRight(180);
+  moveForwardTile();
+  moveForwardTile();
+  rotateRight(0);
+  // TINGS==================================================================================
+  // rowScanSequence();
+  // lookForMagnet();
   //initialScan();
 
   lookForMagnet();
@@ -152,12 +161,19 @@ void extinguishFlame() {
   int angle = -1;
   int maxFlameVal = 0;
   for (int i = 0; i < curr_sweep_meas_idx; i++) {
-    if (initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] > maxFlameVal) {
-      maxFlameVal = initialSweepDistancesAndFlames[curr_sweep_meas_idx][2];
-      angle = initialSweepDistancesAndFlames[curr_sweep_meas_idx][0];
+    if (initialSweepDistancesAndFlames[i][2] > maxFlameVal) {
+      Serial.print("Found more shit ");
+      Serial.print(angle);
+      Serial.print(" ");
+      Serial.println(maxFlameVal);
+      maxFlameVal = initialSweepDistancesAndFlames[i][2];
+      angle = initialSweepDistancesAndFlames[i][0];
     }
   }
   rotateRight(angle);
+  stopMotors();
+  digitalWrite(fanPin, HIGH);
+  delay(10000);
   Serial.print("Blow dat boi out");
 }
 
@@ -172,6 +188,7 @@ void extinguishFlame() {
 void executeMovementInstructions(int movements[], int numMoves) {
 
   for (int i = 0; i < numMoves; i++) {
+    delay(3000);
     int movement = movements[i];
 
     if (movement == 0) {

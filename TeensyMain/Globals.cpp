@@ -121,7 +121,7 @@ void printSweepDistanceArray() {
   	Serial.print(" ");
   	Serial.print(initialSweepDistancesAndFlames[i][1]);
   	Serial.print(" ");
-  	Serial.print(initialSweepDistancesAndFlames[i][2]);
+  	Serial.println(initialSweepDistancesAndFlames[i][2]);
   }
   Serial.println("=======================================");
 }

@@ -60,7 +60,7 @@ float getMergedDistance() {
 }
 
 void updateHeadingVals() {
-  float distance = 10;//getMergedDistance();
+  float distance = getMergedDistance();
   int flameVal = getFlameValue();
   Serial.println(flameVal);
   initialSweepDistancesAndFlames[curr_sweep_meas_idx][0] = cwHeading;
