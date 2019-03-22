@@ -134,6 +134,13 @@ void loop() {
   initialScan();
   extinguishFlame();
   // lookForMagnet();
+  //initialScan();
+
+  lookForMagnet();
+  Serial.println("END OF EXECUTION, INFINITE LOOP");
+  while(true) {
+
+  }
 }
 
 // Sort by tile with the closts euclidean distance
@@ -176,7 +183,7 @@ void executeMovementInstructions(int movements[], int numMoves) {
       } else {
         rotateRight(0);
       }
-      
+
     } else if (movement == 2) {
       if (shouldTurnLeft(cwHeading, 90.0)) {
         rotateLeft(90);
@@ -197,10 +204,32 @@ void executeMovementInstructions(int movements[], int numMoves) {
       } else {
         rotateRight(270);
       }
+
     } else {
       //SHOULD SIGNAL SOMETHING
     }
 
+  }
+}
+
+void goToHouse() {
+
+  int results[MAX_PATH_FINDING_SIZE];
+  //TODO: SETUP LOGIC IF NO HOUSES FOUND, ONE FOUND ... cases that we need to scan more ...
+  if (houseOneDetected && !houseOneDone) {
+    int numHouseOneMoves = getPath(results, houseTile1);
+    executeMovementInstructions(results, numHouseOneMoves);
+    // TODO: Detect house type? flash for delivering food...
+    houseOneDone = true;
+    signalComplete();
+  }
+
+  if (houseTwoDetected && !houseTwoDone) {
+    int numHouseTwoMoves = getPath(results, houseTile2);
+    executeMovementInstructions(results, numHouseTwoMoves);
+    // TODO: Detect house type? flash for delivering food...
+    houseTwoDone = true;
+    signalComplete();
   }
 }
 
@@ -230,41 +259,51 @@ void lookForMagnet() {
       // TODO: Update the state of the grid? ...
       break;
     } else {
+      delay(1000);
       // TODO: Update the state of the grid? ...
     }
-
   }
 }
 
-int determinePriority() {
+void courseLogic() {
 
-  if (!flameDetected){
-    return 1; //look for flame
-  } else if (flameDetected && !flameDone) {
-    return 2; //go to flame
+  while(!flameDetected) {
+    //LOOK FOR FLAME
+  }
+
+  while(!flameDone) {
+    //TAKE OUT FLAME
   }
 
   //at this point, flame stuff is done
-  if (!magnetDetected) {
-    return 3; //look for magnets
+  while (!magnetDetected) {
+    lookForMagnet();
   }
 
   //at this point, food has been found
   
-  //WE MAY NEED A GENERAL LEGO HAS BEEN DETECTED
+  // WE NEED UPDATED LOGIC HERE
   if (!survivorsDetected) {
-    return 4; //look for survivors
+    //look for survivors
   } else if (survivorsDetected && !foodDelivered){
-    return 5; //go to survivors
+    //go to survivors
   }
 
   if (!lostDetected) {
-    return 6; //look for lost
+    //look for lost
   } else if (lostDetected && !lostDone) {
-    return 7; // go to lost
+    // go to lost
   }
 
-  return 8; // Return home
+  // Return home
+  int homePath[MAX_PATH_FINDING_SIZE];
+  Coordinate homeTile(0, 3, 'r');
+  int homeMoves = getPath(homePath, homeTile);
+  executeMovementInstructions(homePath, homeMoves);
+  signalComplete();
+
+  while(true){
+  }
 }
 
 void signalComplete(){

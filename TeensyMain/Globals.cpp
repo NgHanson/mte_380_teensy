@@ -3,15 +3,27 @@
 
 #include "Coordinate.h"
 
+// -- FLAME -- //
 bool flameDetected = false;
 bool flameDone = false;
 Coordinate flameTile;
 
+// -- HOUSES -- //
 bool survivorsDetected = false;
 bool foodDelivered = false;
 bool lostDetected = false;
 bool lostDone = false;
 
+extern bool houseOneDetected = false;
+extern bool houseTwoDetected = false;
+
+extern bool houseOneDone = false;
+extern bool houseTwoDone = false;
+
+Coordinate houseTile1;
+Coordinate houseTile2;
+
+// -- MAGNET -- //
 bool magnetDetected = false;
 
 /*

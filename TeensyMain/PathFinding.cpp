@@ -22,12 +22,6 @@ void printPath(Coordinate list[], int listSize, Coordinate currTile) {
     Serial.print(" DIR: ");
     Serial.println(list[i].dir);
   }
-  Serial.print("X: ");
-  Serial.print(currTile.x);
-  Serial.print(" Y: ");
-  Serial.print(currTile.y);
-  Serial.print(" DIR: ");
-  Serial.println(currTile.dir);
 }
 
 void printTilePath(TilePath currTilePath) {
@@ -158,11 +152,17 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
 
     if (validLocation(forwardX, forwardY, objectiveTileType)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
-        Coordinate newCoord(forwardX, forwardY, currDir);
-        currList[currPathIndex+1] = newCoord;
+
+        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
+        if (objectiveTileType != 'h' && objectiveTileType != 'c') {
+          currPathIndex++;
+          Coordinate newCoord(forwardX, forwardY, currDir);
+          currList[currPathIndex] = newCoord;
+        }
+
         //printPath(currList, currPathIndex, curr);
-        copyIntoResults(coordResult, currList, currPathIndex+1);
-        return currPathIndex + 1;
+        copyIntoResults(coordResult, currList, currPathIndex);
+        return currPathIndex;
       } else {
         int updatedPathCost = currPathCost + 1;          
         if (updatedPathCost < minCost[forwardY][forwardX][dirValue(currDir)] ) {
@@ -179,19 +179,21 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
     }
 
     // WE CAN ROTATE TO DIRECTIONS WHICH THE ROBOT CURRENTLY ISNT FACING
-    for (int i = 0; i < 4; i++) {
-      char c = validDir[i];
-      if (c != currDir) {
-        int updatedPathCost = currPathCost + 1;
-        if (updatedPathCost < minCost[curr.y][curr.x][dirValue(c)] ) {
-          double distCost = euclideanDist(curr.x, objectiveX, curr.y, objectiveY); //Heuristic for PriorityQueue comparator
-          minCost[curr.y][curr.x][dirValue(c)] = updatedPathCost;
-          Coordinate newCoord(curr.x, curr.y, c);
-          Coordinate newPath[MAX_PATH_FINDING_SIZE];
-          deepCopy(currList, newPath, currPathIndex);
-          newPath[currPathIndex+1] = newCoord;
-          TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
-          pq.push(newTilePath);
+    if (levelMap[curr.y][curr.x] != 'm') { // FORCE THE ROBOT TO ONLY MOVE FORWARD IF ITS CURRENTLY ON A SAND TILE
+      for (int i = 0; i < 4; i++) {
+        char c = validDir[i];
+        if (c != currDir) {
+          int updatedPathCost = currPathCost + 1;
+          if (updatedPathCost < minCost[curr.y][curr.x][dirValue(c)] ) {
+            double distCost = euclideanDist(curr.x, objectiveX, curr.y, objectiveY); //Heuristic for PriorityQueue comparator
+            minCost[curr.y][curr.x][dirValue(c)] = updatedPathCost;
+            Coordinate newCoord(curr.x, curr.y, c);
+            Coordinate newPath[MAX_PATH_FINDING_SIZE];
+            deepCopy(currList, newPath, currPathIndex);
+            newPath[currPathIndex+1] = newCoord;
+            TilePath newTilePath(newPath, updatedPathCost, distCost, currPathIndex+1);
+            pq.push(newTilePath);
+          }
         }
       }
     }
