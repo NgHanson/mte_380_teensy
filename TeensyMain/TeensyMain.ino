@@ -261,3 +261,7 @@ void signalComplete(){
   digitalWrite(LED_PIN, LOW);
   delay(1000);
 }
+
+void detectHouseColor(){
+  detectTileInFront();
+}
