@@ -79,6 +79,7 @@ char levelMap[6][6] = {          //  y
 */
 
 // -- GRID 3 -- //
+/*
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'g', 'r', 'u', 'u'},//  0
   {'u', 'm', 'u', 'u', 'p', 'u'},//  1
@@ -86,6 +87,7 @@ char levelMap[6][6] = {          //  y
   {'p', 'u', 'u', 'u', 'u', 'u'},//  3
   {'u', 'g', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
+  */
 //x 0    1    2    3    4    5
 
 // -- GRID 4 -- //
@@ -100,10 +102,20 @@ char levelMap[6][6] = {          //  y
 //x 0    1    2    3    4    5
 */
 
+  // -- GRID 1 WITH TEST-- //
+char levelMap[6][6] = {          //  y
+  {'u', 'u', 'p', 'r', 'u', 'u'},//  0
+  {'u', 'm', 'u', 'u', 'g', 'h'},//  1
+  {'u', 'u', 'u', 'u', 'u', 'p'},//  2
+  {'g', 'c', 'm', 'u', 'u', 'u'},//  3
+  {'u', 'p', 'u', 'u', 'm', 'u'},//  4
+  {'u', 'u', 'h', 'g', 'u', 'u'}};// 5
+//x 0    1    2    3    4    5
+
 //Assume always starting from location levelMap[0][3];
 //levelMap[y][x]
-int xPos = 5;
-int yPos = 1;
+int xPos = 3;
+int yPos = 0;
 
 float cwHeading = 0.0;
 float frontTilt = 0.0;

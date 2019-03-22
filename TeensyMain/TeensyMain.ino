@@ -98,12 +98,28 @@ void loop() {
   //rotateRight(355);
   //initialScan();
 
+  /*
   int results[MAX_PATH_FINDING_SIZE];
   Coordinate testLocation(0, 4, '-');
   int numHouseOneMoves = getPath(results, testLocation);
   executeMovementInstructions(results, numHouseOneMoves);
-
+  */
   //lookForMagnet();
+
+  Coordinate flameCodeCoord(1, 3,'c');
+  flameTile = flameCodeCoord;
+  flameDetected = true;
+
+  Coordinate house1Coord(2, 5,'h');
+  houseTile1 = house1Coord;
+  houseOneDetected = true;
+
+  Coordinate house2Coord(5, 1,'h');
+  houseTile2 = house2Coord;
+  houseTwoDetected = true;
+
+  courseLogic();
+
   Serial.println("END OF EXECUTION, INFINITE LOOP");
   while(true) {
 
@@ -228,33 +244,26 @@ void lookForMagnet() {
 
 void courseLogic() {
 
-  while(!flameDetected) {
-    //LOOK FOR FLAME
-  }
+  int flamePath[MAX_PATH_FINDING_SIZE];
+  int flameMoves = getPath(flamePath, flameTile);
+  executeMovementInstructions(flamePath, flameMoves);
+  signalComplete();
+  delay(1000);
 
-  while(!flameDone) {
-    //TAKE OUT FLAME
-  }
-
-  //at this point, flame stuff is done
-  while (!magnetDetected) {
-    lookForMagnet();
-  }
-
+  /*
+  lookForMagnet();
   //at this point, food has been found
   
-  // WE NEED UPDATED LOGIC HERE
-  if (!survivorsDetected) {
-    //look for survivors
-  } else if (survivorsDetected && !foodDelivered){
-    //go to survivors
-  }
+  int house1Path[MAX_PATH_FINDING_SIZE];
+  int house1Moves = getPath(house1Path, houseTile1);
+  executeMovementInstructions(house1Path, house1Moves);
+  signalComplete();
+  //SCAN HOUSE HERE - CUSTOM DELAY BASED ON COLOUR
 
-  if (!lostDetected) {
-    //look for lost
-  } else if (lostDetected && !lostDone) {
-    // go to lost
-  }
+  int house2Path[MAX_PATH_FINDING_SIZE];
+  int house2Moves = getPath(house2Path, houseTile2);
+  executeMovementInstructions(house2Path, house2Moves);
+  signalComplete();
 
   // Return home
   int homePath[MAX_PATH_FINDING_SIZE];
@@ -262,7 +271,7 @@ void courseLogic() {
   int homeMoves = getPath(homePath, homeTile);
   executeMovementInstructions(homePath, homeMoves);
   signalComplete();
-
+*/
   while(true){
   }
 }
