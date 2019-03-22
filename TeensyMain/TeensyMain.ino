@@ -131,25 +131,28 @@ void executeMovementInstructions(int movements[], int numMoves) {
       } else {
         rotateRight(0);
       }
-      cwHeading = 0.0;
+
     } else if (movement == 2) {
       if (shouldTurnLeft(cwHeading, 90.0)) {
         rotateLeft(90);
       } else {
         rotateRight(90);
       }
+
     } else if (movement == 3) {;
       if (shouldTurnLeft(cwHeading, 180.0)) {
         rotateLeft(180);
       } else {
         rotateRight(180);
       }
+
     } else if (movement == 4) {
       if (shouldTurnLeft(cwHeading, 270.0)) {
         rotateLeft(270);
       } else {
         rotateRight(270);
       }
+
     } else {
       //SHOULD SIGNAL SOMETHING
     }
@@ -204,6 +207,7 @@ void lookForMagnet() {
       // TODO: Update the state of the grid? ...
       break;
     } else {
+      delay(1000);
       // TODO: Update the state of the grid? ...
     }
   }
