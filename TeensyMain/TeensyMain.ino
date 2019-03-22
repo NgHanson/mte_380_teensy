@@ -1,25 +1,24 @@
 #include "Arduino.h"
-#include "Encoder.h"
+
 #include "Constants.h"
 #include "Globals.h"
-#include "LaserSensor.h"
-#include "IRSensor.h"
-#include "DetectionHelper.h"
-//#include <Adafruit_Sensor.h>
-//#include <Adafruit_BNO055.h>
-//#include <utility/imumaths.h>
 
-
-#include "MathHelper.h"
-#include "ColourSensor.h"
-#include "FlameSensor.h"
 #include "Movement.h"
-#include "UltrasonicSensor.h"
-#include "IMU.h"
 #include "Mapping.h"
 #include "PathFinding.h"
 
+#include "UltrasonicSensor.h"
+#include "IMU.h"
+#include "ColourSensor.h"
+#include "FlameSensor.h"
+#include "LaserSensor.h"
+#include "IRSensor.h"
+
+#include "Encoder.h"
 #include "PriorityQueue.h"
+
+#include "DetectionHelper.h"
+#include "MathHelper.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -65,11 +64,7 @@ void timerSetup() {
   /*
   ultrasonicTimer.begin(ultrasonicPulse, 125);
   ultrasonicTimer.priority(3);
-  
-  hallTimer.begin(detectMagnet, 125);
-  hallTimer.priority(3);
   */
-  Serial.print("Hello: Start");
 }
 
 
@@ -106,73 +101,9 @@ void loop() {
   lookForMagnet();
 }
 
-void testTileDetection() {
-  detectTileInFront();
-}
-
-void testRotationWithIMU() {
-  Serial.println("rotateRight(90) ============================");
-  rotateRight(90);
-  delay(5000);
-  Serial.println("rotateRight(180) ============================");
-  rotateRight(180);
-  delay(5000);
-  Serial.println("rotateRight(270) ============================");
-  rotateRight(270);
-  delay(5000);
-  Serial.println("rotateRight(0) ============================");
-  rotateRight(0);
-  delay(5000);  
-}
-
-void testRotateLeft() {
-  Serial.println("rotateLeft(270) ============================");
-  rotateLeft(270);
-  delay(5000);
-  Serial.println("rotateLeft(180) ============================");
-  rotateLeft(180);
-  delay(5000);
-  Serial.println("rotateLeft(90) ============================");
-  rotateLeft(90);
-  delay(5000);
-  Serial.println("rotateLeft(0) ============================");
-  rotateLeft(0);
-  delay(5000);   
-}
-
-void testIRSensor() {
-  getIRDistance();
-}
-
-void testLaserSensor() {
-   Serial.println(getLaserDistance());
-}
-
-void testEncoders() {
-  Serial.print("Left = ");
-  Serial.print(leftEncoder.read());
-  Serial.print(", Right = ");
-  Serial.print(rightEncoder.read());
-  Serial.println();
-}
-
 // Sort by tile with the closts euclidean distance
 bool compareTile(Coordinate c1, Coordinate c2){
   return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
-}
-
-bool shouldTurnLeft(float startAngle, float finalAngle) {
-  float left = startAngle - finalAngle;
-  if (left < 0.0) {
-    left += 360.0;
-  }
-
-  float right = finalAngle - startAngle;
-  if (right < 0.0) {
-    right += 360.0;
-  }
-
-  return left < right;
 }
 
 /*
