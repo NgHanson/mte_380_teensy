@@ -2,12 +2,12 @@
 #include "Globals.h"
 #include "Constants.h"
 #include "IMU.h"
-
+#include "DetectionHelper.h"
 #define MOVE_SPEED 130
 #define LEFT_MOVE_SPEED 135
 #define RIGHT_MOVE_SPEED 130
-#define RIGHT_ROTATION_SPEED 75
-#define LEFT_ROTATION_SPEED 66
+#define RIGHT_ROTATION_SPEED 90//130//75
+#define LEFT_ROTATION_SPEED 110//66
 // Left
 int LEFT_MOVE_SPEEDS[] = {96, 100, 109, 117, 135, 151};
   // Right
@@ -17,7 +17,7 @@ int RIGHT_MOVE_SPEEDS[] = {94, 96, 107, 114, 130, 144};
 #define FORWARD_ENCODER_DIST_PIT 1000
 
 //if we only want to move in up/down/left/right our relative angles will always be either 0, 90, 180, 270
-//IMU does CW increasing 
+//IMU does CW increasing
 //A6 - 9 for reg motors, A4,A5,A21,A22 for the motor encoders
 // THIS WILL MOD THE vert and horz counts
 //DEPRECATE THIS
@@ -40,6 +40,12 @@ void moveForward(int dist) {
 }
 
 void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_counts) {
+  Serial.print("mooveForwardForDistance - angle: ");
+  Serial.print(angle);
+  Serial.print(" speed: ");
+  Serial.print(speed_idx);
+  Serial.print(" encoder count: ");
+  Serial.println(encoder_counts);
   leftEncoder.write(0);
   rightEncoder.write(0);
   digitalWrite(LEFT_MOTOR_DIR, 0);
@@ -54,21 +60,70 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
     getIMUData();
     if (angle == 0) {
       if (cwHeading > 355) {
-        float correction_factor = (360 - cwHeading);
+        float correction_factor = 10*(360 - cwHeading);
+        // Serial.print("grater tahn 355 - left: ");
+        // Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        // Serial.print(" right ");
+        // Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
       } else if (cwHeading < 5) {
-        float correction_factor = cwHeading;
+        float correction_factor = 10*cwHeading;
+        // Serial.print("here - left: ");
+        // Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        // Serial.print(" right ");
+        // Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
         analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
         analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
       }
     } else {
-      float correction_factor = angle - cwHeading;
+      float correction_factor = 10*(angle - cwHeading);
       analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
       analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
-    Serial.println(avgEncoderVal);
+    // Serial.println(avgEncoderVal);
+  }
+}
+
+void moveBackwardForDistance(float angle, int speed_idx, unsigned long encoder_counts) {
+  leftEncoder.write(0);
+  rightEncoder.write(0);
+  digitalWrite(LEFT_MOTOR_DIR, 1);
+  digitalWrite(RIGHT_MOTOR_DIR, 1);
+  analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx]);
+  analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx]);
+  int avgEncoderVal = 0;
+  while(avgEncoderVal < encoder_counts) {
+    if (frontTilt > 100.0) { //TEST VALUE AND SET THIS AS A CONST
+      inPit = true;
+    }
+    getIMUData();
+    if (angle == 0) {
+      if (cwHeading > 355) {
+        float correction_factor = 10*(360 - cwHeading);
+        // Serial.print("grater tahn 355 - left: ");
+        // Serial.print(LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        // Serial.print(" right ");
+        // Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
+      } else if (cwHeading < 5) {
+        float correction_factor = 10*cwHeading;
+        // Serial.print("here - left: ");
+        // Serial.print(LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        // Serial.print(" right ");
+        // Serial.println(RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+        analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
+        analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
+      }
+    } else {
+      float correction_factor = 10*(angle - cwHeading);
+      analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+      analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
+    }
+    avgEncoderVal = abs(leftEncoder.read() + rightEncoder.read())/2;
+    // Serial.println(avgEncoderVal);
   }
 }
 
@@ -90,9 +145,132 @@ void moveForwardForever(float angle, int speed_idx) {
   }
 }
 
-void moveForwardTile() {
-  moveForwardThenStop(0, 1, FORWARD_ENCODER_DIST);
+float addToleranceForEdge(float distance) {
+  if (distance < 0.1) {
+    return distance + 0.08;
+  } else {
+    return distance;
+  }
+}
 
+void moveForwardInSand() {
+  float tolerance = 0.06;
+  Serial.println("move fwd in sand");
+  if ((cwHeading > 350 || cwHeading < 10) && yPos > 0) {
+    // Serial.println("heading is 0");
+    int current_furthest = 5;
+    for (int i = yPos; i < 5; i++) {
+      if (levelMap[i][xPos] == 'h' || levelMap[i][xPos] == 'c') {
+        current_furthest = i;
+        break;
+      }
+    }
+    // Serial.println("Needs to go: ");
+    // Serial.println(yPos);
+    // Serial.println(current_furthest);
+    float dist = (current_furthest - yPos)*TILE_DIST_M + tolerance;
+    dist = addToleranceForEdge(dist);
+    // Serial.println(dist);
+    while (getMergedDistance() > dist) {
+      moveForwardForDistance(0, 2, 1);
+    }
+    stopMotors();
+  } else if ((cwHeading > 80 && cwHeading < 100) && xPos > 0) {
+    int current_furthest = 5;
+    for (int i = xPos; i < 5; i++) {
+      if (levelMap[yPos][i] == 'h' || levelMap[yPos][i] == 'c') {
+        current_furthest = i;
+        break;
+      }
+    }
+    float dist = (current_furthest - xPos)*TILE_DIST_M + tolerance;
+    dist = addToleranceForEdge(dist);
+    // Serial.print("Needs to go: ");
+    // Serial.println(dist);
+    while (getMergedDistance() > dist) {
+      moveForwardForDistance(90, 2, 1);
+    }
+    stopMotors();
+  } else if ((cwHeading > 170 && cwHeading < 190) && yPos < 5) {
+    int current_furthest = 0;
+    for (int i = yPos; i >= 0; i--) {
+      if (levelMap[i][xPos] == 'h' || levelMap[i][xPos] == 'c') {
+        current_furthest = i;
+        break;
+      }
+    }
+    float dist = (yPos - current_furthest)*TILE_DIST_M + tolerance;
+    dist = addToleranceForEdge(dist);
+    // Serial.print("Needs to go: ");
+    // Serial.println(dist);
+    while (getMergedDistance() > dist) {
+      moveForwardForDistance(180, 2, 1);
+    }
+    stopMotors();
+  } else if ((cwHeading > 260 && cwHeading < 280) && xPos < 5) {
+    Serial.println("270");
+    int current_furthest = 0;
+    for (int i = xPos; i >= 0; i--) {
+      if (levelMap[yPos][i] == 'h' || levelMap[yPos][i] == 'c') {
+        current_furthest = i;
+        break;
+      }
+    }
+    Serial.print("xPos: ");
+    Serial.println(xPos);
+
+    float dist = (max(0, (xPos - current_furthest)))*TILE_DIST_M + tolerance;
+    dist = addToleranceForEdge(dist);
+    Serial.print("Needs to go: ");
+    Serial.println(dist);
+    while (getMergedDistance() > dist) {
+      moveForwardForDistance(270, 2, 1);
+    }
+    stopMotors();
+  } else {
+    Serial.print("cwHeading = ");
+    Serial.print(cwHeading);
+    Serial.print(" no clue where were looking...");
+    // delay(10000);
+  }
+}
+
+int getIdealHeading() {
+  if ((cwHeading > 350 || cwHeading < 10)) {
+    return 0;
+  } else if ((cwHeading > 80 && cwHeading < 100)) {
+    return 90;
+  } else if ((cwHeading > 170 && cwHeading < 190)) {
+    return 180;
+  } else if ((cwHeading > 260 && cwHeading < 280)) {
+    return 270;
+  }  
+}
+void dipIntoMagnet() {
+  moveForwardForDistance(getIdealHeading(), 4, FORWARD_ENCODER_DIST);
+  stopMotors();
+  Serial.print("moving backwars fuc");
+  delay(500);
+  if (didDetectMagnet()) {
+    Serial.println("DID DETECT MAGNET");
+      magnetDetected = true;
+      signalComplete();
+      delay(10000);
+  }
+  moveBackwardForDistance(getIdealHeading(), 5, FORWARD_ENCODER_DIST*1.5);
+  stopMotors();
+  delay(1000);
+  moveForwardInSand();
+}
+void moveForwardTile() {
+  if (levelMap[yPos][xPos] == 'm') {
+    Serial.println("IN SAND - THIS SHOULD NEVER BE HAPPENING");
+    moveForwardInSand();
+  } else {
+    moveForwardThenStop(0, 4, FORWARD_ENCODER_DIST);
+  }
+  
+  levelMap[yPos][xPos] = 'u';
   //Update global x,y
   char currDir = convertHeadingToCharDirection(cwHeading);
   if (currDir == 'u') {
@@ -104,6 +282,8 @@ void moveForwardTile() {
   } else if (currDir == 'd') {
     yPos--;
   }
+  levelMap[yPos][xPos] = 'r';
+  moveForwardInSand();
 }
 
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
@@ -121,37 +301,82 @@ void rotateRight(int angle) {
   analogWrite(RIGHT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   getIMUData();
   if (angle == 0) {
-    // angle = 357.5;
-    while (!(cwHeading >= 0 && cwHeading < 1)) {
+    while (!(cwHeading >= 0 && cwHeading < 1)) { getIMUData(); }
+  }
+  else {
+    if (cwHeading < angle) {
       getIMUData();
-      // Serial.println(cwHeading);      
+      while (cwHeading < angle - 1.5) { getIMUData(); }
+    } else if (cwHeading > angle) {
+      while (cwHeading < 360 && cwHeading > 10) { getIMUData(); }
+      while (cwHeading < angle) { getIMUData(); }
+    }
+  }
+  analogWrite(LEFT_MOTOR_SPEED, 0);
+  analogWrite(RIGHT_MOTOR_SPEED, 0);
+  delay(100);
+  getIMUData();
+}
+
+void rotateRightWhileSweeping(int angle) {
+  Serial.println("rotateRightWhileSweeping ");
+  Serial.println(cwHeading);
+  if (angle < 0 || angle >= 360) {
+    Serial.println("Angle is invalid");
+    return;
+  }
+  digitalWrite(LEFT_MOTOR_DIR, 0);
+  digitalWrite(RIGHT_MOTOR_DIR, 1); 
+  getIMUData();
+  analogWrite(LEFT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
+  analogWrite(RIGHT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
+  getIMUData();
+  Serial.println("here");
+  if (angle == 0) {
+    while (!(cwHeading >= 0 && cwHeading < 1)) {
+        getIMUData();
+        // distance = getMergedDistance();
+        // updateRollingMin(distance);
+        updateHeadingVals();
     }
   }
   else {
-    Serial.println("rotateright else");
-    // angle = angle - 2.5;
     if (cwHeading < angle) {
-      Serial.println("cwHeading < angle");
+      Serial.print("cwHeading < angle");
+      Serial.println(cwHeading);
       getIMUData();
       while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
         getIMUData();
-        Serial.print("cwHeading: ");
-        Serial.print(cwHeading);
-        Serial.print(" angle: ");
-        Serial.println(angle);
+        // distance = getMergedDistance();
+        // updateRollingMin(distance);
+        updateHeadingVals();
       }
+      Serial.print("Done Rotating here");
+      Serial.println(cwHeading);
     } else if (cwHeading > angle) {
       Serial.println("cwHeading > angle");
-      while ((cwHeading - 360) < angle) {
+      while (cwHeading < 360 && cwHeading > 10) {
         getIMUData();
-        Serial.println(cwHeading);
+        // distance = getMergedDistance();
+        // updateRollingMin(distance);
+        updateHeadingVals();
+      }
+      while (cwHeading < angle) {
+        getIMUData();
+        // distance = getMergedDistance();
+        // updateRollingMin(distance);
+        updateHeadingVals();
       }
     }    
   }
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
   delay(100);
+  Serial.println("Done");
   getIMUData();
+  // Serial.println();
+  // Serial.println("Printing out distance array");
+  // return avg;
 }
 
 
@@ -194,16 +419,16 @@ void rotateLeft(int angle) {
   // if (target < 0) {
   //   target = target + 360;
   // }
-  
+
   // while(cwHeading > target || cwHeading < target - 3) { //DEFINITELY NEED TO TUNE THIS
   //   getIMUData();
   //   Serial.println(cwHeading);
   // }
   // Serial.println("Good");
   //RUN A FINE TUNE FUNCTION TO GET EXACT HEADING
-  
+
   analogWrite(LEFT_MOTOR_SPEED, 0);
-  analogWrite(RIGHT_MOTOR_SPEED, 0);  
+  analogWrite(RIGHT_MOTOR_SPEED, 0);
   delay(100);
   getIMUData();
 }

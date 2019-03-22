@@ -26,7 +26,7 @@
 // #define echoPin_HCSR04_2 A1
 
 // No longer using ultrasonic...
-// #define pingPin A2
+#define pingPin A20
 
 // No longer using hall effect...
 // #define hallPin A3
@@ -34,9 +34,13 @@
 #define TILE_DIST_M 0.3048 //m
 
 // Math function
-#define SENSOR_NUM_SAMPLES 10
+#define SENSOR_NUM_SAMPLES 5
 #define TILT_TOLERANCE 15
 #define DEG_PER_RAD 57.2957795
 
 // TODO: Confirm this max size ... may lead to missing vals if not large enough
 #define MAX_PATH_FINDING_SIZE 40
+
+#define LED_R 24
+#define LED_G 12
+#define LED_B 11

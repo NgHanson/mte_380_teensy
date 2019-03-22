@@ -42,8 +42,8 @@ extern int yPos;
 extern bool inPit;
 
 // -- SCAN ARRAYS -- //
-extern float initialSweepDistances[360];
-extern float initialSweepFlameVals[360];
+extern float initialSweepDistancesAndFlames[5000][3];
+extern int curr_sweep_meas_idx;
 
 // -- ENCODER -- //
 extern Encoder leftEncoder;

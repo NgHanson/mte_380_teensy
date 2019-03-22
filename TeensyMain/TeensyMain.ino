@@ -2,10 +2,18 @@
 
 #include "Constants.h"
 #include "Globals.h"
+#include "LaserSensor.h"
+// #include "IRSensor.h"
+#include "DetectionHelper.h"
+//#include <Adafruit_Sensor.h>
+//#include <Adafruit_BNO055.h>
+//#include <utility/imumaths.h>
+
 
 #include "Movement.h"
 #include "Mapping.h"
 #include "PathFinding.h"
+#include "DetectionHelper.h"
 
 #include "UltrasonicSensor.h"
 #include "IMU.h"
@@ -52,6 +60,9 @@ void setup() {
   pinMode(LED_PIN, OUTPUT);
   pinMode(IR_SENSOR, INPUT);
   pinMode(fanPin, OUTPUT);
+  pinMode(LED_R, OUTPUT);
+  pinMode(LED_G, OUTPUT);
+  pinMode(LED_B, OUTPUT);
   
   // timerSetup();
 }
@@ -72,7 +83,6 @@ void loop() {
   //didDetectMagnet();
   //constructionCheckLoop();
   //testEncoders();
-  //testIRSensor();
   //testRotationWithIMU();
   //testLaserSensor();
   // int cData[3];
@@ -83,6 +93,34 @@ void loop() {
   // analogWrite(fanPin, 255);
   // moveForward(10);
   //testRotateLeft();
+
+  // TESTING COMBINED SENSOR =========================================
+  // float merged_dist = getMergedDistance();
+  // Serial.println(merged_dist);
+  // =================================================================
+
+  // TESTING ULTRASONIC SENSOR =======================================
+  // Serial.println(parallaxPulse());
+  // =================================================================
+
+  // TESTING IR SENSOR ===============================================
+  // Serial.println(testIRSensor());
+  // =================================================================
+
+  // TESTING LASER SENSOR ============================================
+  // Serial.println(getLaserDistance()*100);
+  // =================================================================
+
+  // TESTING TIMINGS =================================================
+  // unsigned long time = millis();
+  // getIMUData();
+  // Serial.print("Time required for IMU: ");
+  // Serial.print(millis() - time);
+  // time = millis();
+  // getLaserDistance();
+  // Serial.print(" Time required for laserDistance: ");
+  // Serial.println(millis() - time);
+  // =================================================================
 
   // Move Forward One Tile =======================================
   // moveForwardTile();
@@ -96,7 +134,39 @@ void loop() {
   // =============================================================
   // rowScanSequence();
   //rotateRight(355);
-  //initialScan();
+  // TINGS==================================================================================
+
+  // MAPS 1, 2, 4 ==========================================================================
+  // Make sure to uncomment correct map in mapping file!!!
+  // moveForwardTile();
+  // moveForwardTile();
+  // =======================================================================================
+  digitalWrite(LED_R, HIGH);
+  digitalWrite(LED_G, HIGH);
+  digitalWrite(LED_B, HIGH);
+  // MAP 3 =================================================================================
+  moveForwardTile();
+  rotateLeft(270);
+  moveForwardTile();
+  rotateRight(0);
+  moveForwardTile();
+  // =======================================================================================  
+  initialScan();
+  extinguishFlame();
+  rotateRight(180);
+  // MAPS 1, 2, 4 ==========================================================================
+  // moveForwardTile();
+  // moveForwardTile();
+  // =======================================================================================  
+
+  // MAP 3 =================================================================================
+  moveForwardTile();
+  rotateLeft(90);
+  moveForwardTile();
+  rotateRight(180);
+  moveForwardTile();
+  // =======================================================================================  
+  rotateRight(0);
 
   lookForMagnet();
   Serial.println("END OF EXECUTION, INFINITE LOOP");
@@ -110,6 +180,27 @@ bool compareTile(Coordinate c1, Coordinate c2){
   return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
 }
 
+void extinguishFlame() {
+  int angle = -1;
+  int maxFlameVal = 0;
+  for (int i = 0; i < curr_sweep_meas_idx; i++) {
+    if (initialSweepDistancesAndFlames[i][2] > maxFlameVal) {
+      Serial.print("Found more shit ");
+      Serial.print(angle);
+      Serial.print(" ");
+      Serial.println(maxFlameVal);
+      maxFlameVal = initialSweepDistancesAndFlames[i][2];
+      angle = initialSweepDistancesAndFlames[i][0];
+    }
+  }
+  rotateRight(angle);
+  stopMotors();
+  digitalWrite(fanPin, HIGH);
+  delay(7000);
+  digitalWrite(fanPin, LOW);
+  Serial.print("Blow dat boi out");
+}
+
 /*
   a set of movement instructions will be given as an array of integers that will be decoded
   0 - forward
@@ -121,6 +212,7 @@ bool compareTile(Coordinate c1, Coordinate c2){
 void executeMovementInstructions(int movements[], int numMoves) {
 
   for (int i = 0; i < numMoves; i++) {
+    delay(3000);
     int movement = movements[i];
 
     if (movement == 0) {
@@ -201,13 +293,16 @@ void lookForMagnet() {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
     executeMovementInstructions(results, numMoves);
-
-    if (didDetectMagnet()) {
-      magnetDetected = true;
-      signalComplete();
+    // GOING TO BE FACING MAGNET
+    dipIntoMagnet();
+    if (magnetDetected) {
+      Serial.println("Magnet detected in pqueue hsit");
+      // magnetDetected = true;
+      // signalComplete();
       // TODO: Update the state of the grid? ...
-      break;
+      //break;
     } else {
+      Serial.println("doneaz");
       delay(1000);
       // TODO: Update the state of the grid? ...
     }
@@ -255,9 +350,9 @@ void courseLogic() {
   }
 }
 
-void signalComplete(){
-  digitalWrite(LED_PIN, HIGH);
-  delay(1000);
-  digitalWrite(LED_PIN, LOW);
-  delay(1000);
-}
+// void signalComplete(){
+//   digitalWrite(LED_PIN, HIGH);
+//   delay(1000);
+//   digitalWrite(LED_PIN, LOW);
+//   delay(1000);
+// }

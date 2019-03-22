@@ -55,7 +55,7 @@ bool magnetDetected = false;
 // Global map/position/orientation
 
 // -- GRID 1 -- //
-char levelMap[6][6] = {          //  y
+/*char levelMap[6][6] = {          //  y
   {'u', 'u', 'p', 'r', 'u', 'u'},//  0
   {'u', 'm', 'u', 'u', 'g', 'u'},//  1
   {'u', 'u', 'u', 'u', 'u', 'p'},//  2
@@ -63,7 +63,7 @@ char levelMap[6][6] = {          //  y
   {'u', 'p', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'g', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
-
+*/
 // -- GRID 2 -- //
 /*
 char levelMap[6][6] = {          //  y
@@ -77,7 +77,7 @@ char levelMap[6][6] = {          //  y
 */
 
 // -- GRID 3 -- //
-/*
+
 char levelMap[6][6] = {          //  y
   {'u', 'u', 'g', 'r', 'u', 'u'},//  0
   {'u', 'm', 'u', 'u', 'p', 'u'},//  1
@@ -86,7 +86,7 @@ char levelMap[6][6] = {          //  y
   {'u', 'g', 'u', 'u', 'm', 'u'},//  4
   {'u', 'u', 'u', 'p', 'u', 'u'}};// 5
 //x 0    1    2    3    4    5
-*/
+
 
 // -- GRID 4 -- //
 /*
@@ -111,15 +111,19 @@ float ccwRollFromBack = 0.0;
 
 bool inPit = false;
 
-float initialSweepDistances[360];
-float initialSweepFlameVals[360];
+float initialSweepDistancesAndFlames[5000][3];
+int curr_sweep_meas_idx = 0;
 
 void printSweepDistanceArray() {
-  for (int i = 0; i < 360; i++) {
-  	Serial.print(initialSweepDistances[i]);
+  Serial.println("printSweepDistanceArray");
+  for (int i = 0; i < 5000; i++) {
+  	Serial.print(initialSweepDistancesAndFlames[i][0]);
   	Serial.print(" ");
+  	Serial.print(initialSweepDistancesAndFlames[i][1]);
+  	Serial.print(" ");
+  	Serial.println(initialSweepDistancesAndFlames[i][2]);
   }
-  Serial.println();
+  Serial.println("=======================================");
 }
 
 Encoder leftEncoder(LEFT_ENC_1, LEFT_ENC_2);

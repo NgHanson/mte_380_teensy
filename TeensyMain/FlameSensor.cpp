@@ -12,3 +12,8 @@ bool flamePresent(){
     return true;
   }
 }
+
+int getFlameValue() {
+  int flameValue = analogRead(FLAME_PIN);
+  return flameValue;
+}

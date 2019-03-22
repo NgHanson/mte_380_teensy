@@ -7,7 +7,7 @@
 #include <utility/imumaths.h>
 
 #define MIN_GARBAGE_THRESH 1000
-#define MIN_MAGNET_THRESH 110
+#define MIN_MAGNET_THRESH 60
 
 Adafruit_BNO055 bno = Adafruit_BNO055();
 float calibXAngle = 0;
@@ -69,12 +69,12 @@ void getRawIMUData() {
 void getIMUData() {
   int currHeading = cwHeading;
   getRawIMUData();
-  while ((cwHeading > 360 || cwHeading < 0) || abs(currHeading - cwHeading) > 10 && abs(currHeading - cwHeading) < 350) {
-    Serial.print("IMU data is bad... ");
-    Serial.println(cwHeading);
-    cwHeading = currHeading;  
-    getRawIMUData();
-  }
+  // while ((cwHeading > 360 || cwHeading < 0) || abs(currHeading - cwHeading) > 90 && abs(currHeading - cwHeading) < 350) {
+  //   Serial.print("IMU data is bad... ");
+  //   Serial.println(cwHeading);
+  //   cwHeading = currHeading;  
+  //   getRawIMUData();
+  // }
 
 }
 
@@ -84,12 +84,14 @@ bool didDetectMagnet() {
   while (i < 10) {
     imu::Vector<3> mag_vector = bno.getVector(Adafruit_BNO055::VECTOR_MAGNETOMETER);
     mags[i] = sqrt(mag_vector.x()*mag_vector.x()+mag_vector.y()*mag_vector.y()+mag_vector.z()*mag_vector.z());
-    if (mags[i]*mags[i] < MIN_GARBAGE_THRESH) {
-      i -= 1;
-    }
+    // if (mags[i]*mags[i] < MIN_GARBAGE_THRESH) {
+    //   i -= 1;
+    // }
     i += 1; 
   }
   float averagedMag = filteredMean(mags);
+  Serial.print("averagedMag: ");
+  Serial.println(averagedMag);
   if (averagedMag > MIN_MAGNET_THRESH) {
     return true;
   } else {
