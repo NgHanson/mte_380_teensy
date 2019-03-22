@@ -22,6 +22,8 @@ void printPath(Coordinate list[], int listSize, Coordinate currTile) {
     Serial.print(" DIR: ");
     Serial.println(list[i].dir);
   }
+
+  //THIS IS TECHNICALLY WRONG...
   Serial.print("X: ");
   Serial.print(currTile.x);
   Serial.print(" Y: ");
@@ -160,10 +162,11 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
 
         // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
-        if (objectiveTileType != 'h' && objectiveTileType != 'c') { 
+        if (objectiveTileType != 'h' && objectiveTileType != 'c') {
+          Serial.println("DRIVE IN");
           currPathIndex++;
           Coordinate newCoord(forwardX, forwardY, currDir);
-          currList[currPathIndex+1] = newCoord;
+          currList[currPathIndex] = newCoord;
         }
 
         //printPath(currList, currPathIndex, curr);
@@ -185,7 +188,7 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
     }
 
     // WE CAN ROTATE TO DIRECTIONS WHICH THE ROBOT CURRENTLY ISNT FACING
-    if (levelMap[curr.y][curr.y] != 'm') { // FORCE THE ROBOT TO ONLY MOVE FORWARD IF ITS CURRENTLY ON A SAND TILE
+    if (levelMap[curr.y][curr.x] != 'm') { // FORCE THE ROBOT TO ONLY MOVE FORWARD IF ITS CURRENTLY ON A SAND TILE
       for (int i = 0; i < 4; i++) {
         char c = validDir[i];
         if (c != currDir) {

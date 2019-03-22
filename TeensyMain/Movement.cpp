@@ -91,7 +91,7 @@ void moveForwardForever(float angle, int speed_idx) {
 }
 
 void moveForwardTile() {
-  moveForwardThenStop(0, 1, FORWARD_ENCODER_DIST);
+  //moveForwardThenStop(0, 1, FORWARD_ENCODER_DIST);
 
   //Update global x,y
   char currDir = convertHeadingToCharDirection(cwHeading);
