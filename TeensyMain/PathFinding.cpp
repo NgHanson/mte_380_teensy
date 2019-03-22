@@ -67,10 +67,17 @@ void deepCopy(Coordinate toBeCopied[], Coordinate newCopy[], int valsToCopy) {
   }
 }
 
-bool validLocation(int x, int y, char objectiveTileType) {
+bool validLocation(int x, int y, int objectiveX, int objectiveY, char objectiveTileType) {
     char tileType = levelMap[y][x];
-    return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
-          (tileType == 'u' || tileType == 'r' || tileType == objectiveTileType));
+
+    if (x == objectiveX && y == objectiveY) { // WEVE REACHED OBJECTIVE
+    // HACKY WAY OF SAYING THE NEXT TILE IS THE OBJECTIVE MAGNET BUT WE DONT WANT TO DRIVE ON MAGNETS OTHERWISE
+      return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
+        (tileType == 'u' || tileType == 'r' || tileType == objectiveTileType));
+    } else {
+      return (x < 6 && x >= 0 && y < 6 && y >= 0 &&
+        (tileType == 'u' || tileType == 'r'));
+    }
 }
 
 int dirValue(char c) {
@@ -150,11 +157,11 @@ int shortestPath(Coordinate coordResult[], int objectiveX, int objectiveY) {
       forwardY--;
     }
 
-    if (validLocation(forwardX, forwardY, objectiveTileType)) {
+    if (validLocation(forwardX, forwardY, objectiveX, objectiveY, objectiveTileType)) {
       if (forwardY == objectiveY && forwardX == objectiveX) { //WE REACHED THE OBJECTIVE
 
-        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE OR CANDLE TILE!!
-        if (objectiveTileType != 'h' && objectiveTileType != 'c') {
+        // DONT DRIVE INTO THE CURR TILE IF ITS A HOUSE, CANDLE TILE OR MAGNET TILE!!
+        if (objectiveTileType != 'h' && objectiveTileType != 'c' && objectiveTileType != 'm') {
           currPathIndex++;
           Coordinate newCoord(forwardX, forwardY, currDir);
           currList[currPathIndex] = newCoord;
