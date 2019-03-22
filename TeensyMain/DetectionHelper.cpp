@@ -46,12 +46,12 @@ void detectTileInFront() {
 }
 
 float getMergedDistance() {
-  Serial.print("IR Distance: ");
+  // Serial.print("IR Distance: ");
   float ir_distance = getIRDistance();
-  Serial.print(ir_distance);
+  // Serial.print(ir_distance);
   // IR sensor is 20-150
   if (ir_distance < 0.3) {
-    Serial.print("Need us distance - Distance: ");
+    // Serial.print("Need us distance - Distance: ");
     float us_distance = parallaxPulse();
     Serial.println(us_distance);
     return us_distance;
@@ -62,7 +62,7 @@ float getMergedDistance() {
 void updateHeadingVals() {
   float distance = getMergedDistance();
   int flameVal = getFlameValue();
-  Serial.println(flameVal);
+  // Serial.println(flameVal);
   initialSweepDistancesAndFlames[curr_sweep_meas_idx][0] = cwHeading;
   initialSweepDistancesAndFlames[curr_sweep_meas_idx][1] = distance;
   initialSweepDistancesAndFlames[curr_sweep_meas_idx][2] = flameVal;

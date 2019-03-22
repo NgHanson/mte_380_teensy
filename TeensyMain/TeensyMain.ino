@@ -113,7 +113,12 @@ void loop() {
 
   // TESTING TIMINGS =================================================
   // unsigned long time = millis();
-  // getIMUData();
+  // while (1) {
+  // // getIMUData();  
+  // // Serial.println(cwHeading);
+  //   didDetectMagnet();
+  // }
+  
   // Serial.print("Time required for IMU: ");
   // Serial.print(millis() - time);
   // time = millis();
@@ -135,44 +140,112 @@ void loop() {
   // rowScanSequence();
   //rotateRight(355);
   // TINGS==================================================================================
+  // sweepLeftRight();
+  // rotateLeft(0);
+  // moveForwardTile();
+  // sweepLeftRight();
+  // rotateLeft(0);
+  // moveForwardTile();
+  // sweepLeftRight();
+  // rotateLeft(0);
+  // moveForwardTile();
+  // sweepLeftRight();
+  // rotateLeft(0);
+  // moveForwardTile();
 
   // MAPS 1, 2, 4 ==========================================================================
   // Make sure to uncomment correct map in mapping file!!!
-  // moveForwardTile();
-  // moveForwardTile();
+  moveForwardTile();
+  moveForwardTile();
   // =======================================================================================
   digitalWrite(LED_R, HIGH);
   digitalWrite(LED_G, HIGH);
   digitalWrite(LED_B, HIGH);
   // MAP 3 =================================================================================
-  moveForwardTile();
-  rotateLeft(270);
-  moveForwardTile();
-  rotateRight(0);
-  moveForwardTile();
+  // moveForwardTile();
+  // rotateLeft(270);
+  // moveForwardTile();
+  // rotateRight(0);
+  // moveForwardTile();
   // =======================================================================================  
   initialScan();
   extinguishFlame();
   rotateRight(180);
   // MAPS 1, 2, 4 ==========================================================================
-  // moveForwardTile();
-  // moveForwardTile();
+  moveForwardTile();
+  moveForwardTile();
   // =======================================================================================  
 
   // MAP 3 =================================================================================
-  moveForwardTile();
-  rotateLeft(90);
-  moveForwardTile();
-  rotateRight(180);
-  moveForwardTile();
+  // moveForwardTile();
+  // rotateLeft(90);
+  // moveForwardTile();
+  // rotateRight(180);
+  // moveForwardTile();
   // =======================================================================================  
   rotateRight(0);
 
+  sweepLeftRight();
+  rotateLeft(0);
+  moveForwardTile();
+
+  sweepLeftRight();
+  rotateLeft(0);
+  moveForwardTile();
+
+  sweepLeftRight();
+  rotateLeft(0);
+  moveForwardTile();
+
+  sweepLeftRight();
+  rotateLeft(0);
+  moveForwardTile();
+
+  sweepLeftRight();
+  rotateLeft(0);
+  rotateLeft(270);
+  moveForwardTile();
+  rotateRight(0);
+  moveForwardTile();
+  
+  sweepLeftRight();
+  rotateLeft(0);
+
   lookForMagnet();
+
+// house 1 and house 2 must be different coordinates so that house1 is not considered a valid coordinate when searching for house2
+  Coordinate house1Coord(4, 3,'h');
+  houseTile1 = house1Coord;
+
+  Coordinate house2Coord(0, 4,'j');
+  houseTile2 = house2Coord;
+
+  Serial.println("done looking for magnet =========================================");
+  int house1Path[MAX_PATH_FINDING_SIZE];
+  int house1Moves = getPath(house1Path, houseTile1);
+  executeMovementInstructions(house1Path, house1Moves);
+  signalComplete();
+  delay(1000);
+
+  int house2Path[MAX_PATH_FINDING_SIZE];
+  int house2Moves = getPath(house2Path, houseTile2);
+  executeMovementInstructions(house2Path, house2Moves);
+  signalComplete();
+  delay(1000);
+  //SCAN HOUSE HERE - CUSTOM DELAY BASED ON COLOUR
+
+  int homePath[MAX_PATH_FINDING_SIZE];
+  Coordinate homeTile(3, 0, 'r');
+  int homeMoves = getPath(homePath, homeTile);
+  executeMovementInstructions(homePath, homeMoves);
+  signalComplete();
+
+
   Serial.println("END OF EXECUTION, INFINITE LOOP");
   while(true) {
 
   }
+  
 }
 
 // Sort by tile with the closts euclidean distance
@@ -185,10 +258,10 @@ void extinguishFlame() {
   int maxFlameVal = 0;
   for (int i = 0; i < curr_sweep_meas_idx; i++) {
     if (initialSweepDistancesAndFlames[i][2] > maxFlameVal) {
-      Serial.print("Found more shit ");
-      Serial.print(angle);
-      Serial.print(" ");
-      Serial.println(maxFlameVal);
+      // Serial.print("Found more shit ");
+      // Serial.print(angle);
+      // Serial.print(" ");
+      // Serial.println(maxFlameVal);
       maxFlameVal = initialSweepDistancesAndFlames[i][2];
       angle = initialSweepDistancesAndFlames[i][0];
     }

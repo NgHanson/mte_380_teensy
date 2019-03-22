@@ -40,12 +40,12 @@ void moveForward(int dist) {
 }
 
 void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_counts) {
-  Serial.print("mooveForwardForDistance - angle: ");
-  Serial.print(angle);
-  Serial.print(" speed: ");
-  Serial.print(speed_idx);
-  Serial.print(" encoder count: ");
-  Serial.println(encoder_counts);
+  // Serial.print("mooveForwardForDistance - angle: ");
+  // Serial.print(angle);
+  // Serial.print(" speed: ");
+  // Serial.print(speed_idx);
+  // Serial.print(" encoder count: ");
+  // Serial.println(encoder_counts);
   leftEncoder.write(0);
   rightEncoder.write(0);
   digitalWrite(LEFT_MOTOR_DIR, 0);
@@ -78,8 +78,8 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
       }
     } else {
       float correction_factor = 10*(angle - cwHeading);
-      analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] + round(correction_factor));
-      analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] + round(correction_factor)); 
+      analogWrite(LEFT_MOTOR_SPEED, LEFT_MOVE_SPEEDS[speed_idx] - round(correction_factor));
+      analogWrite(RIGHT_MOTOR_SPEED, RIGHT_MOVE_SPEEDS[speed_idx] - round(correction_factor)); 
     }
     avgEncoderVal = (leftEncoder.read() + rightEncoder.read())/2;
     // Serial.println(avgEncoderVal);
@@ -247,15 +247,15 @@ int getIdealHeading() {
   }  
 }
 void dipIntoMagnet() {
-  moveForwardForDistance(getIdealHeading(), 4, FORWARD_ENCODER_DIST);
+  moveForwardForDistance(getIdealHeading(), 4, FORWARD_ENCODER_DIST*1.25);
   stopMotors();
-  Serial.print("moving backwars fuc");
-  delay(500);
+  Serial.print("Detecting Magnet...");
+  delay(3000);
   if (didDetectMagnet()) {
-    Serial.println("DID DETECT MAGNET");
+    // Serial.println("DID DETECT MAGNET");
       magnetDetected = true;
       signalComplete();
-      delay(10000);
+      delay(1000);
   }
   moveBackwardForDistance(getIdealHeading(), 5, FORWARD_ENCODER_DIST*1.5);
   stopMotors();
@@ -331,7 +331,7 @@ void rotateRightWhileSweeping(int angle) {
   analogWrite(LEFT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   analogWrite(RIGHT_MOTOR_SPEED, RIGHT_ROTATION_SPEED);
   getIMUData();
-  Serial.println("here");
+  // Serial.println("here");
   if (angle == 0) {
     while (!(cwHeading >= 0 && cwHeading < 1)) {
         getIMUData();
@@ -342,8 +342,8 @@ void rotateRightWhileSweeping(int angle) {
   }
   else {
     if (cwHeading < angle) {
-      Serial.print("cwHeading < angle");
-      Serial.println(cwHeading);
+      // Serial.print("cwHeading < angle");
+      // Serial.println(cwHeading);
       getIMUData();
       while(cwHeading < angle - 1.5) { //DEFINITELY NEED TO TUNE THIS
         getIMUData();
@@ -351,10 +351,10 @@ void rotateRightWhileSweeping(int angle) {
         // updateRollingMin(distance);
         updateHeadingVals();
       }
-      Serial.print("Done Rotating here");
-      Serial.println(cwHeading);
+      // Serial.print("Done Rotating here");
+      // Serial.println(cwHeading);
     } else if (cwHeading > angle) {
-      Serial.println("cwHeading > angle");
+      // Serial.println("cwHeading > angle");
       while (cwHeading < 360 && cwHeading > 10) {
         getIMUData();
         // distance = getMergedDistance();
@@ -395,23 +395,23 @@ void rotateLeft(int angle) {
   if (angle == 0) {
     while (!(cwHeading > 1 && cwHeading < 3)) {
       getIMUData();
-      Serial.print("Heading ");
-      Serial.println(cwHeading);
+      // Serial.print("Heading ");
+      // Serial.println(cwHeading);
     }
   } else {
     angle = angle + 2.5;
     // Serial.print("cwHeading");
     if (cwHeading < angle) {
-      Serial.println("cwHeading < angle");
+      // Serial.println("cwHeading < angle");
       while (!(cwHeading < angle && cwHeading > angle - 2.5)) {
         getIMUData();
-        Serial.println(cwHeading);
+        // Serial.println(cwHeading);
       }
     } else if (cwHeading > angle) {
-      Serial.println("cwHeading > angle");
+      // Serial.println("cwHeading > angle");
       while (cwHeading > angle) {
         getIMUData();
-        Serial.println(cwHeading);
+        // Serial.println(cwHeading);
       }
     }
   }

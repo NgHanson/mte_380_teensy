@@ -52,9 +52,9 @@ void toGridOffset(float angle_deg, float distance, float offset[]) {
 	// 	offset[1] = -(distance+0.15)*cos(angle_deg/DEG_PER_RAD);
 	// } else if (angle_deg >= 0 && angle_deg < 180) {
 		//y
-		offset[0] = (distance)*cos(angle_deg/DEG_PER_RAD);
+		offset[0] = (distance+0.15)*cos(angle_deg/DEG_PER_RAD);
 		//x
-		offset[1] = (distance)*sin(angle_deg/DEG_PER_RAD);
+		offset[1] = (distance+0.15)*sin(angle_deg/DEG_PER_RAD);
 	// } else {
 
 	// }
@@ -69,17 +69,24 @@ void toTileOffset(float offset[], int tileOffset[]) {
 	float tileOffsety = offset[0] / TILE_DIST_M;
 	float tileOffsetx = offset[1] / TILE_DIST_M;
 	double decimals = abs(getDecimalPlaces(tileOffsety));
-	if (decimals >= 0.9) {
-		tileOffsety += 1;
-	}
+	// if (decimals >= 0.8) {
+	// 	tileOffsety += 1;
+	// }
 	decimals = abs(getDecimalPlaces(tileOffsetx));
-	if (decimals >= 0.9) {
-		tileOffsetx += 1;
+	if (decimals >= 0.5) {
+		if (tileOffsetx > 0) {
+			tileOffsetx += 1;	
+		} else {
+			tileOffsetx -= 1;	
+		}
+		
 	}
 
-	// Serial.println(tileOffsety);
-	tileOffset[0] = ceil(tileOffsety);
-	tileOffset[1] = ceil(tileOffsetx);
+	Serial.println("doing tings");
+	Serial.println(tileOffsetx);
+	Serial.println(ceil(tileOffsetx));
+	tileOffset[0] = 0;
+	tileOffset[1] = floor(tileOffsetx);
 	// if (tileOffsety < 0)
 	// Serial.print("tileOffsety ");
 	// Serial.print(tileOffsety);
@@ -179,6 +186,56 @@ float getMinDist(float minAngle, float maxAngle, float array[][3], int array_len
 	// Serial.println(min);
 	return 0.00;
 }
+void getCoordsForAngle(float angle) {
+	float offset[2];
+  	int tileOffset[2];
+	float minAngle = angle - 1;
+  	float maxAngle = angle + 1;
+  	minAngle = minAngle < 0 ? 360+minAngle : minAngle;
+  	maxAngle = maxAngle > 360 ? maxAngle - 360 : maxAngle;
+  	Serial.print("minAngle: ");
+  	Serial.print(minAngle);
+  	Serial.print(" maxAngle: ");
+  	Serial.println(maxAngle);
+  	float minDist = getMinDist(minAngle, maxAngle, initialSweepDistancesAndFlames, curr_sweep_meas_idx);
+  	Serial.print(" minDist: ");
+  	Serial.println(minDist);
+  	toGridOffset(angle, minDist, offset);
+  	Serial.print("y: ");
+  	Serial.print(offset[0]);
+  	Serial.print(" x: ");
+  	Serial.println(offset[1]);
+  	toTileOffset(offset, tileOffset);
+  	Serial.print("Current x pos: ");
+  	Serial.print(xPos);
+  	Serial.print(" Current y pos: ");
+  	Serial.print(yPos);
+  	updateMap(xPos + tileOffset[1], yPos + tileOffset[0], 'o');
+}
+
+void sweepLeftRight() {
+	// 1 and 4 have the same path, 3 and 2 have the same path
+	float offset[2];
+  	int tileOffset[2];
+	rotateLeft(265);
+	rotateRightWhileSweeping(95);
+	// float left_distance = getMergedDistance();
+	getCoordsForAngle(270);
+	getCoordsForAngle(90);
+	// offset[0] = 0;
+	// offset[1] = -1*left_distance;
+	// toTileOffset(offset, tileOffset);
+	// updateMap(xPos + tileOffset[1], yPos + tileOffset[0], 'o');
+	// rotateRight(90);
+	// float right_distance = getMergedDistance();
+	// offset[0] = 0;
+	// offset[1] = right_distance;
+	// toTileOffset(offset, tileOffset);
+	// updateMap(xPos + tileOffset[1], yPos + tileOffset[0], 'o');
+	Serial.println("Done Sweep Left and Right...");
+	printMap();
+	Serial.println("=============================================");
+}
 // void arrayMax(int arr[]) {
 
 // }
@@ -201,6 +258,7 @@ void initialScan() {
    */
   rotateRightWhileSweeping(180);
   rotateRightWhileSweeping(0);
+  return;
   printSweepDistanceArray();
   Serial.println("eieiei");
   Serial.println(curr_sweep_meas_idx);
@@ -211,8 +269,8 @@ void initialScan() {
   // ANGLES FOR CASES 1, 2, 4
   float angles[] = {0.0, 333.434948822922, 288.434948822922, 45.0, 326.30993247402023, 18.43494882292201, 303.69006752597977, 63.43494882292201, 315.0, 341.565051177078, 296.565051177078, 33.690067525979785, 26.56505117707799};
   for (int i = 0; i < 23; i++) {
-  	float minAngle = angles[i] - 0.5;
-  	float maxAngle = angles[i] + 0.5;
+  	float minAngle = angles[i] - 1;
+  	float maxAngle = angles[i] + 1;
   	minAngle = minAngle < 0 ? 360+minAngle : minAngle;
   	maxAngle = maxAngle > 360 ? maxAngle - 360 : maxAngle;
   	Serial.print("minAngle: ");
@@ -235,7 +293,7 @@ void initialScan() {
   	updateMap(xPos + tileOffset[1], yPos + tileOffset[0], 'o');
   	printMap();
   }
-  return;
+  
   // Add check for wall - do sweep of walls (empty map) - if we are within a certain tolerance of that, we are a wall otherwise we are an object
   Serial.print("IMU Data: ");
   Serial.print(cwHeading);
