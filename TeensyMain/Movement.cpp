@@ -75,6 +75,7 @@ void moveForwardForDistance(float angle, int speed_idx, unsigned long encoder_co
 void stopMotors() {
   analogWrite(LEFT_MOTOR_SPEED, 0);
   analogWrite(RIGHT_MOTOR_SPEED, 0);
+  delay(300);
 }
 
 void moveForwardThenStop(float angle, int speed_idx, unsigned long encoder_counts) {
@@ -91,6 +92,18 @@ void moveForwardForever(float angle, int speed_idx) {
 
 void moveForwardTile() {
   moveForwardThenStop(0, 1, FORWARD_ENCODER_DIST);
+
+  //Update global x,y
+  char currDir = convertHeadingToCharDirection(cwHeading);
+  if (currDir == 'u') {
+    yPos++;
+  } else if (currDir == 'l') {
+    xPos--;
+  } else if (currDir == 'r') {
+    xPos++;
+  } else if (currDir == 'd') {
+    yPos--;
+  }
 }
 
 //We will only rotate with either 90 or 180 ... 360 isnt necessary and 270 will just use the other rotation
@@ -252,18 +265,20 @@ void rotateLeft(int angle) {
   getIMUData();
 }
 
-void rotate180() {
-  rotateRight(180);
-}
-
-
-//EVERYTIME WE DO WACK STUFF, LIKE COME OUT OF A DITCH, we want to do this?
-void realignHeading() {
-
-}
-
-void alignToAngle(int angle) {
-
+char convertHeadingToCharDirection(float heading) {
+  //PROBABLY SHOULDNT ROUND TO NEARIST 90
+  if ((345.0 <= heading && heading < 360.0) || (heading >= 0.0 && heading <= 15.0)) {
+    return 'u';
+  } else if (heading >= 75.0 && heading <= 105.0) {
+    return 'r';
+  } else if (heading >= 165.0 && heading <= 195.0) {
+    return 'd';
+  } else if (heading >= 255.0 && heading <= 285.0) {
+    return 'l';
+  } else { // CURRENTLY HEADING IS COMPLETELY OFF FROM a 90 deg
+    Serial.print("WRONG");
+    return '-'; //SHOULD PROB THROW ERR OR PERFORM RE ALIGN 
+  }
 }
 
 // CALIBRATION FUNCTIONS FOR MOTORS... USE VALUES THAT ARE AT LEAST A BIT HIGHER THAT WHAT IS GIVEN
@@ -381,4 +396,18 @@ void calibrateEncoders() {
     Serial.print(" ");
   }
   delay(10000);
+}
+
+bool shouldTurnLeft(float startAngle, float finalAngle) {
+  float left = startAngle - finalAngle;
+  if (left < 0.0) {
+    left += 360.0;
+  }
+
+  float right = finalAngle - startAngle;
+  if (right < 0.0) {
+    right += 360.0;
+  }
+
+  return left < right;
 }

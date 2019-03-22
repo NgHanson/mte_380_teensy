@@ -1,5 +1,5 @@
 #include "Arduino.h"
-#include "Encoder.h"
+
 #include "Constants.h"
 #include "Globals.h"
 #include "LaserSensor.h"
@@ -10,17 +10,23 @@
 //#include <utility/imumaths.h>
 
 
-#include "MathHelper.h"
-#include "ColourSensor.h"
-#include "FlameSensor.h"
 #include "Movement.h"
-#include "UltrasonicSensor.h"
-#include "IMU.h"
 #include "Mapping.h"
 #include "PathFinding.h"
 #include "DetectionHelper.h"
 
+#include "UltrasonicSensor.h"
+#include "IMU.h"
+#include "ColourSensor.h"
+#include "FlameSensor.h"
+#include "LaserSensor.h"
+#include "IRSensor.h"
+
+#include "Encoder.h"
 #include "PriorityQueue.h"
+
+#include "DetectionHelper.h"
+#include "MathHelper.h"
 
 //Timer
 //IntervalTimer flameTimer;
@@ -38,8 +44,8 @@ void setup() {
   delay(1000);
   // colourSetup();
   // hcUltrasonicSetup();
-  //setUpLaserSensor();
- // setupIMU();
+  // setUpLaserSensor();
+  setupIMU();
   // delay(1000);
   // getIMUData();
   // calibrateIMU();
@@ -66,11 +72,7 @@ void timerSetup() {
   /*
   ultrasonicTimer.begin(ultrasonicPulse, 125);
   ultrasonicTimer.priority(3);
-  
-  hallTimer.begin(detectMagnet, 125);
-  hallTimer.priority(3);
   */
-  Serial.print("Hello: Start");
 }
 
 
@@ -134,59 +136,59 @@ void loop() {
   // lookForMagnet();
 }
 
-void testTileDetection() {
-  detectTileInFront();
-}
-
-void testRotationWithIMU() {
-  Serial.println("rotateRight(90) ============================");
-  rotateRight(90);
-  delay(5000);
-  Serial.println("rotateRight(180) ============================");
-  rotateRight(180);
-  delay(5000);
-  Serial.println("rotateRight(270) ============================");
-  rotateRight(270);
-  delay(5000);
-  Serial.println("rotateRight(0) ============================");
-  rotateRight(0);
-  delay(5000);  
-}
-
-void testRotateLeft() {
-  Serial.println("rotateLeft(270) ============================");
-  rotateLeft(270);
-  delay(5000);
-  Serial.println("rotateLeft(180) ============================");
-  rotateLeft(180);
-  delay(5000);
-  Serial.println("rotateLeft(90) ============================");
-  rotateLeft(90);
-  delay(5000);
-  Serial.println("rotateLeft(0) ============================");
-  rotateLeft(0);
-  delay(5000);   
-}
-
-// void testIRSensor() {
-//   getIRDistance();
-// }
-
-void testLaserSensor() {
-   Serial.println(getLaserDistance());
-}
-
-void testEncoders() {
-  Serial.print("Left = ");
-  Serial.print(leftEncoder.read());
-  Serial.print(", Right = ");
-  Serial.print(rightEncoder.read());
-  Serial.println();
-}
-
 // Sort by tile with the closts euclidean distance
 bool compareTile(Coordinate c1, Coordinate c2){
   return euclideanDist(c1.x, xPos, c1.y, yPos) < euclideanDist(c2.x, xPos, c2.y, yPos);
+}
+
+/*
+  a set of movement instructions will be given as an array of integers that will be decoded
+  0 - forward
+  1 - rotate 0
+  2 - rotate 90
+  3 - rotate 180
+  4 - rotate 270
+*/
+void executeMovementInstructions(int movements[], int numMoves) {
+
+  for (int i = 0; i < numMoves; i++) {
+    int movement = movements[i];
+
+    if (movement == 0) {
+      moveForwardTile();
+
+    } else if (movement == 1) {
+      if (shouldTurnLeft(cwHeading, 0.0)) {
+        rotateLeft(0);
+      } else {
+        rotateRight(0);
+      }
+      
+    } else if (movement == 2) {
+      if (shouldTurnLeft(cwHeading, 90.0)) {
+        rotateLeft(90);
+      } else {
+        rotateRight(90);
+      }
+
+    } else if (movement == 3) {;
+      if (shouldTurnLeft(cwHeading, 180.0)) {
+        rotateLeft(180);
+      } else {
+        rotateRight(180);
+      }
+
+    } else if (movement == 4) {
+      if (shouldTurnLeft(cwHeading, 270.0)) {
+        rotateLeft(270);
+      } else {
+        rotateRight(270);
+      }
+    } else {
+      //SHOULD SIGNAL SOMETHING
+    }
+
+  }
 }
 
 // Will go to all magnet tiles (sand tiles that we havent confirmed a magnet is in)
@@ -207,41 +209,17 @@ void lookForMagnet() {
   while(!pq.isEmpty()) {
     Coordinate closestMagnetTile = pq.pop();
     int numMoves = getPath(results, closestMagnetTile);
+    executeMovementInstructions(results, numMoves);
 
-    for (int i = 0; i < numMoves; i++) {
-
-      int movement = results[i];
-
-      /*
-      0 - forward
-      1 - rotate 0
-      2 - rotate 90
-      3 - rotate 180
-      4 - rotate 270
-      -1 - end
-      */
-      if (movement == 0) {
-        Serial.println("MOVE FORWARD");
-      } else if (movement == 1) {
-        Serial.println("ROTATE TO 0");
-      } else if (movement == 2) {
-        Serial.println("ROTATE TO 90");
-      } else if (movement == 3) {
-        Serial.println("ROTATE TO 180");
-      } else if (movement == 4) {
-        Serial.println("ROTATE TO 270");
-      }
-
+    if (didDetectMagnet()) {
+      magnetDetected = true;
+      signalComplete();
+      // TODO: Update the state of the grid? ...
+      break;
+    } else {
+      // TODO: Update the state of the grid? ...
     }
-    Serial.println("ARRIVE ON TOP OF LOCATION");
-    Serial.println("CHECK NEXT LOCATION");
-    Serial.println();
-    Serial.println();
-  }
 
-  Serial.println("WENT TO 3 MAGNET TILE LOCATIONS");
-  while(true) {
-    
   }
 }
 
