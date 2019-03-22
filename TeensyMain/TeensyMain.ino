@@ -69,7 +69,7 @@ void timerSetup() {
 
 
 void loop() {
-  initialScan();
+  //initialScan();
   
   Coordinate flameCodeCoord(1, 3,'c');
   flameTile = flameCodeCoord;
@@ -201,7 +201,6 @@ void lookForMagnet() {
 void courseLogic() {
 
 
-  while(!flameDone) {
     //TAKE OUT FLAME
     int flamePath[MAX_PATH_FINDING_SIZE];
     int flameMoves = getPath(flamePath, flameTile);
@@ -209,13 +208,10 @@ void courseLogic() {
 
 
     signalComplete();
-  }
+    delay(1000);
 
   //at this point, flame stuff is done
-  while (!magnetDetected) {
-    lookForMagnet();
-    break; //GOES TO EACH LOCATION AND LEAVES
-  }
+  lookForMagnet();
 
   //at this point, food has been found
   
@@ -224,11 +220,13 @@ void courseLogic() {
   int house1Moves = getPath(house1Path, houseTile1);
   executeMovementInstructions(house1Path, house1Moves);
   signalComplete();
+  delay(1000);
 
   int house2Path[MAX_PATH_FINDING_SIZE];
   int house2Moves = getPath(house2Path, houseTile2);
   executeMovementInstructions(house2Path, house2Moves);
   signalComplete();
+  delay(1000);
 
   // Return home
   int homePath[MAX_PATH_FINDING_SIZE];
